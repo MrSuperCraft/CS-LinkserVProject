@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="styles/scroll.css" rel="stylesheet" text="css">
+    <link href="styles/login.css" rel="stylesheet" text="css">
+    <link href="styles/style.css" rel="stylesheet" text="css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Outfit">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"/>
+    
+    <title>LinkserV | Login</title>
+
+</head>
+
+<body>
+
+
+<div class="bgsmall">
+
+   <div class="img-container">
+    <img class="aloeimg" src="feey-XWtLafKscik-unsplash.jpg"></img>
+    <div class="overlay">
+        New to LinkServ?
+        <br>
+        <br>
+        Sign up and start designing your own bio page in seconds!
+        <br>
+        <br>
+        <a href="/signup"><button type="" value="Sign Up" class="signin">Sign Up</button></a>
+    </div>
+   </div>
+   
+   
+    <div class="box">
+        <a href="/" class="arrow-button backref">Go Back</a>
+        <form action="#" class="logform">
+            <div class="logcon">
+            <h2 class="titlelog">Login To Your Account</h2>
+            </div>
+            <br>
+            <div class="logintext">with your email and password</div>
+
+            <fieldset>
+                <legend class="loglegend">Email Address</legend>
+                <input class="input" type="text" placeholder="Email" name="username" required autocomplete="off" id="email"
+                autocapitalize="none" oninvalid="this.setCustomValidity('Please Enter Your Email Here.')"
+                oninput="this.setCustomValidity('')" autofocus spellcheck="false" autocorrect="off" onchange="validate()" 
+                pattern="/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/" /> 
+                <span class="spantext"></span>
+            </fieldset>
+            <div class="pwcontainer">
+                <fieldset>
+                    <legend class="loglegend">Password</legend>
+            
+                    <div class="icons"><i id="eye" class="fa-regular fa-eye" onclick="hideShow()"></i></div>
+            
+                    <div class="password-container">
+                        <div class="password-input">
+                            <input class="input password" id="password" type="password" placeholder="Password" name="password" required autocomplete="off"
+                                oninvalid="this.setCustomValidity('Please Enter Your Password Here.')" 
+                                oninput="this.setCustomValidity('')"
+                                autofocus spellcheck="false" autocorrect="off" onkeyup="checkPasswordStrength(this.value)"/>
+                        </div>
+                    
+                        <div class="password-strength">
+                            <p>Password Strength: <span id="strength-label"></span></p>
+                        </div>
+                    </div>
+            <button type="submit" value="login" class="loginbtn" onclick="validateForm(event)">Login</button>
+        </form>
+    </div>
+
+</div>
+
+
+    <!-- Scripts-->
+
+    <script src="passwordhide.js"></script>
+    <script src="validemail.js"></script>
+    <script src="pwAuth.js"></script>
+    <script src="formSub.js"></script>
+
+    <!---->
+
+</body>
+</html>
