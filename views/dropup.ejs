@@ -1,26 +1,74 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <link rel="stylesheet" type="text/css" href="styles/dropmenu.css">
-</head>
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <link rel="stylesheet" type="text/css" href="styles/scroll.css">
+  </head>
 <body>
-    <div class="container">
-        <div class="button-container">
-            <button class="dropbtn" onclick="toggleDropdown()"></button>
+  <div class="background">
+   <div class="container">
+    <nav class="navcontainer2" id="navbar">
+      <img src="clipIcon.png" class="clipimg"></img>
+      <div class="icontext"><a href="/" class="reftext">LinkserV</a></div>
+      <ul class="navbar">
+        <li class="navtext">
+          <a class="menu-link" id="viewButton">View</a>
+        </li>
+        <li class="navtext">
+          <a data-menu="menu1" class="menu-link">Design</a>
+        </li>
+        <li class="navtext">
+          <a data-menu="menu2" class="menu-link">Presets</a>
+        </li>
+        <li class="navtext">
+          <a data-menu="menu3" class="menu-link">Background</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="content">
+      <div id="menu1" class="menu" data-menu-content="menu1">
+        <div class="mcc1"></div>
+        <div class="slider">
+
+          <!-- Border Radius -->
+          <input type="range" id="slider" min="0" max="120" value="30" oninput="radiusValue.innerText = this.value; updateRadius(this.value)">
+          <p id="radiusValue">30</p>
         </div>
-        <div class="dropdown-content" id="myDropdown">
-            <div class="dropup-content">
-                <!-- Your content here -->
-                <nav class="navbar">
-                    <a href="#">Home</a>
-                    <a href="#">About</a>
-                    <a href="#">Services</a>
-                    <a href="#">Contact</a>
-                </nav>
-            </div>
+      </div>
+
+
+      <div id="menu2" class="menu" data-menu-content="menu2">
+        <div class="presets">
+          <div class="presetContainer"><a class="preset1" onclick="preset1()">Preset 1</a></div>
+          <div class="presetContainer"><a class="preset2" onclick="preset2()">Preset 2</a></div>
+          <div class="presetContainer"><a class="preset3" onclick="preset3()">Preset 3</a></div>
+          <div class="presetContainer"><a class="preset4" onclick="preset4()">Preset 4</a></div>
+          <div class="presetContainer"><a class="preset5" onclick="preset5()">Preset 5</a></div>
         </div>
+      </div>
+
+      <div id="menu3" class="menu" data-menu-content="menu3"></div>      
     </div>
-    <script src="dropmenu.js"></script>
+
+    <div class="center-container">
+      <div class="profile">
+          <input type="file" id="profilePicInput" style="display: none;">
+          <img id="profilePic" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Your Profile Picture">
+      </div>
+      <div id="button-container">
+          <button id="addButton" onclick="createButton()">Create Button</button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Scripts-->
+  <script src="dropmenu.js"></script>
+  <script src="presets.js"></script>
+  <script src="btnprops.js"></script>
+  <script src="pfp.js"></script>
+  <!---->
 </body>
 </html>
-

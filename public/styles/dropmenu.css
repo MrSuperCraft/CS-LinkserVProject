@@ -1,71 +1,256 @@
-/* Updated styles for the container, button, and dropdown content */
-body, html {
-    height: 100%;
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     margin: 0;
+    overflow: auto;
     padding: 0;
 }
 
+/* Container Settings */
+
 .container {
+    margin-top: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* Navbar Styling */
+
+.navcontainer2 {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    position: fixed;
+    background: linear-gradient(90deg , rgba(196, 196, 196, 0.726) , grey);
+    background-color: linear-gradient(90deg , rgba(156, 156, 156, 0.744) , grey);
+}
+
+#navbar {
+    position: relative;
+    top: 0;
+    width: 100%;
+    background-color: #ffffff;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: top 0.3s;
+}
+
+
+.navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding-top: 15px;
+    list-style-type: none;
+    text-align: center;
+}
+
+.navbar a {
+    font-size: 25px;
+    color: white;
+    text-decoration-line: none;
+    margin-inline: 20px;
+    text-decoration: none;
+    text-align: center;
+    text-decoration-color: white;
+    font-family: 'Roboto' , sans-serif;
+    font-weight: 600;
+    transition: 0.5s;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.navbar a:hover {
+    text-decoration-line: underline;
+    text-underline-offset: 1px;
+    text-shadow: 1px 1px 2px rgba(0 , 0 , 0 , 0.7);
+}
+
+.reftext {
+    text-decoration: none;
+    color: white;
+}
+
+
+/* Menu Animation Style */
+  
+  .menuContent {
+    width: 100%;
+    height: 80%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
     align-items: center;
-    height: 100%;
-    position: relative;
-}
-
-.button-container {
-    position: relative;
-    transition: transform 0.3s; /* Add the transition property for smooth movement */
-}
-
-.dropbtn {
-    background-color: #4CAF50; /* Green color for the circular button */
+    justify-content: center;
+  }
+  
+  #closeMenu {
+    text-decoration: none;
     color: white;
+    padding: 10px;
+  }
+
+  .menu {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background: rgb(226, 223, 223);
+    color: white;
+    transition: height 1s ease-in-out, opacity 0.5s ease-in-out, visibility 0.5s ease-out;
+    overflow: hidden;
+    z-index: 100;
+}
+
+.menu.active {
+    color: black;
+}
+
+
+/* Custom Range Slider */
+
+.slider {
+    position: absolute;
+    top: 20%;
+    left: 30%;
+    transform: translate(-50% , -50%);
+    width: 250px;
+    height: 50px;
+    padding: 20px;
+    background: #f5f5f5;
+    border: 1px solid #000000;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.slider p {
+    font-size: 28px;
+    font-weight: 600;
+    font-family: sans-serif;
+    padding-left: 20px;
+    color: #000000;
+}
+
+.slider input[type="range"] ::-webkit-slider-runnable-track{
+    -webkit-appearance: none !important;
+    width: 200px;
+    height: 1px;
+    background: #000000;
     border: none;
-    width: 60px; /* Adjust the button's size as needed */
-    height: 60px;
-    border-radius: 50%; /* Makes it circular */
+    outline: none;
+    margin-left: 20px;
+}
+
+.slider input[type="range"] ::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    width: 20px;
+    height: 20px;
+    background: #f5f5f5;
+    border: 2px solid rgb(0, 0, 0);
+    border-radius: 50%;
     cursor: pointer;
-    transition: transform 0.3s; /* Smooth transition for the button */
-    z-index: 2;
+}
+
+.slider input[type="range"] ::-webkit-slider-thumb:hover {
+    background: #000000;
+}
+
+/* Menu 1 Text */
+
+
+
+/* Presets */
+
+.presets {
+    width: 100%;
+    height: 80%;
+    margin-top: 20%;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    color: black;
+    font-family: "Nunito Sans", sans-serif;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.presetContainer {
+    cursor: pointer;
+}
+
+.linkbtn {
+    position: relative;
+    width: 200px;
+    height: 200px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 20px; /* Make the arrow text larger */
-    outline: none; /* Remove outline */
+    border-radius: 30px;
+    top: 400px;
+    left: 900px;
 }
 
-/* Updated styles for the dropdown content */
-.dropdown-content {
-
+#button-container {
     position: relative;
-    background-color: #f9f9f9; /* Bright color for the content */
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    width: 200px; /* Set the width for the content */
-    max-height: 200px; /* Set the maximum height for the content */
-    overflow-y: auto; /* Enable scrolling if content exceeds the maximum height */
-    border: 1px solid #ccc;
-    transform: translateY(100%);
-    transition: transform 0.3s, opacity 0.3s; /* Smooth transition for position and opacity */
-    z-index: 1;
-    padding: 20px; /* Add padding for content */
-    border-radius: 15px; /* Border radius for the content */
-    opacity: 0; /* Make the content invisible by default */
+    display: flex;
+    flex-direction: column;
+    margin-top: 100px;
 }
 
-/* Add a class for smooth button movement */
-.move-up {
-    transform: translateY(-50vh); /* Adjust the vertical position based on viewport height */
+.custom-button {
+    position: relative;
+    width: 300px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+    margin-bottom: 30px;
+    font-size: 30px;
+    cursor: grab;
 }
 
-/* Move the dropdown content up when the button is clicked */
-.dropdown-content.move-up {
-    transform: translateY(0);
-    opacity: 1;
+/* Profile Picture + Centering Elements */
+
+
+.center-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
 }
 
-/* Show the dropdown content when the button is clicked */
-.dropbtn:after {
-    content: '\25B2'; /* Ensure the arrow is always visible in the button */
+.profile {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#profilePic {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    margin-top: 80px;
+}
+
+#addButton {
+    outline: 2px dashed #000;
+    background-color: transparent;
+    color: black;
+    font-size: 30px;
+    font-weight: 500;
+    margin-bottom: 150px;
 }

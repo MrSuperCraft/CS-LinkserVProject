@@ -26,7 +26,7 @@ app.get('/credits' , (req, res) => {
     res.render("credits")
 });
 
-app.get('/dropup' , (req, res) => {
+app.get('/design' , (req, res) => {
     res.render("dropup")
 });
 
