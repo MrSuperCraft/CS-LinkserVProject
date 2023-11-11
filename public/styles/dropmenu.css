@@ -168,13 +168,22 @@ body {
 
 
 
+
+/* Username Title */
+
+.username {
+    font-family: "Outfit";
+    font-size: 40px;
+    font-weight: 800;
+    margin-bottom: 25px;
+}
+
 /* Presets */
 
 .presets {
     width: 100%;
     height: 80%;
-    margin-top: 20%;
-    text-align: center;
+    margin-top: 10%;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
@@ -182,10 +191,6 @@ body {
     font-family: "Nunito Sans", sans-serif;
     font-size: 30px;
     font-weight: 600;
-}
-
-.presetContainer {
-    cursor: pointer;
 }
 
 .linkbtn {
@@ -217,7 +222,7 @@ body {
     border-radius: 30px;
     margin-bottom: 30px;
     font-size: 30px;
-    cursor: grab;
+    cursor: pointer;
 }
 
 /* Profile Picture + Centering Elements */
@@ -248,9 +253,86 @@ body {
 
 #addButton {
     outline: 2px dashed #000;
+    border: none;
+    border-radius: 20px;
+    padding: 10px;
     background-color: transparent;
     color: black;
     font-size: 30px;
     font-weight: 500;
-    margin-bottom: 150px;
+    margin-bottom: 200px;
+}
+
+
+
+/* Bio Text */
+
+.bioinput {
+    width: 650px;
+    height: 50px;
+    font-size: 30px;
+    font-weight: 500;
+    font-family: "Outfit";
+    text-align: center;
+    padding: 20px;
+    outline: none;
+    border-radius: 20px;
+    border: 2px solid black;
+    background-color: rgba(230, 222, 222, 0.897);
+    transition: background-color 0.7s;
+    resize: none;
+}
+
+
+.textarea-container {
+    position: relative;
+}
+
+
+.char-count {
+    position: absolute;
+    bottom: 15px;
+    right: 20px;
+    font-family: "Tahoma";
+}
+
+
+.bioinput:focus {
+    background-color: #fff;
+}
+
+
+/* Preset boxes*/
+
+.presetContainer {
+    width: 100%;
+    height: 80%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+}
+
+.preset-box {
+    position: relative;
+    width: 184px;
+    height: 250px;
+    border: 3px solid black;
+    border-radius: 20px;
+    display: flex;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.presetimg {
+    width: auto;
+    height: auto;
+    left: 0;
+    margin: 0;
+    object-fit: cover;
+    border-radius: inherit;
+    z-index: -1;
+}
+
+.preset-box:hover {
+    transform: scale(1.05);
 }

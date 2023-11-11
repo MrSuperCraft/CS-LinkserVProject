@@ -1,3 +1,11 @@
+// Global Variables
+let currentPreset = 'defaultPreset'; // Set the default preset name initially
+
+
+window.addEventListener('load', function() {
+  applyPreset('defaultPreset');
+});
+
 const menuLinks = document.querySelectorAll('.menu-link');
 const menus = document.querySelectorAll('.menu');
 
@@ -34,25 +42,58 @@ viewButton.addEventListener('click', function() {
 
 
 
+// Event delegation to handle dynamically created buttons
+document.getElementById('button-container').addEventListener('click', function(event) {
+  if (event.target.tagName === 'BUTTON') {
+      let selectedPreset = currentPreset; // Assign the preset based on your logic
+      applyPreset(selectedPreset); // Apply the selected preset
+  }
+});
+
+
 // Adding Buttons Function
+
+
 let buttonCount = 0;
 let draggedButton = null;
 
-function createButton() {
+function createButton(presetName) {
+  const container = document.getElementById('button-container');
+  const newButton = document.createElement("button");
+    
+  newButton.addEventListener('dragstart', handleDragStart);
+  newButton.addEventListener('dragover', handleDragOver);
+  newButton.addEventListener('drop', handleDrop);
+
   buttonCount++;
-  const button = document.createElement("button");
-  button.innerText = `Link #${buttonCount}`;
-  button.className = "custom-button";
-  button.draggable = true;
-  button.addEventListener('dragstart', handleDragStart);
-  button.addEventListener('dragover', handleDragOver);
-  button.addEventListener('drop', handleDrop);
+  newButton.innerText = `Link #${buttonCount}`;
+  newButton.className = "custom-button";
+  newButton.draggable = true;
 
-  const container = document.getElementById("button-container");
-  container.appendChild(button);
-  container.style.marginTop = "100px";
-  container.appendChild(document.getElementById("addButton")); // Move addButton to the end
+  const currentPreset = presetName || 'defaultPreset'; // Use the provided preset or default
 
+  const styles = presets[currentPreset];
+  if (styles) {
+    for (const property in styles) {
+      if (property !== 'presetName' && property !== 'bgColor') {
+        newButton.style[property] = styles[property];
+      } else if (property === 'bgColor') {
+        background.style.background = styles[property];
+      }
+    }
+
+    console.log(`Button created with ${currentPreset} preset:`, styles);
+
+    container.appendChild(newButton);
+    container.style.marginTop = "100px";
+    container.appendChild(document.getElementById("addButton"));
+  } else {
+    console.error(`Preset "${currentPreset}" is not defined.`);
+  }
+}
+
+function createButtonFromAddButton() {
+  createButton(currentPreset);
 }
 
 function handleDragStart(event) {
@@ -80,4 +121,35 @@ function handleDrop(event) {
     }
     draggedButton = null
   }
+  
+
 }
+
+
+
+// Bio Text Function + Character
+
+const textarea = document.querySelector('.bioinput');
+const charCount = document.querySelector('.char-count');
+const maxLength = parseInt(textarea.getAttribute('maxlength'));
+
+textarea.addEventListener('input', function() {
+  let currentLength = textarea.value.length;
+
+  if (currentLength > maxLength) {
+    textarea.value = textarea.value.slice(0, maxLength);
+    currentLength = maxLength;
+  }
+  
+  charCount.textContent = `${currentLength}/${maxLength}`;
+
+  textarea.style.height = 'auto'; // Reset the height
+  textarea.style.height = (textarea.scrollHeight) + 'px';
+});
+
+// Ensure the textarea starts with a correct character count
+charCount.textContent = `0/${maxLength}`;
+
+
+
+

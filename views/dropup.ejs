@@ -4,8 +4,15 @@
     <link rel="stylesheet" type="text/css" href="styles/dropmenu.css">
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <link rel="stylesheet" type="text/css" href="styles/scroll.css">
+    <link rel="stylesheet" type="text/css" href="styles/bgDesign.css">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Outfit">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"/>
   </head>
 <body>
+
+
   <div class="background">
    <div class="container">
     <nav class="navcontainer2" id="navbar">
@@ -40,15 +47,33 @@
 
       <div id="menu2" class="menu" data-menu-content="menu2">
         <div class="presets">
-          <div class="presetContainer"><a class="preset1" onclick="preset1()">Preset 1</a></div>
-          <div class="presetContainer"><a class="preset2" onclick="preset2()">Preset 2</a></div>
-          <div class="presetContainer"><a class="preset3" onclick="preset3()">Preset 3</a></div>
-          <div class="presetContainer"><a class="preset4" onclick="preset4()">Preset 4</a></div>
-          <div class="presetContainer"><a class="preset5" onclick="preset5()">Preset 5</a></div>
+          <div class="presetContainer">
+            <a class="preset1" onclick="applyPreset('preset1')">
+              <div class="preset-box"><img src="preset1.png" class="presetimg"></div>
+            </a>
+          </div>          
+          <div class="presetContainer">
+            <a class="preset2" onclick="applyPreset('preset2')">
+              <div class="preset-box"><img src="preset2.png" class="presetimg"></div>
+            </a>
+          </div> 
+          <div class="presetContainer">
+            <a class="preset3" onclick="applyPreset('preset3')"></a>
+          </div>
+          <div class="presetContainer">
+            <a class="preset4" onclick="applyPreset('preset4')"></a>
+          </div>
+          <div class="presetContainer"><a class="preset5" onclick="applyPreset('preset5')"></a>
+          </div>
         </div>
       </div>
 
-      <div id="menu3" class="menu" data-menu-content="menu3"></div>      
+      <div id="menu3" class="menu" data-menu-content="menu3">
+        <div class="bgcon">
+          <button class="bgstyle">
+            <div class="linear"></div>
+          <!-- <button class="radial"></button> work tomorrow --> 
+      </div>      
     </div>
 
     <div class="center-container">
@@ -56,19 +81,29 @@
           <input type="file" id="profilePicInput" style="display: none;">
           <img id="profilePic" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Your Profile Picture">
       </div>
+
+      <div class="username">Username</div>
+
+      <div class="bio">
+        <div class="textarea-container">
+          <textarea class="bioinput" id="bioinput" placeholder="Hey, I am a LinkserV user and this is my bio!" maxlength="200"></textarea>
+          <span class="char-count">0/200</span>
+        </div>
+      </div>
+
       <div id="button-container">
-          <button id="addButton" onclick="createButton()">Create Button</button>
+        <button id="addButton" onclick="createButtonFromAddButton()">Create Button</button>
       </div>
     </div>
   </div>
 
+    <!-- Scripts-->
+    <script src="presets.js"></script>
+    <script src="dropmenu.js"></script>
+    <script src="btnprops.js"></script>
+    <script src="presetApply.js"></script>
+    <script src="pfp.js"></script>
+    <!---->
 
-
-  <!-- Scripts-->
-  <script src="dropmenu.js"></script>
-  <script src="presets.js"></script>
-  <script src="btnprops.js"></script>
-  <script src="pfp.js"></script>
-  <!---->
 </body>
 </html>
