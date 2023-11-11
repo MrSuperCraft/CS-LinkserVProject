@@ -49,6 +49,24 @@ const presets = {
         charCount: {
             color: "white"
         }
+    },
+
+    preset3: {
+        presetName: "preset3",
+        backgroundColor: "#754D30",
+        color: "white",
+        fontFamily: "sans-serif",
+        bgColor: "#CF6F39",
+        
+        bioInput: {
+            color: "black",
+            background: "#F0DFC7",
+            fontFamily: "sans-serif"
+        },
+
+        charCount: {
+            color: "black"
+        }
     }
 };
 
