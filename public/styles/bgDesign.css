@@ -4,13 +4,13 @@
     display: flex;
     flex-direction: row;
     padding: 50px 50px;
-    justify-content: center;
+    justify-content: space-evenly;
 }
 
 
 .bgstyle {
-    width: 200px;
-    height: 250px;
+    width: 100%;
+    height: 100%;
     display: flex;
     overflow: hidden;
     object-fit: fill;
