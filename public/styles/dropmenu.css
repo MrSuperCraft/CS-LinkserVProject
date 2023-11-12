@@ -77,6 +77,10 @@ body {
     color: white;
 }
 
+.space {
+    margin-left: 40px;
+}
+
 
 /* Menu Animation Style */
   
@@ -163,9 +167,6 @@ body {
 .slider input[type="range"] ::-webkit-slider-thumb:hover {
     background: #000000;
 }
-
-/* Menu 1 Text */
-
 
 
 
@@ -339,9 +340,58 @@ body {
 
 /* imgUpload */
 
-#imageUpload {
-    width: 200px;
-    height: 100px;
-    left: auto;
+
+.custom-file-upload {
+    display: inline-block;
+    cursor: pointer;
+    color: black;
+    border: none;
+    background-color: white;
+    border-radius: 30px;
+    width: 300px;
+    height: 50px;
+    font-size: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    line-height: 50px;
     margin-top: 300px;
+    text-align: center;
+    padding: 10px 12px;
+    transition: 0.5s;
+}
+
+.custom-file-upload input {
+    display: none;
+}
+
+.custom-file-upload:hover {
+    color: white;
+    background-color: rgb(46, 153, 36);
+}
+
+
+.imgremove {
+    width: 300px;
+    height: 50px;
+    margin-top: 320px;
+    color: black;
+    border: none;
+    outline: none;
+    font-size: 20px;
+    font-family: 'Roboto';
+    border-radius: 30px;
+    padding: 10px 12px;
+    background-color: white;
+    font-weight: bold;
+    transition: 0.5s;
+}
+
+.imgremove:hover {
+    background-color: rgb(126, 3, 3);
+    color: white;
+}
+
+button {
+    outline: none;
+    border: none;
 }
