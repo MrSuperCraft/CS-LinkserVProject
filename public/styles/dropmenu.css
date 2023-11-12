@@ -336,3 +336,12 @@ body {
 .preset-box:hover {
     transform: scale(1.05);
 }
+
+/* imgUpload */
+
+#imageUpload {
+    width: 200px;
+    height: 100px;
+    left: auto;
+    margin-top: 300px;
+}
