@@ -3,9 +3,15 @@ const button = document.createElement('button');
 
 const globalStyles = document.querySelector('.background').style;
 
+
+
 function applyPreset(presetName) {
-    // Apply the styles based on the selected preset to the background and buttons
     const styles = presets[presetName];
+
+    if (background.style.backgroundImage) {
+        background.style.backgroundImage = 'none';
+    }
+
     for (const property in styles) {
         if (property !== 'presetName') {
             if (property === 'bgColor') {
@@ -34,15 +40,31 @@ function applyPreset(presetName) {
                     charCount.style[property] = charCountStyles[property];
                 }
             }
+
+
+            if (styles.placeholder) {
+                const placeholderStyles = styles.placeholder;
+                const placeholder = document.getElementById('bioinput').getAttribute("placeholder");
+
+                for (const property in placeholderStyles) {
+                    placeholder.style[property] = placeholderStyles[property];
+                }
+            }
+
+            // default background color
+            if (!presetName) {
+                globalStyles.background = defaultBackgroundColor;
+                currentPreset = 'defaultPreset'; // Update the current preset as default
+            }
+
         }
+
+         }
         
-    }
-    currentPreset = presetName; // Update the global preset variable
+        currentPreset = presetName; // Update the global preset variable
 
-    console.log(`applied the preset: ${currentPreset}`);
-
+        console.log(`applied the preset: ${currentPreset}`);
 }
-
 
 // Function to create a new button with a specific preset
 function createButtonWithPreset(presetName) {
@@ -51,6 +73,54 @@ function createButtonWithPreset(presetName) {
 }
 
 
+let imageRemoved = false;
+
+const removeImageButton = document.getElementById('removeImageButton');
+
+removeImageButton.addEventListener('click', function() {
+    if (background.style.backgroundImage !== 'none') {
+        console.log('Background image is being removed');
+        background.style.backgroundImage = 'none';
+        imageRemoved = true;
+
+        setTimeout(() => {
+            if (currentPreset === 'defaultPreset' && imageRemoved) {
+                console.log('Restoring default background color');
+                const defaultPreset = presets.defaultPreset;
+                if (defaultPreset && defaultPreset.bgColor) {
+                    globalStyles.background = defaultPreset.bgColor;
+                } else {
+                    globalStyles.background = ''; // Fallback to no background color
+                }
+            }
+        }, 100); // Adjust the delay time as needed
+    } else {
+        console.log('Background image was not present');
+        imageRemoved = false;
+    }
+
+    console.log('Current preset:', currentPreset);
+    console.log('Image Removed:', imageRemoved);
+});
+
+
+
+
+
+
+
+
+
 
   
+// Apply presets to buttons specifically
 
+function applyPresetBtn(presetName) {
+    const styles = presets[presetName];
+    for (const property in styles) {
+        const buttons = document.querySelectorAll('.custom-button');
+            buttons.forEach((button) => {
+            button.style[property] = styles[property];
+        });
+    }
+}

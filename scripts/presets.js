@@ -8,11 +8,16 @@ const presets = {
         bgColor: "linear-gradient(0deg, rgba(48,103,24,0.9853992622439601) 0%, rgba(79,200,93,0.6828782538405987) 37%, rgba(188,232,169,0.3999650885744923) 100%)",
         
         bioInput: {
-          color: "rgba(230, 222, 222, 0.897)",
-          fontFamily: "Outfit"
+          color: "black",
+          fontFamily: "Outfit",
+
         },
 
         charCount: {
+          color: "black"
+        },
+
+        placeHolder: {
           color: "black"
         }
     },

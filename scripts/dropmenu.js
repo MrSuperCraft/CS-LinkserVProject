@@ -46,7 +46,7 @@ viewButton.addEventListener('click', function() {
 document.getElementById('button-container').addEventListener('click', function(event) {
   if (event.target.tagName === 'BUTTON') {
       let selectedPreset = currentPreset; // Assign the preset based on your logic
-      applyPreset(selectedPreset); // Apply the selected preset
+      applyPresetBtn(selectedPreset); // Apply the selected preset
   }
 });
 
@@ -77,8 +77,6 @@ function createButton(presetName) {
     for (const property in styles) {
       if (property !== 'presetName' && property !== 'bgColor') {
         newButton.style[property] = styles[property];
-      } else if (property === 'bgColor') {
-        background.style.background = styles[property];
       }
     }
 
