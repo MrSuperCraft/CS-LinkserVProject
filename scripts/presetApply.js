@@ -103,15 +103,6 @@ removeImageButton.addEventListener('click', function() {
     console.log('Image Removed:', imageRemoved);
 });
 
-
-
-
-
-
-
-
-
-
   
 // Apply presets to buttons specifically
 

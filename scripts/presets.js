@@ -26,7 +26,7 @@ const presets = {
         backgroundColor: "#7E7B7B",
         color: "white",
         fontFamily: "Outfit",
-        bgColor: "#FFF",
+        bgColor: "#c2bdbd",
 
         bioInput: {
             color: "white",
@@ -72,7 +72,92 @@ const presets = {
         charCount: {
             color: "black"
         }
-    }
+    },
+    preset4: {
+        presetName: "preset4",
+        backgroundColor: "#7B2727",
+        color: "white",
+        fontFamily: "sans-serif",
+        bgColor: "#CF394B",
+        
+        bioInput: {
+            color: "white",
+            background: "#914045",
+            fontFamily: "sans-serif"
+        },
+
+        charCount: {
+            color: "white"
+        }
+    },
+    preset5: {
+        presetName: "preset5",
+        backgroundColor: "#E1E1E1",
+        color: "black",
+        fontFamily: "sans-serif",
+        bgColor: "#151515",
+        
+        bioInput: {
+            color: "black",
+            background: "#E1E1E1",
+            fontFamily: "sans-serif"
+        },
+
+        charCount: {
+            color: "black"
+        }
+    },
+    preset6: {
+        presetName: "preset6",
+        backgroundColor: "#4E5039",
+        color: "black",
+        fontFamily: "sans-serif",
+        bgColor: "#D2AC24",
+        
+        bioInput: {
+            color: "black",
+            background: "#857F44",
+            fontFamily: "sans-serif"
+        },
+
+        charCount: {
+            color: "black"
+        }
+    },
+    preset7: {
+        presetName: "preset7",
+        backgroundColor: "#5784A4",
+        color: "black",
+        fontFamily: "sans-serif",
+        bgColor: "#252B61",
+        
+        bioInput: {
+            color: "black",
+            background: "#7FBAC7",
+            fontFamily: "sans-serif"
+        },
+
+        charCount: {
+            color: "black"
+        }
+    },  
+    preset8: {
+        presetName: "preset8",
+        backgroundColor: "#03764D",
+        color: "black",
+        fontFamily: "sans-serif",
+        bgColor: "#1DC373",
+        
+        bioInput: {
+            color: "white",
+            background: "#20763D",
+            fontFamily: "sans-serif"
+        },
+
+        charCount: {
+            color: "white"
+        }
+    },      
 };
 
 
