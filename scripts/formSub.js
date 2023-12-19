@@ -10,8 +10,69 @@ function validateForm(event) {
     const passwordIsStrong = strongPasswordRegex.test(password);
 
     if (emailIsValid && passwordIsStrong) {
-        // LOGIN! WIP.
+        // Send login credentials to the server for authentication
+        authenticateUser(email, password);
     } else {
         alert("Invalid email or weak password. Please check your inputs.");
     }
+}
+
+// Authenticating the user with login
+function authenticateUser(email, password) {
+    // Send a fetch request to the server for authentication
+    fetch('/authenticate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Invalid credentials');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Redirect to the design page upon successful login
+        const emailPrefix = email.split('@')[0];
+        window.location.href = `/design/${encodeURIComponent(emailPrefix)}`;
+    })
+    .catch(error => {
+        console.error(error.message);
+        alert('Invalid email or password. Please check your inputs.');
+    });
+}
+
+function submitSignupForm() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    // Make a POST request to the /signup endpoint
+    fetch('/signup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+    })
+    .then(response => {
+        if (response.ok) {
+            // You can handle success as needed
+            const emailPrefix = email.split('@')[0];
+            console.log('Signup successful');
+            // Optionally, redirect if you want
+            window.location.href = `/design/${encodeURIComponent(emailPrefix)}`;
+        } else if (response.status === 400) {
+            // Handle the case where the email is already in use
+            console.log('Email is already in use');
+            // You can display a message to the user or handle it as needed
+        } else {
+            throw new Error('Sign-up failed');
+        }
+    })
+    .catch(error => {
+        console.error(error.message);
+        // Handle other errors, display a message, etc.
+    });
 }
