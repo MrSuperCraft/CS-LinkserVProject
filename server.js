@@ -12,25 +12,11 @@ app.use(express.static('presets'));
 app.use(express.json());
 
 // SQLite database connection
-const dbPath = path.resolve(__dirname, 'sql', 'mydb.db');
-const db = new sqlite3.Database(dbPath);
+// Specify the path to your database file
 
-// Create table if not exists
-const createTableSql = `
- CREATE TABLE IF NOT EXISTS Users (
-    ID INTEGER PRIMARY KEY,
-    Email TEXT COLLATE NOCASE,
-    Password TEXT
- );
-`;
+// Open a database connection (or create if not exists)
+const db = new sqlite3.Database('mydb.db');
 
-db.run(createTableSql, (err) => {
-    if (err) {
-        console.error('Error creating table:', err.message);
-    } else {
-        console.log('Table created successfully');
-    }
-});
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -63,60 +49,106 @@ app.get('/design/:emailPrefix', (req, res) => {
     res.render('dropup', { emailPrefix });
 });
 
-// Dummy user data (replace this with your actual user database)
-const users = [
-    { email: 'user@example.com', password: 'Password1234!' },
-    // Add more user data as needed
-];
-
-
-function authenticateUser(user, password) {
-    // Replace this with your authentication logic
-    return user && user.password === password;
-}
-
-app.post('/authenticate', (req, res) => {
+app.post('/authenticate', async (req, res) => {
     const { email, password } = req.body;
 
-    // Check if the user exists
-    const user = users.find(u => u.email === email);
+    try {
+        console.log('Attempting to authenticate user:', email);
 
-    if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-    }
+        // Check if the user exists in the database
+        const user = await getUserByEmail(email);
 
-    // Authenticate user (add your authentication logic here)
-    // For simplicity, let's assume you have a function authenticateUser(user, password)
-    if (authenticateUser(user, password)) {
-        res.status(200).json({ message: 'Login successful' });
-    } else {
-        res.status(401).json({ message: 'Invalid credentials' });
+        if (!user) {
+            console.log('User not found');
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Ensure the user object has a 'password' property
+        if (!user.password) {
+            console.log('User password not found');
+            return res.status(500).json({ message: 'User password not found' });
+        }
+
+        // Compare the hashed password with the provided password
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (passwordMatch) {
+            console.log('Login successful');
+            res.status(200).json({ success: true, message: 'Login successful' });
+        } else {
+            console.log('Invalid credentials');
+            console.log('Entered password:', password);
+            console.log('Stored hashed password:', user.password);
+            res.status(401).json({ success: false, message: 'Invalid credentials' });
+        }
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 });
 
 // Handle user signup form submission
-app.post('/signup', (req, res) => {
+app.post('/signup', async (req, res) => {
     const { email, password } = req.body;
 
-
+    try {
         // Check if the email is already in use
-        const existingUser = db.get('SELECT * FROM Users WHERE Email = ?', [email]);
+        const existingUser = await getUserByEmail(email);
 
-        if (existingUser) {
+        if (existingUser.email !== null) {
+            console.log('Email is already in use');
             res.status(400).json({ message: 'Email is already in use' });
         } else {
-            // Hash the password before storing it in the database
-            const hashedPassword = bcrypt.hash(password, 10);
+            // Hash the password
+            const hashedPassword = await bcrypt.hash(password, 10);
 
-            // Insert user data into the Users table
-            db.run('INSERT INTO Users (Email, Password) VALUES (?, ?)', [email, hashedPassword]);
+            // Insert data into the 'Users' table
+            await db.run('INSERT INTO Users (Email, password) VALUES (?, ?)', [email, hashedPassword]);
 
-            res.status(200).json({ message: 'Signup successful' });
-            
-            const emailPrefix = req.params.emailPrefix;
-            res.render('dropup', { emailPrefix });
+            console.log(`User registered successfully`);
+
+            // Redirect the user to the '/design/:emailPrefix' route
+            const emailPrefix = email.split('@')[0];
+            res.redirect(`/design/${emailPrefix}`);
+            return;  // Ensure no further code execution after the redirect
         }
+    } catch (err) {
+        console.error(err.message);
+        // Handle errors appropriately
+        res.status(500).json({ message: 'Internal Server Error' });
     }
-);
+
+    // If there's an error or the email is already in use, redirect to an error or signup page
+    res.redirect('/signup');  // Update the route accordingly
+});
+
+// Function to get user by email
+function getUserByEmail(email) {
+    return new Promise((resolve, reject) => {
+        db.get('SELECT Email, Password FROM Users WHERE Email = ?', [email], (err, row) => {
+            if (err) {
+                reject(err);
+            } else {
+                console.log('Retrieved user row:', row);
+
+                // Ensure the user object has a 'password' property
+                const user = {
+                    email: row ? row.Email : null,
+                    password: row ? row.Password : null,
+                };
+
+                resolve(user);
+            }
+        });
+    });
+}
+
+
+// Close the database connection when the application exits
+process.on('exit', () => {
+    db.close();
+});
+
 
 app.listen(3000);
+

@@ -5,11 +5,10 @@ CREATE TABLE IF NOT EXISTS Users (
     Password TEXT
 );
 
--- Insert data 
+
+-- Delete a user
+-- DELETE FROM Users WHERE Email="MrSuperCraft@gmail.com";
 
 
 -- View the table data
 SELECT * FROM Users;
-
-.tables
-

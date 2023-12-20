@@ -17,7 +17,7 @@ function validateForm(event) {
     }
 }
 
-// Authenticating the user with login
+// Update the client-side authenticateUser function
 function authenticateUser(email, password) {
     // Send a fetch request to the server for authentication
     fetch('/authenticate', {
@@ -27,22 +27,25 @@ function authenticateUser(email, password) {
         },
         body: JSON.stringify({ email, password }),
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Invalid credentials');
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        // Redirect to the design page upon successful login
-        const emailPrefix = email.split('@')[0];
-        window.location.href = `/design/${encodeURIComponent(emailPrefix)}`;
+        console.log('Login response:', data);
+
+        if (data.success) {
+            // Redirect to the design page upon successful login
+            const emailPrefix = email.split('@')[0];
+            window.location.href = `/design/${encodeURIComponent(emailPrefix)}`;
+        } else {
+            console.error('Login failed:', data.message);
+            alert('Invalid email or password. Please check your inputs.');
+        }
     })
     .catch(error => {
         console.error(error.message);
-        alert('Invalid email or password. Please check your inputs.');
+        alert('An error occurred during login. Please try again.');
     });
 }
+
 
 function submitSignupForm() {
     const email = document.getElementById('email').value;
