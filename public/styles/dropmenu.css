@@ -229,7 +229,6 @@ body {
 
 /* Profile Picture + Centering Elements */
 
-
 .center-container {
     display: flex;
     flex-direction: column;
@@ -239,8 +238,9 @@ body {
 }
 
 .profile {
-    text-align: center;
-    margin-bottom: 20px;
+    position: relative;
+    margin-top: 80px;
+
 }
 
 #profilePic {
@@ -250,9 +250,41 @@ body {
     object-fit: cover;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     cursor: pointer;
-    margin-top: 80px;
+    transition: filter 0.3s;
+
 }
 
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+    cursor: pointer;
+    border-radius: 100%;
+    overflow: hidden;
+}
+
+.overlay i {
+    color: white;
+    font-size: 24px;
+}
+
+.profile:hover #profilePic {
+    filter: brightness(70%); /* Adjust the brightness on hover */
+}
+
+.profile:hover .overlay {
+    opacity: 1;
+}
+
+/* add button style */
 #addButton {
     outline: 2px dashed #000;
     border: none;

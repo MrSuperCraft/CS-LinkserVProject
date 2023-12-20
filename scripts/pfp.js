@@ -1,7 +1,8 @@
 const profilePicInput = document.getElementById('profilePicInput');
 const profilePic = document.getElementById('profilePic');
+const overlay = document.querySelector('.overlay');
 
-profilePic.addEventListener('click', function() {
+overlay.addEventListener('click', function() {
     profilePicInput.click();
 });
 
