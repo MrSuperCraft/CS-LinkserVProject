@@ -1,20 +1,20 @@
 function checkPasswordStrength(password) {
+    const strongPasswordRegex = /^(?=.*[A-Z])(?=.*[@$!%*?&]).{8,}$/;
+    const strengthLabel = document.getElementById("strength-label");
 
-const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        
     if (password.length === 0) {
-        document.getElementById("strength-label").innerText = "";
-        document.getElementById("strength-label").style.color = "black";
+        strengthLabel.innerText = "";
+        strengthLabel.style.color = "black";
     } else if (strongPasswordRegex.test(password)) {
-        document.getElementById("strength-label").innerText = "Strong";
-        document.getElementById("strength-label").style.color = "green";
+        strengthLabel.innerText = "\n Strong";
+        strengthLabel.style.color = "green";
     } else if (password.length >= 8) {
-        document.getElementById("strength-label").innerText = "Medium";
-        document.getElementById("strength-label").style.color = "orange";
+        strengthLabel.innerText = "\n Medium";
+        strengthLabel.style.color = "orange";
     } else {
-        document.getElementById("strength-label").innerText = "Weak";
-        document.getElementById("strength-label").style.color = "red";
-}
+        strengthLabel.innerText = "\n Weak";
+        strengthLabel.style.color = "red";
+    }
 }
 
 

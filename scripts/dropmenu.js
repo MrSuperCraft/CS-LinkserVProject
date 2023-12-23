@@ -1,5 +1,7 @@
 // Global Variables
 let currentPreset = 'defaultPreset'; // Set the default preset name initially
+let updatedButtonText = ''; // Add a global variable to store the updated button text
+
 
 window.addEventListener('load', function() {
   applyPreset('defaultPreset');
@@ -86,9 +88,8 @@ function createButton(presetName) {
     openEditModal(`Edit Link #${buttonCount}`, currentPreset);
   });
 
-  newButton.addEventListener('mousedown', function(event) {
-    // Check if the target is the "Add Button" or the button itself
-    if (event.target.id !== 'addButton' && event.target.className !== 'custom-button') {
+  document.getElementById('addButton').addEventListener('mousedown', function(event) {
+    if (event.target.id === 'addButton') {
       event.preventDefault(); // Prevent the default behavior of the button click
       event.stopPropagation(); // Prevent the event from reaching the button
     }
@@ -100,7 +101,7 @@ function createButton(presetName) {
   container.style.marginTop = "100px";
   container.appendChild(document.getElementById("addButton"));
 
-  const currentPreset = presetName || 'defaultPreset'; // Use the provided preset or default
+  currentPreset = presetName || 'defaultPreset'; // Use the provided preset or default
 
   const styles = presets[currentPreset];
   if (styles) {
@@ -113,11 +114,6 @@ function createButton(presetName) {
     console.error(`Preset "${currentPreset}" is not defined.`);
   }
 }
-
-document.getElementById('addButton').addEventListener('mousedown', function(event) {
-  event.preventDefault(); // Prevent the default behavior of the button click
-  event.stopPropagation(); // Prevent the event from reaching the button
-});
 
 
 
@@ -155,7 +151,6 @@ function handleDrop(event) {
 }
 
 
-
 // Bio Text Function + Character
 
 const textarea = document.querySelector('.bioinput');
@@ -179,32 +174,58 @@ textarea.addEventListener('input', function() {
 // Ensure the textarea starts with a correct character count
 charCount.textContent = `0/${maxLength}`;
 
-// Open the modal with parameters for editing
-function openEditModal(title, buttonText) {
+// Modify the openEditModal function to use the stored button text
+function openEditModal(title, buttonText, buttonIndex) {
   const modal = document.getElementById('editModal');
   const modalTitle = document.getElementById('modalTitle');
   const modalText = document.getElementById('modal-text');
   const modalButton = document.getElementById('updateButton');
   const buttonNameInput = document.getElementById('button-Name');
 
-  // Set dynamic content for editing
-  modalTitle.innerText = title;
-  modalText.innerText = `Update this button to your liking!`;
-  modalButton.textContent = `Update Button`;
+  if (modal && modalTitle && modalText && modalButton && buttonNameInput) {
+    // Set dynamic content for editing
+    modalText.innerText = `Update this button to your liking!`;
+    modalButton.textContent = `Update Button`;
 
-  // Update button name input with stored or default text
-  buttonNameInput.value = buttonText || "My Awesome Link!";
+    // Create a temporary div element to handle the button text
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = buttonText;
 
-  modal.style.display = 'block';
+    // Remove any child elements (like the span) from the temporary div
+    while (tempDiv.firstChild) {
+      tempDiv.removeChild(tempDiv.firstChild);
+    }
+
+    // Set the dynamic title
+    modalTitle.innerHTML = `${title.replace('#1', '')}${tempDiv.innerText}`;
+
+    // Use the stored button text or default text
+    buttonNameInput.value = updatedButtonText || "My Awesome Link!";
+
+    modal.style.display = 'block';
+
+    // Add an event listener to the edit icon inside the modal
+    const editIconInModal = document.getElementById('editIconInModal');
+    if (editIconInModal) {
+      // Check if the editIconInModal exists before adding the event listener
+      editIconInModal.addEventListener('click', function (event) {
+        event.stopPropagation(); // Prevent the event from reaching the button
+        openEditModal(`Edit Link #${buttonIndex + 1}`, updatedButtonText, buttonIndex);
+      });
+    }
+  } else {
+    console.error('Modal elements not found.');
+  }
+}
+
+// Modify the handleDragStart function to store the button index
+function handleDragStart(event) {
+  draggedButton = event.target;
+  // Store the button index in a data attribute
+  draggedButton.setAttribute('data-button-index', buttonCount - 1);
 }
 
 function closeEditModal() {
   const modal = document.getElementById('editModal');
   modal.style.display = 'none';
-}
-
-function updateLink() {
-  // Add logic to handle the update button click
-  // You can perform the necessary actions here (e.g., update link properties)
-  closeEditModal(); // Close the modal after updating
 }
