@@ -1,5 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="styles/scroll.css" rel="stylesheet" text="css">
+    <link href="styles/login.css" rel="stylesheet" text="css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
+    <link rel="stylesheet" href="styles/accordion.css">
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <title>LinkserV | Login</title>
+</head>
+
+<body style="background-image: url('mountain.jpg');">
+
+
+    <div class="login-container" data-aos="fade-up" data-aos-duration="800">
+        <div class="image-container">
+            <img class="background-img" src="feey-XWtLafKscik-unsplash.jpg" alt="Background Image">
+            <div class="overlay">
+                <div class="text-overlay">
+                    Do you have an account on LinkserV already?
+                    <br>
+                    <br>
+                    Continue designing by logging in!
+                    <br>
+                    <br>
+                    <a href="/login" class="signup-btn">Login</a>
+                </div>
+            </div>
+        </div>
+        <div class="login-box">
+            <a href="/" class="back-btn"><i class="fas fa-arrow-left"></i> Go Back</a>
+            <form action="/signup" method="post" class="login-form" id="signupForm">
+                <div class="logcon">
+                    <h2 class="titlelog">Sign Up To LinkserV</h2>
+                </div>
+                <div class="login-text">with your credentials</div>
+
+
+                <div class="custom-container custom-transition custom-hover">
+                    <div class="custom-flex custom-background custom-padding">
+                        <span class="custom-label">LinkserV.com/</span>
+                        <div class="custom-input-container" title="Enter your username">
+                            <input name="username" autocomplete="off" type="text" placeholder="username" required
+                                aria-invalid="false" aria-labelledby="label-ltclid6"
+                                class="custom-input custom-ease-out !outline-none" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <fieldset>
+                        <legend class="loglegend" id="emailLegend"></legend>
+                        <input class="input" type="text" name="email" required autocomplete="off" id="email"
+                            autocapitalize="none" oninvalid="this.setCustomValidity('Please Enter Your Email')"
+                            oninput="this.setCustomValidity('')" autofocus spellcheck="false" autocorrect="off"
+                            title="Enter your Email here" />
+                        <span class="placeholder">Email</span>
+                    </fieldset>
+                </div>
+
+                <div class="input-group">
+                    <fieldset>
+                        <legend class="loglegend" id="passwordLegend"></legend>
+
+                        <div class="password-container">
+                            <div class="password-input">
+                                <input class="input password" id="password" type="password" name="password" required
+                                    autocomplete="off"
+                                    oninvalid="this.setCustomValidity('Please Enter Your Password Here.')"
+                                    oninput="this.setCustomValidity('')" autofocus spellcheck="false" autocorrect="off"
+                                    onkeyup="checkPasswordStrength(this.value)" title="Enter your password here" />
+                                <span class="placeholder">Password</span>
+                                <div class="icons">
+                                    <i id="eye" class="fa-regular fa-eye" onclick="hideShow()"></i>
+                                </div>
+                            </div>
+
+                            <div class="password-strength">
+                                <p>Password Strength: <span id="strength-label"></span></p>
+                            </div>
+                        </div>
+                        <ul class="accordion  js-accordion" data-animation="on" data-multi-items="on">
+
+                            <li class="accordion__item js-accordion__item">
+                                <button class="accordion__header ak6-padding-x-md js-tab-focus" type="button">
+                                    <span class="ak6-text-md">Why is my password not strong enough?</span>
+                                </button>
+
+                                <div
+                                    class="accordion__panel ak6-padding-top-2xs ak6-padding-x-md ak6-padding-bottom-md js-accordion__panel">
+                                    <div class="ak6-text-component">
+                                        <p>A strong password fills these 3 conditions: <br>
+                                            - At least 8 characters. <br>
+                                            - At least 1 uppercase letter. <br>
+                                            - At least 1 special symbol (e.g ! , @ , $ , %). <br>
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </fieldset>
+                </div>
+                <button value="Sign Up" class="login-button" type="submit">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts-->
+    <script src="passwordhide.js"></script>
+    <script src="validemail.js"></script>
+    <script src="pwAuth.js"></script>
+    <script src="formSub.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="aos.js"></script>
+    <script src="accordion.js"></script>
+    <!---->
+</body>
+
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +134,7 @@
     <link href="styles/login.css" rel="stylesheet" text="css">
     <link href="styles/style.css" rel="stylesheet" text="css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Outfit">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
     <title>LinkserV | Sign Up</title>
 
 </head>
@@ -15,69 +142,75 @@
 <body>
 
 
-<!---->
 
-<div class="bgsmall">
+    <div class="bgsmall">
 
-   <div class="img-container">
-    <img class="aloeimg" src="feey-XWtLafKscik-unsplash.jpg"></img>
-    <div class="overlay">
-        Already have an account?
-        <br>
-        <br>
-        Please log in with your credentials in order to access your bio page.
-        <br>
-        <br>
-        <a href="/login"><button type="" value="Sign Up" class="signin">Login</button></a>
-    </div>
-   </div>
-   
-   
-    <div class="box">
-        <a href="/" class="arrow-button backref">Go Back</a>
-        <form action="/signup" method="post" class="logform" id="signupForm">
-            <div class="logcon">
-            <h2 class="titlelog">Sign Up to LinkserV</h2>
+        <div class="img-container">
+            <img class="aloeimg" src="feey-XWtLafKscik-unsplash.jpg"></img>
+            <div class="overlay">
+                Already have an account?
+                <br>
+                <br>
+                Please log in with your credentials in order to access your bio page.
+                <br>
+                <br>
+                <a href="/login"><button type="" value="Sign Up" class="signin">Login</button></a>
             </div>
-            <br>
-            <div class="logintext">with your email and password</div>
+        </div>
 
-            <fieldset>
-                <legend class="loglegend">Email Address</legend>
-                <input class="input" type="text" placeholder="Email" name="email" required autocomplete="off" id="email"
-                autocapitalize="none" oninvalid="this.setCustomValidity('Please Enter Your Email Here.')"
-                oninput="this.setCustomValidity('')" autofocus spellcheck="false" autocorrect="off" onchange="validate()" /> 
-                <span class="spantext"></span>
-            </fieldset>
-            <div class="pwcontainer">
+
+        <div class="box">
+            <a href="/" class="arrow-button backref">Go Back</a>
+            <form action="/signup" method="post" class="logform" id="signupForm">
+                <div class="logcon">
+                    <h2 class="titlelog">Sign Up to LinkserV</h2>
+                </div>
+                <br>
+                <div class="logintext">with your email and password</div>
+
                 <fieldset>
-                    <legend class="loglegend">Password</legend>
-            
-                    <div class="icons"><i id="eye" class="fa-regular fa-eye" onclick="hideShow()"></i></div>
-            
-                    <div class="password-container">
-                        <div class="password-input">
-                            <input class="input password" id="password" type="password" placeholder="Password" name="password" required autocomplete="off"
-                                oninvalid="this.setCustomValidity('Please Enter Your Password Here.')" oninput="this.setCustomValidity('')"
-                                autofocus spellcheck="false" autocorrect="off" onkeyup="checkPasswordStrength(this.value)" />
+                    <legend class="loglegend">Email Address</legend>
+                    <input class="input" type="text" placeholder="Email" name="email" required autocomplete="off"
+                        id="email" autocapitalize="none"
+                        oninvalid="this.setCustomValidity('Please Enter Your Email Here.')"
+                        oninput="this.setCustomValidity('')" autofocus spellcheck="false" autocorrect="off"
+                        onchange="validate()" />
+                    <span class="spantext"></span>
+                </fieldset>
+                <div class="pwcontainer">
+                    <fieldset>
+                        <legend class="loglegend">Password</legend>
+
+                        <div class="icons"><i id="eye" class="fa-regular fa-eye" onclick="hideShow()"></i></div>
+
+                        <div class="password-container">
+                            <div class="password-input">
+                                <input class="input password" id="password" type="password" placeholder="Password"
+                                    name="password" required autocomplete="off"
+                                    oninvalid="this.setCustomValidity('Please Enter Your Password Here.')"
+                                    oninput="this.setCustomValidity('')" autofocus spellcheck="false" autocorrect="off"
+                                    onkeyup="checkPasswordStrength(this.value)" />
+                            </div>
+
+                            <div class="password-strength">
+                                <p class="strengthtext">Password Strength: <span id="strength-label"></span></p>
+                            </div>
                         </div>
-                    
-                        <div class="password-strength">
-                            <p class="strengthtext">Password Strength: <span id="strength-label"></span></p>
-                        </div>
-                    </div>
-            <button type="submit" value="login" class="loginbtn">Register</button>
-        </form>
+                        <button type="submit" value="login" class="loginbtn">Register</button>
+            </form>
+        </div>
+
     </div>
 
-</div>
-
-<script src="passwordhide.js"></script>
-<script src="validemail.js"></script>
-<script src="pwAuth.js"></script>
-<script src="formSub.js"></script>
+    <script src="passwordhide.js"></script>
+    <script src="validemail.js"></script>
+    <script src="pwAuth.js"></script>
+    <script src="formSub.js"></script>
 
 
 
 </body>
+
 </html>
+
+-->

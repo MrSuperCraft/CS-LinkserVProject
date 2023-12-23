@@ -1,155 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="styles/style.css" rel="stylesheet" text="css">
+    <meta name="description"
+        content="LinkserV is a link - in bio website designer. Create your own personal link today!">
+
     <link href="styles/scroll.css" rel="stylesheet" text="css">
     <link href="styles/animation.css" rel="stylesheet" text="css">
+    <link rel="stylesheet" href="styles/hero.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+
+    <!-- imports for fonts & icons -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
+        integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
     <title>LinkserV | Main</title>
-
 </head>
+
 <body>
+    <!-- scripts -->
+    <script src="carousel.js"></script>
+    <script src="accordion.js"></script>
+    <!-- -->
 
-  <!-- Scripts -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="scrollscript.js"></script>
-<script src="type-animation.js"></script>
-  <!---->
+    <section class="main-hero" id="Home">
+        <header>
+            <h2><a href="/" class="logo"><svg xmlns="http://www.w3.org/2000/svg" height="26" width="24"
+                        viewBox="0 0 448 512">
+                        <path
+                            d="M364.2 83.8c-24.4-24.4-64-24.4-88.4 0l-184 184c-42.1 42.1-42.1 110.3 0 152.4s110.3 42.1 152.4 0l152-152c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-152 152c-64 64-167.6 64-231.6 0s-64-167.6 0-231.6l184-184c46.3-46.3 121.3-46.3 167.6 0s46.3 121.3 0 167.6l-176 176c-28.6 28.6-75 28.6-103.6 0s-28.6-75 0-103.6l144-144c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-144 144c-6.7 6.7-6.7 17.7 0 24.4s17.7 6.7 24.4 0l176-176c24.4-24.4 24.4-64 0-88.4z" />
+                    </svg> LinkserV</a></h2>
+            <div class="navigation-container">
+                <div class="navigation" data-aos="fade-left" data-aos-duration="300">
+                    <a href="#Home">Home</a>
+                    <a href="#About">About</a>
+                    <a href="#FAQ">FAQ</a>
+                    <a href="/login" class="logbtn">Login</a>
+                </div>
+            </div>
+        </header>
+        <div class="content">
+            <div class="info" data-aos="fade-up" data-aos-duration="400">
+                <h2>Welcome To <br><span>LinkserV!</span></h2>
+                <div>
+                    <p>The go - to platform for creating <br> an amazing bio page with ease!</p>
+                    <ul>
+                        <li><i class="fa-solid fa-check"></i> User - friendly</li>
+                        <li><i class="fa-solid fa-check"></i> Innovative</li>
+                        <li><i class="fa-solid fa-check"></i> Free</li>
+                    </ul>
+                </div>
+                <a href="/login" class="info-btn">Claim Your Link</a>
+            </div>
 
-<div class="background" id="Home">
-   <nav class="navcontainer" id="navbar">
-        <img src="clipIcon.png" class="clipimg"></img>
-        <div class="icontext">LinkserV</div>
-     <ul class="navbar">
-        <li class="navtext"><a href="#Home">Home</a></li>
-        <li class="navtext"><a href="#aboutus">About Us</a></li>
-        <li class="navtext"><a href="#FAQ">FAQ</a></li>
-        <li class="navtext"><a href="#">Try It Yourself!</a></li>
-     </ul>
+            <div class="image-container">
+                <img id="carouselImage" class="carousel-image" src="design-main.png" alt="Image description"
+                    width="200px" height="200px">
+            </div>
+        </div>
 
-     <button class="start" id="loginref" onclick="location.href = 'login.html'">Login To Start</button>
-  </nav>
+        <i id="About"></i>
+        <!-- Second Section - About Us -->
+        <div class="second-section">
+            <div class="white-box" data-aos="fade-up" data-aos-duration="500">
+                <h2>About Us</h2>
+                <p class="white-box-desc">Welcome to LinkserV - the platform that empowers you to effortlessly create
+                    and share your personalized link-in-bio page in seconds. Whether you're a social media enthusiast,
+                    musician, artist,
+                    or anyone seeking to connect, LinkserV provides a versatile solution for showcasing your identity
+                    and interests. Elevate your online
+                    presence and make meaningful connections with a dynamic link that speaks volumes about you.</p>
+                <div class="about-content">
+                    <div class="about-item">
+                        <img src="customizable.svg" width="300px" height="300px"
+                            alt="customizability feature illustration">
+                        <h3>Customizability</h3>
+                        <p>Tailor your bio link to reflect your unique identity with presets, custom social media
+                            buttons and more.</p>
+                    </div>
+                    <div class="about-item">
+                        <img src="online art.svg" width="300px" height="300px"
+                            alt="customizability feature illustration">
+                        <h3>Efficiency</h3>
+                        <p>Streamline your online presence with our fast and easy link creation process.</p>
+                    </div>
+                    <div class="about-item">
+                        <img src="social growth.svg" width="300px" height="300px"
+                            alt="customizability feature illustration">
+                        <h3>Free Use</h3>
+                        <p>Enjoy the power of creating for free and promoting yourself with our user - friendly
+                            platform.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <i id="FAQ"></i>
+        <div class="third-section faq-section">
+            <div class="white-box" data-aos="fade-up" data-aos-duration="500" id="FAQ">
+                <h2>Frequently Asked Questions</h2>
+                <h3 class="faq-desc"> Here are some questions that are asked often about the LinkserV service:</h3>
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <h3>What features does your link-in-bio service offer?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Our platform offers many customization features such as social media buttons and to aid
+                                you in creating an all - in one bio page!</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <h3>How many links can I add?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Each user can only have a single link assigned to their account.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <h3>Can I use my own domain?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="accordion-content">
+                            <p>No. LinkserV offers you a custom link with a URL in this pattern:
+                                LinkserV.com/yourUsername. Currently, the feature is unavailable.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <h3>How does it look on different devices?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Generally speaking, the design for your personal link page will work well for all the
+                                different platforms. However, editing the page on your desktop is recommended.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <h3>Are there planned updates and features?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="accordion-content">
+                            <p>New updates are not yet planned as core features are still being implemented, but they
+                                will start getting published after further development on the website.</p>
+                        </div>
+                    </div>
 
+                </div>
+            </div>
+    </section>
+    <footer class="footer">
+        <div class="footer-container">
+            <ul class="footer-list">
+                <a href="#Home" aria-label="Go to the Home section.">
+                    <li><i class="fas fa-home"></i></li>
+                </a>
+                <a href="#About" aria-label="Go to the About section to read more about LinkserV.">
+                    <li><i class="fas fa-info"></i></li>
+                </a>
+                <a href="#FAQ"
+                    aria-label="Go to the FAQ section to see commonly asked questions about the LinkserV project.">
+                    <li><i class="fas fa-question"></i></li>
+                </a>
+                <!-- Add more list items as needed -->
+            </ul>
+            <p class="copyright">Created by MrSuperCraft. All rights reserved.</p>
+        </div>
+    </footer>
 
-  
-
-  <div class="mainbox" href>
-      <div class="typing-text"><span class="cursor">|</span></div>
-      <p class="additional-text">Hello and welcome to LinkserV, <br> your service to creating customizable bio pages!</p>
-      <img src="canvaimg.png" class="imgright"></img>
-  </div>
-
-  <div class="mb2" id="aboutus">
-   <h2 class="title">What is LinkserV?</h2>
-   <p class="additional-text right">
-      LinkserV is a bio page - creating service which can handle all of your links in one place. 
-      <br>
-      You can use LinkserV to add links with customizable text, add icons for social media and share them to others.</p>
-      <img src="ilya-pavlov.jpg" class="imgleft">
-   </div>
-
-  <div class="mainbox" id="FAQ">
-   <div class="typing-text-title">FAQ</div>
-         <p class="additional-text-2">
-            Q: So, what's this website all about? <br>
-            A: This is my final CS project, revolving around <br> creating bio pages
-            using a website frontend and a server & database on the backend. <br>
-            <br>
-            Q: How do you get the link?<br>
-            A: Log in, create the page and share!<br>
-            <br>
-            Q: Is this service free?<br>
-            A: Yes, completely free. <br> All presets and features are available.<br>
-         </p>
-      <img src="canvaimg.png" class="imgright"></img>
-  </div>
-<!--
-   <div class="mainbox" id="FAQ">
-      <div class="typing-text-title">FAQ</div>
-      <br>
-      <br>
-      <div class="space"></div>
-      <p class="additional-text">
-         Q: How do you get the link?<br>
-         A: Log in, create the page and share!<br>
-         <br>
-         Q: Is this service free?<br>
-         A: Yes, completely free. <br> All presets and features are available.<br>
-      </p>
-      <img src="canvaimg.png" class="imgright"></img>
-   </div>
-
---->
-<!--  
-
-   <div class="mpbox">
-     <div class="textcon" href="#home">
-      <br>
-      <h2 class="title">LinkserV</h2>
-      <p class="text2">Hello and welcome to LinkserV, your service to creating customizable bio pages!</p>
-   </div>
-
-<div id="aboutus"></div>
-<section class="s1">
-<div class="textcon">
-   <h2 class="aboutus underline"> About Us</h2>
-   <p class="text2">LinkserV is a bio page - creation service designed
-      and created by ___ aka MrSuperCraft, an 11th grade CS major and programming enthusiast.
-      <div class="bold text2">What can you do with LinkserV?</div>
-      <li class="left text2">Design your own bio page</li>
-      <li class="left text2">Add your own links</li>
-      <li class="left text2">Share with everyone!</li>
-   </p>
-</div>
-
-</section>
-
-
-<div id="faq"></div>
-<section class="s2">
-
-</section>
-
-
-
-<section class="s3">
-
-</section>
-
--->
-
-<footer>
-  <div class="footerContainer">
-    <div class="footerNav">
-      <ul>
-        <a href="#Home" id="ftext">Home</a>
-        <a href="#aboutus" id="ftext" >About Us</a>
-        <a href="#FAQ" id="ftext" >FAQ</a>
-        <a href="" id="ftext" ></a>
-        <a href="" id="ftext" ></a>
-      </ul>
-    </div>
-
-  </div>
-</footer>
-
-
-   <!--
-      FOOTER TEXT
-
-   <p>*Note: this website is made for project purposes only. All Rights Reserved*</p>
-  
-   -->
-
-   <!-- Scripts -->
-<script src='navscroll.js'></script>
-<script src="refbutton.js"></script>
-   <!---->
-</div>
-
+    <!-- scripts -->
+    <script src="scrollscript.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="aos.js"></script>
 </body>
+
 </html>
