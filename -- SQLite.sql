@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS Users (
 
 
 -- Delete a user
--- DELETE FROM Users WHERE Email="MrSuperCraft@gmail.com";
+-- DELETE FROM Users WHERE Email="123@gmail.com";
 
 
 -- View the table data
