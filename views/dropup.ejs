@@ -1,167 +1,177 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <link rel="stylesheet" type="text/css" href="/styles/dropmenu.css">
-    <link rel="stylesheet" type="text/css" href="/styles/style.css">
-    <link rel="stylesheet" type="text/css" href="/styles/scroll.css">
-    <link rel="stylesheet" type="text/css" href="/styles/bgDesign.css">
-    <link rel="stylesheet" type="text/css" href="/styles/global.css">
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Outfit">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"/>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-  </head>
+<head>
+  <link rel="stylesheet" type="text/css" href="/styles/dropmenu.css">
+  <link rel="stylesheet" type="text/css" href="/styles/style.css">
+  <link rel="stylesheet" type="text/css" href="/styles/scroll.css">
+  <link rel="stylesheet" type="text/css" href="/styles/bgDesign.css">
+  <link rel="stylesheet" type="text/css" href="/styles/global.css">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Outfit">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    rel="stylesheet">
+</head>
+
 <body>
 
 
   <div class="background">
-   <div class="container">
-    <nav class="navcontainer2" id="navbar">
-      <img src="/clipIcon.png" class="clipimg"></img>
-      <div class="icontext"><a href="/" class="reftext">LinkserV</a></div>
-      <div class="space"></div>
-      <ul class="navbar">
-        <li class="navtext">
-          <a class="menu-link" id="viewButton">View</a>
-        </li>
-        <li class="navtext">
-          <a data-menu="menu1" class="menu-link">Design</a>
-        </li>
-        <li class="navtext">
-          <a data-menu="menu2" class="menu-link">Presets</a>
-        </li>
-        <li class="navtext">
-          <a data-menu="menu3" class="menu-link">Background</a>
-        </li>
-      </ul>
-    </nav>
-    <div id="content">
-      <div id="menu1" class="menu" data-menu-content="menu1">
-        <div class="mcc1"></div>
-        <div class="slider">
+    <div class="container">
+      <nav class="navcontainer2" id="navbar">
+        <img src="/clipIcon.png" class="clipimg"></img>
+        <div class="icontext"><a href="/" class="reftext">LinkserV</a></div>
+        <div class="space"></div>
+        <ul class="navbar">
+          <li class="navtext">
+            <a class="menu-link" id="viewButton">View</a>
+          </li>
+          <li class="navtext">
+            <a data-menu="menu1" class="menu-link">Design</a>
+          </li>
+          <li class="navtext">
+            <a data-menu="menu2" class="menu-link">Presets</a>
+          </li>
+          <li class="navtext">
+            <a data-menu="menu3" class="menu-link">Background</a>
+          </li>
+        </ul>
+      </nav>
+      <div id="content">
+        <div id="menu1" class="menu" data-menu-content="menu1">
+          <div class="mcc1"></div>
+          <div class="slider">
 
-          <!-- Border Radius -->
-          <input type="range" id="slider" min="0" max="120" value="30" oninput="radiusValue.innerText = this.value; updateRadius(this.value)">
-          <p id="radiusValue">30</p>
+            <!-- Border Radius -->
+            <input type="range" id="slider" min="0" max="120" value="30"
+              oninput="radiusValue.innerText = this.value; updateRadius(this.value)">
+            <p id="radiusValue">30</p>
+          </div>
         </div>
-      </div>
 
 
-      <div id="menu2" class="menu" data-menu-content="menu2">
-        <div class="presets">
-          <div class="presetContainer">
-            <a class="preset1" onclick="applyPreset('preset1')">
-              <div class="preset-box"><img src="/preset1.png" class="presetimg"></div>
-            </a>
-          </div>          
-          <div class="presetContainer">
-            <a class="preset2" onclick="applyPreset('preset2')">
-              <div class="preset-box"><img src="/preset2.png" class="presetimg"></div>
-            </a>
-          </div> 
-          <div class="presetContainer">
-            <a class="preset3" onclick="applyPreset('preset3')">
-              <div class="preset-box"><img src="/preset3.png" class="presetimg"></div>
-            </a>
-          </div> 
-          <div class="presetContainer">
-            <a class="preset4" onclick="applyPreset('preset4')">
-              <div class="preset-box"><img src="/preset4.png" class="presetimg"></div>
-            </a>
-          </div>   
-          <div class="presetContainer">
-            <a class="preset5" onclick="applyPreset('preset5')">
-              <div class="preset-box"><img src="/preset5.png" class="presetimg"></div>
-            </a>
-          </div> 
-          <div class="presetContainer">
-            <a class="preset6" onclick="applyPreset('preset6')">
-              <div class="preset-box"><img src="/preset6.png" class="presetimg"></div>
-            </a>
-          </div> 
-          <div class="presetContainer">
-            <a class="preset7" onclick="applyPreset('preset7')">
-              <div class="preset-box"><img src="/preset7.png" class="presetimg"></div>
-            </a>
-          </div> 
-          <div class="presetContainer">
-            <a class="preset8" onclick="applyPreset('preset8')">
-              <div class="preset-box"><img src="/preset8.png" class="presetimg"></div>
-            </a>
-          </div> 
+        <div id="menu2" class="menu" data-menu-content="menu2">
+          <div class="presets">
+            <div class="presetContainer">
+              <a class="preset1" onclick="applyPreset('preset1')">
+                <div class="preset-box"><img src="/preset1.png" class="presetimg"></div>
+              </a>
+            </div>
+            <div class="presetContainer">
+              <a class="preset2" onclick="applyPreset('preset2')">
+                <div class="preset-box"><img src="/preset2.png" class="presetimg"></div>
+              </a>
+            </div>
+            <div class="presetContainer">
+              <a class="preset3" onclick="applyPreset('preset3')">
+                <div class="preset-box"><img src="/preset3.png" class="presetimg"></div>
+              </a>
+            </div>
+            <div class="presetContainer">
+              <a class="preset4" onclick="applyPreset('preset4')">
+                <div class="preset-box"><img src="/preset4.png" class="presetimg"></div>
+              </a>
+            </div>
+            <div class="presetContainer">
+              <a class="preset5" onclick="applyPreset('preset5')">
+                <div class="preset-box"><img src="/preset5.png" class="presetimg"></div>
+              </a>
+            </div>
+            <div class="presetContainer">
+              <a class="preset6" onclick="applyPreset('preset6')">
+                <div class="preset-box"><img src="/preset6.png" class="presetimg"></div>
+              </a>
+            </div>
+            <div class="presetContainer">
+              <a class="preset7" onclick="applyPreset('preset7')">
+                <div class="preset-box"><img src="/preset7.png" class="presetimg"></div>
+              </a>
+            </div>
+            <div class="presetContainer">
+              <a class="preset8" onclick="applyPreset('preset8')">
+                <div class="preset-box"><img src="/preset8.png" class="presetimg"></div>
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div id="menu3" class="menu" data-menu-content="menu3">
-        <div class="bgcon">
-          <label class="custom-file-upload">
-            <span>CHOOSE A FILE</span>
-            <input id="imageUpload" type="file"/>
-        </label>
-        
-          <button class="imgremove" id="removeImageButton">Remove Background Image</button>
-          <!-- <button class="radial"></button> work tomorrow --> 
-      </div>      
-    </div>
+        <div id="menu3" class="menu" data-menu-content="menu3">
+          <div class="bgcon">
+            <label class="custom-file-upload">
+              <span>CHOOSE A FILE</span>
+              <input id="imageUpload" type="file" />
+            </label>
 
-    <!-- Front / no menu view -->
-
-    <div class="center-container">
-      <div class="profile">
-        <input type="file" id="profilePicInput" style="display: none;">
-        <img id="profilePic" src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg" alt="Your Profile Picture">
-        <div class="overlay" id="overlay"><i class="editIconProfile">✏</i></div>
-      </div>
-
-      <div class="username" id="dynamicUsername">Username</div>
-
-      <div class="bio">
-        <div class="textarea-container">
-          <textarea name="bio" class="bioinput" id="bioinput" placeholder="Hey, I am a LinkserV user and this is my bio!" maxlength="200"></textarea>
-          <span class="char-count">0/200</span>
+            <button class="imgremove" id="removeImageButton">Remove Background Image</button>
+            <!-- <button class="radial"></button> work tomorrow -->
+          </div>
         </div>
-      </div>
 
-      <div id="button-container">
-        <div id="dynamic-btn-container"></div>
-        <button id="addButton" onclick="createButtonFromAddButton()">Create Button</button>
-      </div>
-    </div>
+        <!-- Front / no menu view -->
 
+        <div class="center-container">
+          <div class="profile">
+            <input type="file" id="profilePicInput" style="display: none;">
+            <img id="profilePic"
+              src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg"
+              alt="Your Profile Picture">
+            <div class="overlay" id="overlay"><i class="editIconProfile">✏</i></div>
+          </div>
 
+          <div class="username" id="dynamicUsername">Username</div>
 
-    <!-- Modal structure -->
-    <div id="editModal" class="modal">
-      <div class="modal-content">
-        <span class="close" onclick="closeEditModal()">&times;</span>
-        <h2 id="modalTitle"></h2>
-        <p id="modal-text"></p>
-        <div id="edit-section">
-          <label for="button-Name">Button Name:</label>
-          <input type="text" id="button-Name" placeholder="My Awesome Link!">
+          <div class="bio">
+            <div class="textarea-container">
+              <textarea name="bio" class="bioinput" id="bioinput"
+                placeholder="Hey, I am a LinkserV user and this is my bio!" maxlength="200"></textarea>
+              <span class="char-count">0/200</span>
+            </div>
+          </div>
 
-          <label for="button-URL">Button URL:</label>
-          <input type="text" id="button-URL" placeholder="e.g https://LinkserV.com">
+          <div id="button-container">
+            <div id="dynamic-btn-container"></div>
+            <button id="addButton" onclick="createButtonFromAddButton()">Create Button</button>
+          </div>
         </div>
-        <button id="updateButton" onclick="updateLink()">Update Link</button>
-      </div>
-    </div>
 
-    <!-- Scripts-->
-    <script src="/presets.js"></script>
-    <script src="/dropmenu.js"></script>
-    <script src="/btnprops.js"></script>
-    <script src="/presetApply.js"></script>
-    <script src="/pfp.js"></script>
-    <script src="/imgrender.js"></script>
-    <script src="/dynamic.js"></script>
-    <!---->
+
+
+        <!-- Modal structure -->
+        <div id="editModal" class="modal">
+          <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <p id="modal-text"></p>
+            <div id="edit-section">
+              <label for="button-Name">Button Name:</label>
+              <input type="text" id="button-Name" placeholder="My Awesome Link!">
+
+              <label for="button-URL">Button URL:</label>
+              <input type="text" id="button-URL" placeholder="e.g https://LinkserV.com">
+            </div>
+            <button id="updateButton" onclick="updateLink()">Update Link</button>
+          </div>
+        </div>
+
+
+        <!-- scripts-->
+        <script src="/presets.js"></script>
+        <script src="/dropmenu.js"></script>
+        <script src="/btnprops.js"></script>
+        <script src="/presetApply.js"></script>
+        <script src="/pfp.js"></script>
+        <script src="/imgrender.js"></script>
+        <script src="/dynamic.js"></script>
+        <!---->
 
 
 
 
 </body>
+
 </html>
