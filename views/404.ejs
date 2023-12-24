@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background: linear-gradient(135deg, #407e55, #1a5030);
+            /* Modified gradient background */
+            color: #ecf0f1;
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #1a5030;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 6em;
+            margin: 0;
+        }
+
+        p {
+            font-size: 1.5em;
+        }
+
+        .return-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #000000;
+            color: #ecf0f1;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .return-btn:hover {
+            background-color: #2e2e2e;
+            transform: translateY(-5px);
+        }
+    </style>
+    <title>404 Not Found</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>404</h1>
+        <p>Oops! Either your page was not found, <br> or you are not authorized to look into this page.</p>
+        <a href="/" class="return-btn">HOME</a>
+    </div>
+</body>
+
+</html>
