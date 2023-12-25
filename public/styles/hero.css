@@ -76,6 +76,7 @@ header .navigation a:hover {
   text-align: left;
   display: flex;
   flex-direction: flex-start;
+  margin-bottom: 12rem;
 }
 
 .content .info {
