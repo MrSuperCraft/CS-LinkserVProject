@@ -48,27 +48,16 @@ function handleAuthenticationResponse(data) {
     console.log('Login response:', data);
 
     if (data.success) {
-        // Redirect to the design page upon successful login
         const identifier = document.getElementById('email').value;
 
-        // Fetch the username from the server using another API endpoint
-        fetch('/get-username', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ identifier }),
-        })
-            .then(response => response.json())
-            .then(usernameData => {
-                const username = usernameData.username || 'Guest';
-                const redirectPath = `/design/${encodeURIComponent(username)}`;
-                window.location.href = redirectPath;
-            })
-            .catch(error => {
-                console.error(error.message);
-                alert('An error occurred during login. Please try again.');
-            });
+        if (data.redirect) {
+            // Redirect using JavaScript
+            window.location.href = data.redirect;
+        } else {
+            // Fallback: redirect to the design page
+            const redirectPath = `/design/${encodeURIComponent(identifier)}`;
+            window.location.href = redirectPath;
+        }
     } else {
         console.error('Login failed:', data.message);
         alert('Invalid email, username, or password. Please check your inputs.');
@@ -77,7 +66,7 @@ function handleAuthenticationResponse(data) {
 
 function submitSignupForm() {
     const email = document.getElementById('email').value;
-    const username = document.getElementById('username').value; // Add this line
+    const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
     // Make a POST request to the /signup endpoint
@@ -88,24 +77,24 @@ function submitSignupForm() {
         },
         body: JSON.stringify({ email, username, password }), // Include username in the payload
     })
-        .then(response => {
-            if (response.ok) {
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
                 // You can handle success as needed
                 const emailPrefix = email.split('@')[0];
                 console.log('Signup successful');
                 // Optionally, redirect if you want
                 window.location.href = `/design/${encodeURIComponent(emailPrefix)}`;
-            } else if (response.status === 400) {
-                // Handle the case where the email or username is already in use
-                console.log('Email or username is already in use');
-                // You can display a message to the user or handle it as needed
             } else {
-                throw new Error('Sign-up failed');
+                // Handle other cases, e.g., display a message to the user
+                console.error('Signup failed:', data.message);
+                alert('Signup failed. ' + data.message);
             }
         })
         .catch(error => {
             console.error(error.message);
             // Handle other errors, display a message, etc.
+            alert('An error occurred during signup. Please try again.');
         });
 }
 
