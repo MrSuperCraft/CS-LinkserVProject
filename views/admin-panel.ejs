@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/admin-panel.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Admin Panel</title>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h2>Welcome Back, <br> Admin!</h2>
+        <ul>
+            <ul>
+                <li id="homeMenu"><a href="#" class="menu-link" onclick="loadSection('homeSection')"><i
+                            class="fas fa-home"></i> Home</a></li>
+                <li id="contactMenu"><a href="#" class="menu-link" onclick="loadSection('contactSection')"><i
+                            class="fas fa-envelope"></i>
+                        Contact Submissions</a></li>
+                <li id="usersMenu"><a href="#users" class="menu-link" onclick="loadSection('userSection')"><i
+                            class="fas fa-users"></i>
+                        Users</a>
+                </li>
+                <li id="settingsMenu"><a href="#settings" class="menu-link" onclick="loadSection('settingsSection')"><i
+                            class="fas fa-cogs"></i>
+                        Settings</a></li>
+                <li id="logoutMenu"><a href="#" class="menu-link" onclick="logoutAdmin()"><i
+                            class="fas fa-sign-out-alt"></i> Log Out</a></li>
+                <!-- Add more menu items as needed -->
+            </ul>
+    </div>
+
+    <div class="content">
+
+        <!-- Home Section, will appear on load -->
+        <div id="homeSection" class="section">
+            <h2>Welcome to the Admin Panel!</h2>
+            <p>This is the main section with important information.</p>
+            <!-- Add more content as needed -->
+        </div>
+
+
+        <!-- Section for Contact Submissions -->
+        <div id="contactSection" class="section">
+            <!-- Contact submissions will be dynamically added here -->
+            <h2>Contact Submissions</h2>
+            <!-- Add your contact submissions content here -->
+        </div>
+
+        <!-- Section for User Data Table -->
+        <div id="userSection" class="section">
+            <h2>User Data Table</h2>
+            <div class="table-container">
+                <table id="userTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Email</th>
+                            <th>Username</th>
+                            <th>Actions</th> <!-- Add more columns as needed -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- User data will be dynamically added here -->
+                    </tbody>
+                </table>
+                <button id="refreshTable" class="action-button" onclick="refreshTable()">
+                    Refresh Data <i id="refreshIcon" class="fas fa-sync-alt"></i>
+                </button>
+                <div id="tableLoader" class="loader hide-loader"></div>
+            </div>
+
+            <!-- Search container for Users -->
+            <div class="search">
+                <input type="text" class="search__input" id="userSearchInput" placeholder="Search for a user..."
+                    oninput="searchUsers()">
+                <button class="search__button">
+                    <svg class="search__icon" aria-hidden="true" viewBox="0 0 24 24">
+                        <!-- Your search icon SVG code -->
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Section for Settings -->
+        <div id="settingsSection" class="section">
+            <h2>Settings</h2>
+            <!-- Add your settings content here -->
+        </div>
+
+        <!-- Rest of your existing content -->
+
+        <script src="table.js"></script>
+        <!-- Include Font Awesome script -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"
+            integrity="sha512-GWzVrcGlo0TxTRvz9ttioyYJ+Wwk9Ck0G81D+eO63BaqHaJ3YZX9wuqjwgfcV/MrB2PhaVX9DkYVhbFpStnqpQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+
+</html>
