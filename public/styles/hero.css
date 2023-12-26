@@ -406,11 +406,83 @@ label {
   font-size: 20px;
 }
 
+.logged-in-message {
+  margin-top: 10px;
+  margin-left: 10px;
+  font-size: 20px;
+  color: #333;
+  /* Set the desired text color */
+}
 
+.user-info a#logout {
+  margin-top: 10px;
+  /* Adjust the margin to move the logout button down */
+}
 
+.user-info {
+  display: flex;
+  align-items: center;
+}
 
+.fourth-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 50px 20px;
+  margin-bottom: 50px;
+  /* Adjust the background color as needed */
+}
 
+#contactForm {
+  max-width: 600px;
+  width: 100%;
+  margin: auto;
+  margin-block: 30px;
+  align-items: center;
+  align-self: center;
+}
 
+#contactForm h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+  /* Adjust the text color as needed */
+}
+
+#contactForm label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+#contactForm input,
+#contactForm select,
+#contactForm textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  /* Adjust the border color as needed */
+  border-radius: 4px;
+}
+
+#contactForm button {
+  background-color: #4caf50;
+  /* Adjust the background color as needed */
+  color: #fff;
+  /* Adjust the text color as needed */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#contactForm button:hover {
+  background-color: #45a049;
+  /* Adjust the hover background color as needed */
+}
 
 
 
@@ -561,5 +633,11 @@ label {
   .about-item {
     width: 100%;
     margin: 10px 0;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  #contactForm {
+    padding: 20px;
   }
 }

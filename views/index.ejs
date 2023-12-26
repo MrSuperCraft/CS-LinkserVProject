@@ -45,7 +45,25 @@
                     <a href="#Home">Home</a>
                     <a href="#About">About</a>
                     <a href="#FAQ">FAQ</a>
-                    <a href="/login" class="logbtn">Login</a>
+                    <a href="/login" class="logbtn">
+                        <% if (req.session.username) { %>
+                            Start
+                            <% } else { %>
+                                Login
+                                <% } %>
+                    </a>
+
+
+                    <div class="user-info">
+                        <% if (req.session.username) { %>
+                            <p class="logged-in-message">Logged in as <strong>
+                                    <%= req.session.username %>
+                                </strong>
+                            </p>
+                            <a href="/logout" id="logout">Logout</a>
+                            <% } %>
+                    </div>
+
                 </div>
             </div>
         </header>
@@ -163,6 +181,38 @@
 
                 </div>
             </div>
+        </div>
+        <div class="fourth-section contact-section">
+            <div class="white-box" data-aos="fade-up" data-aos-duration="500" id="Contact-us">
+                <form id="contactForm">
+                    <h1 style="font-size: 50px;">Contact Us</h1>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required autocomplete="off">
+
+                    <label for="email">Email (user's Email):</label>
+                    <input type="email" id="email" name="email" required autocomplete="off">
+
+                    <label for="topic">Topic:</label>
+                    <select name="topic" id="topic" required autocomplete="off">
+                        <option value="General Inquiry">General Inquiry</option>
+                        <option value="Technical Support">Technical Support</option>
+                        <option value="Feedback">Feedback</option>
+                        <option value="Bug Report">Bug Report</option>
+                        <option value="Feature Request">Feature Request</option>
+                        <option value="Other">Other</option>
+                    </select>
+
+                    <label for="title">Title (optional):</label>
+                    <input type="text" id="title" name="title" required>
+
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" rows="4" required autocomplete="off"></textarea>
+
+                    <button type="button" onclick="validateAndSubmit()">Submit</button>
+                    <div id="formResult"></div>
+                </form>
+            </div>
+        </div>
     </section>
     <footer class="footer">
         <div class="footer-container">
@@ -185,6 +235,7 @@
 
     <!-- scripts -->
     <script src="scrollscript.js"></script>
+    <script src="contactForm.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="aos.js"></script>
 </body>
