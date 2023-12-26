@@ -3,7 +3,6 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/admin-panel.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -16,10 +15,10 @@
         <h2>Welcome Back, <br> Admin!</h2>
         <ul>
             <ul>
-                <li id="homeMenu"><a href="#" class="menu-link" onclick="loadSection('homeSection')"><i
+                <li id="homeMenu"><a href="#home" class="menu-link" onclick="loadSection('homeSection')"><i
                             class="fas fa-home"></i> Home</a></li>
-                <li id="contactMenu"><a href="#" class="menu-link" onclick="loadSection('contactSection')"><i
-                            class="fas fa-envelope"></i>
+                <li id="contactMenu"><a href="#contact-submissions" class="menu-link"
+                        onclick="loadSection('contactSection')"><i class="fas fa-envelope"></i>
                         Contact Submissions</a></li>
                 <li id="usersMenu"><a href="#users" class="menu-link" onclick="loadSection('userSection')"><i
                             class="fas fa-users"></i>
@@ -28,7 +27,7 @@
                 <li id="settingsMenu"><a href="#settings" class="menu-link" onclick="loadSection('settingsSection')"><i
                             class="fas fa-cogs"></i>
                         Settings</a></li>
-                <li id="logoutMenu"><a href="#" class="menu-link" onclick="logoutAdmin()"><i
+                <li id="logoutMenu"><a href="/logout" class="menu-link" onclick="logoutAdmin()"><i
                             class="fas fa-sign-out-alt"></i> Log Out</a></li>
                 <!-- Add more menu items as needed -->
             </ul>
@@ -38,17 +37,48 @@
 
         <!-- Home Section, will appear on load -->
         <div id="homeSection" class="section">
-            <h2>Welcome to the Admin Panel!</h2>
-            <p>This is the main section with important information.</p>
-            <!-- Add more content as needed -->
+            <h2>Welcome to the Admin Panel! 🚀</h2>
+            <p>Here's a quick overview to get you started:</p>
+
+            <!-- Summary List -->
+            <ul>
+                <li>👤 <Strong> Manage Users:</Strong> Access and update user information in the "Users" section.</li>
+                <br>
+                <li>📨 <strong>Contact Submissions:</strong> View and respond to messages in the "Contact Submissions"
+                    section.</li><br>
+                <li>🔄 <Strong>Refresh Data</Strong> Stay up-to-date by refreshing user data with a single click.</li>
+                <br>
+                <li>🔍 <Strong>Search Users & tickets:</Strong> find specific data using the search bar.</li><br>
+                <li>🔼 <Strong>Load More Users:</Strong> Retrieve additional user data at your convenience.</li><br>
+                <li>⚙️ <strong>Settings:</strong> Customize your admin experience in the "Settings" section.</li>
+            </ul>
+
+            <!-- Additional Tips -->
+            <p> Master the admin realm! Effortlessly navigate, wield the search bar like a coding wizard,
+                and stay alert for new connections - your gateway to endless possibilities!</p>
+
+
+            <!-- Add more content or tips as needed -->
         </div>
 
 
         <!-- Section for Contact Submissions -->
         <div id="contactSection" class="section">
-            <!-- Contact submissions will be dynamically added here -->
             <h2>Contact Submissions</h2>
+            <div class="container">
+                <div class="controls">
+                    <input type="text" class="search__input" id="contactSearchInput"
+                        placeholder="Search for a form submission..." oninput="searchContactSubmissions()">
+                    <div class="tag-bar">
+                        <button onclick="fetchCompletedTasks()" class="tag-button completed">Completed</button>
+                        <button onclick="fetchInProgressTasks()" class="tag-button in-progress">In Progress</button>
+                        <button id="allTasksButton" class="tag-button pressed" onclick="fetchContactSubmissions()">All
+                            Tasks</button>
+                    </div>
+                </div>
+            </div>
             <!-- Add your contact submissions content here -->
+            <div class="dynamic-contact"></div>
         </div>
 
         <!-- Section for User Data Table -->
@@ -68,37 +98,54 @@
                         <!-- User data will be dynamically added here -->
                     </tbody>
                 </table>
-                <button id="refreshTable" class="action-button" onclick="refreshTable()">
-                    Refresh Data <i id="refreshIcon" class="fas fa-sync-alt"></i>
-                </button>
                 <div id="tableLoader" class="loader hide-loader"></div>
-            </div>
 
-            <!-- Search container for Users -->
-            <div class="search">
-                <input type="text" class="search__input" id="userSearchInput" placeholder="Search for a user..."
-                    oninput="searchUsers()">
-                <button class="search__button">
-                    <svg class="search__icon" aria-hidden="true" viewBox="0 0 24 24">
-                        <!-- Your search icon SVG code -->
-                    </svg>
-                </button>
+                <div class="table-controls">
+                    <div class="button-container">
+                        <button id="refreshTable" class="action-button" onclick="refreshTable()">
+                            Refresh Data <i id="refreshIcon" class="fas fa-sync-alt"></i>
+                        </button>
+
+                        <button id="loadMoreButton" class="action-button" onclick="loadMoreUsers()">
+                            Load More Users
+                        </button>
+                    </div>
+
+                    <!-- Search container for Users -->
+                    <div class="search">
+                        <input type="text" class="search__input" id="userSearchInput" placeholder="Search for a user..."
+                            oninput="searchUsers()">
+                    </div>
+                </div>
             </div>
         </div>
-
         <!-- Section for Settings -->
         <div id="settingsSection" class="section">
-            <h2>Settings</h2>
-            <!-- Add your settings content here -->
+            <h1>Settings</h1>
+            <label for="themeSelect">Theme:</label>
+            <select id="themeSelect">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+            </select>
+            <br>
+            <label for="languageSelect">Language:</label>
+            <select id="languageSelect">
+                <option value="english">English</option>
+                <!-- Add more language options as needed -->
+            </select>
+            <br>
+            <button onclick="saveSettings()">Save Settings</button>
         </div>
 
         <!-- Rest of your existing content -->
 
         <script src="table.js"></script>
+        <script src="settings.js"></script>
         <!-- Include Font Awesome script -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"
             integrity="sha512-GWzVrcGlo0TxTRvz9ttioyYJ+Wwk9Ck0G81D+eO63BaqHaJ3YZX9wuqjwgfcV/MrB2PhaVX9DkYVhbFpStnqpQ=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 </body>
 
 </html>

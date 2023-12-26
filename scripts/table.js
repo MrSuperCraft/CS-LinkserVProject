@@ -1,12 +1,15 @@
 // table.js
 
+let contactSubmissions = [];
+
+
 document.addEventListener('DOMContentLoaded', function () {
-    // Fetch user data when the page loads
-    fetchUsers();
+    // Initial number of users to display
+    const initialUsersCount = 10;
 
     // Add event listeners for menu items
     document.getElementById('usersMenu').addEventListener('click', function () {
-        fetchUsers();
+        fetchUsers(initialUsersCount);
     });
 
     document.getElementById('contactMenu').addEventListener('click', function () {
@@ -16,14 +19,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // Add event listener for hash changes
     window.addEventListener('hashchange', handleHashChange);
 
-    // Load initial section based on hash
+    // Load initial section based on hash or a default section
     handleHashChange();
 });
 
-
-async function fetchUsers() {
+async function fetchUsers(usersCount) {
     try {
-        const response = await fetch('/api/users');
+        const response = await fetch(`/api/users?count=${usersCount}`);
         const users = await response.json();
 
         // Call the function to update the table with the retrieved user data
@@ -48,19 +50,70 @@ function updateUsersTable(users) {
         cell2.textContent = user.email;
         cell3.textContent = user.username;
     });
+
+    // Check if there are more users to load
+    const loadMoreButton = document.getElementById('loadMoreButton');
+    if (loadMoreButton) {
+        loadMoreButton.style.display = users.length >= 10 ? 'block' : 'none';
+    }
 }
 
+function loadMoreUsers() {
+    // Get the current number of displayed users
+    const currentUsersCount = document.querySelectorAll('#userTable tbody tr').length;
 
-function fetchContactSubmissions() {
-    // Fetch contact submissions from the server endpoint
-    // Replace '/api/contact-submissions' with your actual endpoint
-    fetch('/api/contact-submissions')
-        .then(response => response.json())
-        .then(contactSubmissions => {
-            // Call a function to update the contact submissions section
-            updateContactSubmissions(contactSubmissions);
-        })
-        .catch(error => console.error('Error fetching contact submissions:', error));
+    // Load 10 more users
+    fetchUsers(currentUsersCount + 10);
+}
+
+async function fetchCompletedTasks() {
+    try {
+        const response = await fetch('/api/completed-tasks');
+        const completedTasks = await response.json();
+
+        if (completedTasks.error) {
+            console.error('Error fetching completed tasks:', completedTasks.error);
+            return;
+        }
+
+        // Logging only the count of completed tasks instead of the entire array
+        console.log('Completed Tasks Count:', completedTasks.length);
+
+        // Update the UI with the completed tasks
+        updateContactSubmissions(completedTasks);
+    } catch (error) {
+        console.error('Error fetching completed tasks:', error);
+    }
+}
+
+async function fetchInProgressTasks() {
+    try {
+        const response = await fetch('http://localhost:3000/api/in-progress-tasks');
+        if (!response.ok) {
+            throw new Error(`Error fetching in-progress tasks: ${response.statusText}`);
+        }
+        const inProgressTasks = await response.json();
+
+        // Update the UI with the in-progress tasks
+        updateContactSubmissions(inProgressTasks);
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
+async function fetchContactSubmissions() {
+    try {
+        const response = await fetch(`/api/contact-submissions`);
+        const submissions = await response.json();
+
+        // Update the global contactSubmissions array with the fetched data
+        contactSubmissions = submissions;
+
+        // Call a function to update the UI with the filtered submissions
+        updateContactSubmissions(submissions);
+    } catch (error) {
+        console.error('Error fetching contact submissions:', error);
+    }
 }
 
 function updateUsersTableDynamic(users) {
@@ -82,7 +135,7 @@ function updateUsersTableDynamic(users) {
 }
 
 function updateContactSubmissions(contactSubmissions) {
-    const contactSection = document.querySelector('#contactSection');
+    const contactSection = document.querySelector('.dynamic-contact');
     // Clear existing contact cards
     contactSection.innerHTML = '';
 
@@ -91,20 +144,46 @@ function updateContactSubmissions(contactSubmissions) {
         const card = document.createElement('div');
         card.classList.add('card-content');
 
+        const taskId = submission.id;
+        // Use the topic as the title if available, otherwise use a default
+        const title = submission.title || submission.topic || 'Untitled';
+
+        // Render the card
         card.innerHTML = `
-            <h3>${submission.subject}</h3>
+        <div class="card-header">
+            <h3>${title}</h3>
+            <p>From: ${submission.email} - ${submission.name || 'Anonymous'}</p>
             <p>${submission.message}</p>
-            <!-- Add more details as needed -->
-            <button onclick="handleTicketUpdate(${submission.id})">Update</button>
+            <p>Status: ${submission.status}</p>
+        </div>
+        <div class="task-buttons">
+            <button onclick="updateTaskStatusAndFetch(${taskId} , 'Completed')">
+                <i class="fas fa-check"></i> Add Completed Tag
+            </button>
+            <button onclick="updateTaskStatusAndFetch(${taskId}, 'Pending')">
+                <i class="fas fa-times"></i> Remove Completed Tag
+            </button>
+            <button id="trash-btn" onclick="deleteTask(${taskId})">
+                <i class="fas fa-trash"></i> Delete Task
+            </button>
+        </div>
         `;
+
 
         contactSection.appendChild(card);
     });
 }
 
-function handleTicketUpdate(ticketId) {
-    // Implement the logic to handle ticket updates, e.g., show a modal or redirect to a ticket editing page
-    console.log(`Update ticket with ID: ${ticketId}`);
+async function getContactSubmissionDetails(submissionId) {
+    try {
+        const response = await fetch(`/api/card/${submissionId}`);
+        const submissionDetails = await response.json();
+        console.log(submissionDetails);
+        return submissionDetails;
+    } catch (error) {
+        console.error('Error fetching individual contact submission details:', error);
+        throw error;
+    }
 }
 
 
@@ -161,16 +240,13 @@ function filterContactSubmissions(input) {
 }
 
 
+// Update the refreshTable function
 async function refreshTable() {
-    const tableContainer = document.querySelector('.table-container');
-    const tableLoader = document.getElementById('tableLoader');
     console.log('Refreshing table...');
-
-    // Remove the hide-loader class to make sure the loader is visible
-    tableLoader.classList.remove('hide-loader');
 
     // Show loading spinner during the fetch process
     showLoadingSpinner();
+    toggleTableLoadingState(true);
 
     try {
         // Fetch updated user data
@@ -182,8 +258,9 @@ async function refreshTable() {
     } catch (error) {
         console.error('Error refreshing table:', error);
     } finally {
-        // Hide the loading spinner after the table is updated
+        // Hide the loading spinner after the table is updated or if an error occurs
         hideLoadingSpinner();
+        toggleTableLoadingState(false);
     }
 }
 
@@ -228,3 +305,109 @@ function handleHashChange() {
             break;
     }
 }
+
+
+
+
+function toggleTableLoadingState(loading) {
+    const tableContainer = document.querySelector('.table-container');
+    if (loading) {
+        tableContainer.classList.add('loading');
+    } else {
+        // Delay the removal of the loading class to allow the animation to complete
+        setTimeout(() => {
+            tableContainer.classList.remove('loading');
+        }, 500); // Adjust the delay time based on your transition duration
+    }
+}
+
+// Function to update the status of a task and fetch the updated task list based on the active filter
+async function updateTaskStatusAndFetch(taskId, newStatus) {
+    try {
+        // Update the status
+        const updateResponse = await fetch('/api/update-task-status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                taskId: taskId,
+                newStatus: newStatus,
+            }),
+        });
+
+        const updateData = await updateResponse.json();
+
+        if (!updateResponse.ok) {
+            console.error('Error updating task status:', updateData.error);
+            return;
+        }
+
+        console.log(updateData.message);
+
+        // Determine the active filter based on the "pressed" class
+        const completedButton = document.querySelector('.tag-button.completed');
+        const inProgressButton = document.querySelector('.tag-button.in-progress');
+        const allTasksButton = document.querySelector('#allTasksButton');
+
+        if (completedButton && completedButton.classList.contains('pressed')) {
+            fetchCompletedTasks();
+            console.log('completed tasks');
+        } else if (inProgressButton && inProgressButton.classList.contains('pressed')) {
+            fetchInProgressTasks();
+            console.log('in progress tasks');
+        } else if (allTasksButton && allTasksButton.classList.contains('pressed')) {
+            fetchContactSubmissions();
+            console.log('all')
+        } else {
+            // Default to fetching all tasks if no specific filter is active
+            fetchContactSubmissions();
+        }
+
+    } catch (error) {
+        console.error('Error updating task status:', error);
+    }
+}
+
+// Function to delete task
+async function deleteTask(taskId) {
+    try {
+        const response = await fetch(`/api/delete-task/${taskId}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to delete task: ${response.statusText}`);
+        }
+
+        // Fetch and update contact submissions after deleting the task
+        fetchContactSubmissions();
+    } catch (error) {
+        console.error('Error deleting task:', error);
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Add event listener for tag buttons
+    document.querySelectorAll('.tag-button').forEach(function (button) {
+        button.addEventListener('click', function () {
+            // Remove "completed" class from all buttons
+            document.querySelectorAll('.tag-button.pressed').forEach(function (completedButton) {
+                completedButton.classList.remove('pressed');
+            });
+
+            // Remove "in-progress" class from all buttons
+            document.querySelectorAll('.tag-button.in-progress').forEach(function (inProgressButton) {
+                inProgressButton.classList.remove('in-progress');
+            });
+
+            // Toggle the appropriate class based on button click
+            if (button.classList.contains('pressed')) {
+                button.classList.add('in-progress');
+            } else {
+                button.classList.add('pressed');
+            }
+        });
+    });
+});

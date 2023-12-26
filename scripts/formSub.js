@@ -58,6 +58,7 @@ function handleAuthenticationResponse(data) {
             const redirectPath = `/design/${encodeURIComponent(identifier)}`;
             window.location.href = redirectPath;
         }
+
     } else {
         console.error('Login failed:', data.message);
         alert('Invalid email, username, or password. Please check your inputs.');

@@ -28,16 +28,42 @@ app.use(session({
         httpOnly: true,
     }
 }));
+
+
+
 // Static routes
 
 app.get('/', (req, res) => {
-    res.render("index");
+    // Pass the req object as a local variable
+    res.render('index', { req });
 });
 
 app.get('/login', (req, res) => {
-    req.session.destroy();
-    res.render("login");
+    // Check if the user is already authenticated
+    if (req.session.username) {
+        // If authenticated, redirect to the design page
+        res.redirect(`/design/${encodeURIComponent(req.session.username)}`);
+    } else {
+        // If not authenticated, render the login page
+        res.render("login");
+    }
 });
+
+
+app.get('/logout', (req, res) => {
+    // Destroy the session to log the user out
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Error destroying session:', err);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        // Redirect the user to the home page or any desired page after logout
+        res.redirect('/');
+    });
+});
+
+
 
 app.get('/signup', (req, res) => {
     res.render("signup");
@@ -69,9 +95,9 @@ function isAuthenticated(req, res, next) {
         console.log('User is authenticated:', req.session.username);
         return next(); // Proceed to the next middleware/route handler
     } else {
-        // User is not authenticated, redirect to the login page
-        console.log('User not authenticated. Redirecting to login.');
-        res.redirect('/login');
+        // User is not authenticated, redirect to the 404 page
+        console.log('User not authenticated. Redirecting to 404 page.');
+        res.status(404).render('404'); // Assuming '404' is the name of your 404 page
     }
 }
 
@@ -219,15 +245,6 @@ app.get('/logout', (req, res) => {
     // Destroy the session to log the user out
     req.session.destroy();
     res.redirect('/');
-});
-
-// Close the database connection when the application exits
-process.on('exit', () => {
-    db.close();
-});
-
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
 });
 
 // Function to get user by email or username
@@ -378,16 +395,16 @@ async function getAllUsers() {
 }
 
 // Assuming you have a route for the contact submissions section
-app.get('/admin-panel/contact-submissions', isAdminAuthenticated, async (req, res) => {
+app.get('/api/contact-submissions', isAdminAuthenticated, async (req, res) => {
     try {
         // Fetch contact submissions data from the database
         const contactSubmissions = await getAllContactSubmissions();
 
-        // Render the admin-panel template with the contact submissions data
-        res.render('admin-panel', { contactSubmissions: contactSubmissions }); // Pass the "contactSubmissions" variable here
+        // Return a JSON response
+        res.json(contactSubmissions);
     } catch (error) {
         console.error('Error fetching contact submissions:', error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
@@ -395,7 +412,7 @@ app.get('/admin-panel/contact-submissions', isAdminAuthenticated, async (req, re
 async function getAllContactSubmissions() {
     return new Promise((resolve, reject) => {
         // Replace this query with your actual query to get contact submissions from the database
-        db.all('SELECT * FROM ContactSubmissions', (err, rows) => {
+        db.all('SELECT * FROM contact_submissions', (err, rows) => {
             if (err) {
                 reject(err);
             } else {
@@ -405,5 +422,205 @@ async function getAllContactSubmissions() {
     });
 }
 
+// Function to get settings from the database
+function getSettings() {
+    return new Promise((resolve, reject) => {
+        db.get('SELECT * FROM settings LIMIT 1', (err, row) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(row);
+            }
+        });
+    });
+}
+
+// Function to save a single setting
+function saveSetting({ setting_name, setting_value }) {
+    return new Promise((resolve, reject) => {
+        db.run('INSERT INTO settings (setting_name, setting_value) VALUES (?, ?)', [setting_name, setting_value], (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+    });
+}
+
+// Function to update a single setting
+function updateSetting({ setting_name, setting_value }) {
+    return new Promise((resolve, reject) => {
+        db.run('UPDATE settings SET setting_value = ? WHERE setting_name = ?', [setting_value, setting_name], (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+    });
+}
+
+// Route to save settings
+app.post('/api/save-settings', async (req, res) => {
+    // Extract settings from the request body
+    const settings = req.body;
+
+    try {
+        // Ensure settings is an array
+        if (!Array.isArray(settings)) {
+            return res.status(400).json({ message: 'Invalid settings format' });
+        }
+
+        // Iterate through settings and save or update each one
+        for (const setting of settings) {
+            const existingSetting = await getSettings();
+
+            if (existingSetting) {
+                await updateSetting(setting);
+            } else {
+                await saveSetting(setting);
+            }
+        }
+
+        // Respond with a success message
+        res.status(200).json({ message: 'Settings saved successfully' });
+    } catch (error) {
+        console.error('Error saving settings:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
+// Define your SQL table schema for contact submissions
+const createTableQuery = `
+  CREATE TABLE IF NOT EXISTS contact_submissions (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    topic TEXT NOT NULL,
+    message TEXT NOT NULL
+  )
+`;
+
+db.run(createTableQuery, (err) => {
+    if (err) {
+        console.error('Error creating table:', err);
+    }
+});
+
+app.use(express.json());
+
+app.post('/api/submit-contact', (req, res) => {
+    const { name, email, topic, message } = req.body;
+
+    const insertQuery = `
+    INSERT INTO contact_submissions (name, email, topic, message)
+    VALUES (?, ?, ?, ?)
+  `;
+
+    db.run(insertQuery, [name, email, topic, message], function (err) {
+        if (err) {
+            console.error('Error inserting contact submission:', err);
+            res.status(500).send('Error submitting contact form');
+        } else {
+            console.log('Contact submission successful');
+            res.status(200).send('Contact form submitted successfully');
+        }
+    });
+});
+
+
+app.get('/api/completed-tasks', async (req, res) => {
+    try {
+        // Assuming you have a 'status' column in your 'contact_submissions' table
+        const completedTasks = await getTasksByStatus('Completed');
+        res.json(completedTasks);
+    } catch (error) {
+        console.error('Error fetching completed tasks:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Function to get tasks by status from the database
+async function getTasksByStatus(status) {
+    return new Promise((resolve, reject) => {
+        // Replace this query with your actual query to get tasks by status from the database
+        db.all('SELECT * FROM contact_submissions WHERE status = ?', [status], (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(rows);
+            }
+        });
+    });
+}
+
+app.get('/api/in-progress-tasks', async (req, res) => {
+    try {
+        // Fetch in-progress tasks from the database based on status
+        const inProgressTasks = await getTasksByStatus('Pending');
+        res.json(inProgressTasks);
+    } catch (error) {
+        console.error('Error fetching in-progress tasks:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Function to get tasks by status from the database
+async function getTasksByStatus(status) {
+    return new Promise((resolve, reject) => {
+        // Replace this query with your actual query to get tasks by status from the database
+        db.all('SELECT * FROM contact_submissions WHERE status = ?', [status], (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(rows);
+            }
+        });
+    });
+}
+
+// Update the status of a submission
+app.post('/api/update-task-status', async (req, res) => {
+    const { taskId, newStatus } = req.body;
+
+    try {
+        // Replace this query with your actual query to update the status in the database
+        await updateTaskStatus(taskId, newStatus);
+
+        res.status(200).json({ message: 'Task status updated successfully' });
+    } catch (error) {
+        console.error('Error updating task status:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Function to update the status of a task in the database
+async function updateTaskStatus(taskId, newStatus) {
+    return new Promise((resolve, reject) => {
+        // Replace this query with your actual query to update the status in the database
+        db.run('UPDATE contact_submissions SET status = ? WHERE id = ?', [newStatus, taskId], (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+    });
+}
+
+// Add the 404 route at the end of your routes
+app.use((req, res) => {
+    res.status(404).render('404'); // Assuming '404' is the name of your 404 page
+});
+
+// Close the database connection when the application exits
+process.on('exit', () => {
+    db.close();
+});
+
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
+});
 
 
