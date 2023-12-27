@@ -25,7 +25,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 async function fetchUsers(usersCount) {
     try {
-        const response = await fetch(`/api/users?count=${usersCount}`);
+        const response = await fetch(`/api/users?count=${usersCount}&orderBy=isAdmin`);
+        if (!response.ok) {
+            throw new Error(`Error fetching users: ${response.statusText}`);
+        }
+
         const users = await response.json();
 
         // Call the function to update the table with the retrieved user data
@@ -46,7 +50,13 @@ function updateUsersTable(users) {
         const cell2 = row.insertCell(1);
         const cell3 = row.insertCell(2);
 
-        cell1.textContent = user.id;
+        // Check if the user is an admin and apply red color to the ID
+        if (user.isAdmin) {
+            cell1.innerHTML = `<span style="color: red;">${user.id}</span>`;
+        } else {
+            cell1.textContent = user.id;
+        }
+
         cell2.textContent = user.email;
         cell3.textContent = user.username;
     });
@@ -58,11 +68,12 @@ function updateUsersTable(users) {
     }
 }
 
+
 function loadMoreUsers() {
     // Get the current number of displayed users
     const currentUsersCount = document.querySelectorAll('#userTable tbody tr').length;
 
-    // Load 10 more users
+    // Load 10 more users starting from the current count
     fetchUsers(currentUsersCount + 10);
 }
 
@@ -408,6 +419,7 @@ function isTaskCompleted(taskId) {
 
 // Function to delete task
 
+// Function to delete task
 async function deleteTask(taskId) {
     // Confirm deletion with the user
     const isConfirmed = confirm('Are you sure you want to delete this comment Submission?');
@@ -426,13 +438,28 @@ async function deleteTask(taskId) {
             throw new Error(`Failed to delete task: ${response.statusText}`);
         }
 
-        // Fetch and update contact submissions after deleting the task
-        fetchContactSubmissions();
+        // Determine the active filter based on the "pressed" class
+        const completedButton = document.querySelector('.tag-button.completed');
+        const inProgressButton = document.querySelector('.tag-button.in-progress');
+        const allTasksButton = document.querySelector('#allTasksButton');
+
+        if (completedButton && completedButton.classList.contains('pressed')) {
+            // Fetch completed tasks
+            fetchCompletedTasks();
+        } else if (inProgressButton && inProgressButton.classList.contains('pressed')) {
+            // Fetch in-progress tasks
+            fetchInProgressTasks();
+        } else if (allTasksButton && allTasksButton.classList.contains('pressed')) {
+            // Fetch all tasks
+            fetchContactSubmissions();
+        } else {
+            // Default to fetching all tasks if no specific filter is active
+            fetchInProgressTasks();
+        }
     } catch (error) {
         console.error('Error deleting task:', error);
     }
 }
-
 
 document.addEventListener('DOMContentLoaded', function () {
     // Add event listener for tag buttons

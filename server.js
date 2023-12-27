@@ -187,13 +187,14 @@ app.post('/signup', async (req, res) => {
         const existingUser = await getUserByEmailOrUsername(email, username);
 
         if (existingUser.email !== null || existingUser.username !== null) {
-            console.log('Email or username is already in use');
-            return res.status(400).json({ message: 'Email or username is already in use' });
+            console.log('Email or username is already in use.');
+            // Send a JSON response with an error message
+            return res.status(400).json({ success: false, message: 'Email or username is already in use.' });
         } else {
             // Hash the password
             const hashedPassword = await bcrypt.hash(password, 10);
 
-            // Insert data into the 'Users' table for regular user
+            // Insert data into the 'Users' table for a regular user
             await db.run('INSERT INTO Users (Email, Username, Password) VALUES (?, ?, ?)', [email, username, hashedPassword]);
 
             console.log(`User registered successfully`);
@@ -201,13 +202,13 @@ app.post('/signup', async (req, res) => {
             // Save user information in the session
             req.session.username = username;
 
-            // Redirect the user to the design page
-            return res.redirect(`/design/${encodeURIComponent(username)}`);
+            // Send a JSON response indicating successful signup
+            return res.status(200).json({ success: true, redirect: `/design/${encodeURIComponent(username)}` });
         }
     } catch (err) {
         console.error(err.message);
-        // Handle errors appropriately
-        res.status(500).json({ message: 'Internal Server Error' });
+        // Send a JSON response with an error message
+        res.status(500).json({ success: false, message: 'Internal Server Error. Please try again later.' });
     }
 });
 
@@ -365,8 +366,8 @@ app.get('/admin-panel/users', isAdminAuthenticated, async (req, res) => {
 
 app.get('/api/users', async (req, res) => {
     try {
-        // Query the database to get all users
-        const users = await getAllUsers();
+        const usersCount = req.query.count || 10; // Use 10 as the default value if count is not provided
+        const users = await getUsersLimited(usersCount);
 
         res.status(200).json(users);
     } catch (err) {
@@ -375,10 +376,16 @@ app.get('/api/users', async (req, res) => {
     }
 });
 
-// Function to get all users from the database
-async function getAllUsers() {
+// Function to get limited users from the database with admin priority
+async function getUsersLimited(usersCount) {
     return new Promise((resolve, reject) => {
-        db.all('SELECT ID, Email, Username FROM Users', (err, rows) => {
+        const count = parseInt(usersCount, 10); // Ensure usersCount is a valid number
+        if (isNaN(count) || count <= 0) {
+            reject(new Error('Invalid usersCount value'));
+            return;
+        }
+
+        db.all(`SELECT ID, Email, Username, isAdmin FROM Users ORDER BY isAdmin DESC, ID LIMIT ${count}`, (err, rows) => {
             if (err) {
                 reject(err);
             } else {
@@ -386,6 +393,7 @@ async function getAllUsers() {
                     id: row.ID,
                     email: row.Email,
                     username: row.Username,
+                    isAdmin: row.isAdmin,
                 }));
 
                 resolve(users);
@@ -393,7 +401,6 @@ async function getAllUsers() {
         });
     });
 }
-
 // Assuming you have a route for the contact submissions section
 app.get('/api/contact-submissions', isAdminAuthenticated, async (req, res) => {
     try {
@@ -608,6 +615,100 @@ async function updateTaskStatus(taskId, newStatus) {
         });
     });
 }
+
+// Route for deleting a task then refreshing the view of the tasks
+app.delete('/api/delete-task/:taskId', async (req, res) => {
+    const taskId = req.params.taskId;
+
+    try {
+        // Assuming you have a table named 'contact_submissions' with an 'id' column as the primary key
+        const result = await deleteTaskById(taskId);
+
+        if (result) {
+            // Task deleted successfully
+            res.status(200).json({ message: 'Task deleted successfully' });
+        } else {
+            // Task not found or deletion failed
+            res.status(404).json({ error: 'Task not found' });
+        }
+    } catch (error) {
+        console.error('Error deleting task:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Function to delete a task by its ID
+async function deleteTaskById(taskId) {
+    return new Promise((resolve, reject) => {
+        // Replace 'contact_submissions' with the actual name of your table
+        const deleteQuery = 'DELETE FROM contact_submissions WHERE id = ?';
+
+        db.run(deleteQuery, [taskId], function (err) {
+            if (err) {
+                console.error('Error deleting task from the database:', err);
+                reject(err);
+            } else {
+                // Check if any rows were affected (task deleted)
+                const rowsAffected = this.changes;
+                resolve(rowsAffected > 0);
+            }
+        });
+    });
+}
+
+// Admin actions on the user
+
+app.put('/api/users/:id', isAdminAuthenticated, (req, res) => {
+    const userId = req.params.id;
+    const { email, username, isAdmin } = req.body;
+
+    // Validate input (add more validation as needed)
+    if (!email || !username || isAdmin === undefined) {
+        return res.status(400).json({ message: 'Invalid input' });
+    }
+
+    // Update the user details in the database
+    const query = 'UPDATE Users SET Email = ?, Username = ?, isAdmin = ? WHERE ID = ?';
+    db.run(query, [email, username, isAdmin, userId], function (err) {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+
+        // Check if a user was actually updated
+        if (this.changes === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json({ message: 'User updated successfully' });
+    });
+});
+
+app.delete('/api/users/:id', isAdminAuthenticated, (req, res) => {
+    const userId = req.params.id;
+
+    // Delete the user from the database
+    const query = 'DELETE FROM Users WHERE ID = ?';
+    db.run(query, [userId], function (err) {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+
+        // Check if a user was actually deleted
+        if (this.changes === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json({ message: 'User deleted successfully' });
+    });
+});
+
+
+
+
+
+
 
 // Add the 404 route at the end of your routes
 app.use((req, res) => {

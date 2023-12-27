@@ -58,14 +58,20 @@ function handleAuthenticationResponse(data) {
             const redirectPath = `/design/${encodeURIComponent(identifier)}`;
             window.location.href = redirectPath;
         }
-
     } else {
         console.error('Login failed:', data.message);
-        alert('Invalid email, username, or password. Please check your inputs.');
+
+        // Check if the error is related to a duplicate signup
+        if (data.message && data.message.toLowerCase().includes('already in use')) {
+            displayErrorMessage('Email or username is already in use. Please choose a different one.');
+        } else {
+            displayErrorMessage('Invalid email, username, or password. Please check your inputs.');
+        }
     }
 }
 
-function submitSignupForm() {
+function submitSignupForm(event) {
+    event.preventDefault(); // Add this line to prevent the default form submission
     const email = document.getElementById('email').value;
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -87,16 +93,31 @@ function submitSignupForm() {
                 // Optionally, redirect if you want
                 window.location.href = `/design/${encodeURIComponent(emailPrefix)}`;
             } else {
-                // Handle other cases, e.g., display a message to the user
+                // Handle other cases, e.g., display a specific message to the user
                 console.error('Signup failed:', data.message);
-                alert('Signup failed. ' + data.message);
+                displaySignupErrorMessage(data.message || 'Signup failed. Please try again.');
             }
         })
         .catch(error => {
             console.error(error.message);
             // Handle other errors, display a message, etc.
-            alert('An error occurred during signup. Please try again.');
+            displaySignupErrorMessage('An error occurred during signup. Please try again.');
         });
+}
+
+
+// Modify the displaySignupErrorMessage function to handle client-side display
+function displaySignupErrorMessage(message) {
+    const signupErrorMessage = document.getElementById('signup-error-message');
+
+    // Update the container with the error message
+    signupErrorMessage.innerText = message;
+    signupErrorMessage.style.display = 'block';
+
+    // Set a timeout to hide the error message after a specific duration (e.g., 5 seconds)
+    setTimeout(() => {
+        signupErrorMessage.style.display = 'none';
+    }, 5000); // Adjust the duration as needed
 }
 
 function handleAuthenticationError(error) {
@@ -111,5 +132,16 @@ function handleAuthenticationError(error) {
         errorMessage = 'Internal Server Error. Please try again later.';
     }
 
-    alert(errorMessage);
+    displayErrorMessage(errorMessage);
+}
+
+// Add the following function to display error messages
+function displayErrorMessage(message) {
+    const errorMessageContainer = document.getElementById('login-error-message');
+    errorMessageContainer.innerText = message;
+    errorMessageContainer.style.display = 'block';
+
+    setTimeout(() => {
+        errorMessageContainer.style.display = 'none';
+    }, 5000); // Adjust the duration as needed
 }
