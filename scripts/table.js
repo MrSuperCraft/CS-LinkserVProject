@@ -88,7 +88,7 @@ async function fetchCompletedTasks() {
 
 async function fetchInProgressTasks() {
     try {
-        const response = await fetch('http://localhost:3000/api/in-progress-tasks');
+        const response = await fetch('/api/in-progress-tasks');
         if (!response.ok) {
             throw new Error(`Error fetching in-progress tasks: ${response.statusText}`);
         }
@@ -321,9 +321,14 @@ function toggleTableLoadingState(loading) {
     }
 }
 
-// Function to update the status of a task and fetch the updated task list based on the active filter
 async function updateTaskStatusAndFetch(taskId, newStatus) {
     try {
+        // Check if the task is already in the desired status
+        if (newStatus === 'Completed' && isTaskCompleted(taskId)) {
+            console.log('Task is already in Completed status');
+            return;
+        }
+
         // Update the status
         const updateResponse = await fetch('/api/update-task-status', {
             method: 'POST',
@@ -350,18 +355,37 @@ async function updateTaskStatusAndFetch(taskId, newStatus) {
         const inProgressButton = document.querySelector('.tag-button.in-progress');
         const allTasksButton = document.querySelector('#allTasksButton');
 
-        if (completedButton && completedButton.classList.contains('pressed')) {
+        if (
+            newStatus === 'Pending' &&
+            completedButton &&
+            completedButton.classList.contains('pressed') &&
+            !allTasksButton?.classList.contains('pressed')
+        ) {
+            // Fetch completed tasks
             fetchCompletedTasks();
-            console.log('completed tasks');
-        } else if (inProgressButton && inProgressButton.classList.contains('pressed')) {
+        } else if (
+            newStatus === 'Completed' &&
+            inProgressButton &&
+            inProgressButton.classList.contains('pressed') &&
+            !allTasksButton?.classList.contains('pressed')
+        ) {
+            // Fetch in-progress tasks
             fetchInProgressTasks();
-            console.log('in progress tasks');
+        } else if (
+            newStatus === 'Pending' &&
+            inProgressButton &&
+            inProgressButton.classList.contains('pressed') &&
+            !allTasksButton?.classList.contains('pressed')
+        ) {
+            // Remove the task from completed tasks and fetch in-progress tasks
+            removeTaskFromCompleted(taskId);
+            fetchInProgressTasks();
         } else if (allTasksButton && allTasksButton.classList.contains('pressed')) {
+            // Fetch all tasks
             fetchContactSubmissions();
-            console.log('all')
         } else {
             // Default to fetching all tasks if no specific filter is active
-            fetchContactSubmissions();
+            fetchInProgressTasks();
         }
 
     } catch (error) {
@@ -369,8 +393,30 @@ async function updateTaskStatusAndFetch(taskId, newStatus) {
     }
 }
 
+function removeTaskFromCompleted(taskId) {
+    // Remove the task from the completed tasks array
+    contactSubmissions = contactSubmissions.filter(submission => !(submission.id === taskId && submission.status === 'Completed'));
+}
+
+
+function isTaskCompleted(taskId) {
+    // Implement logic to check if the task is already in Completed status
+    const task = contactSubmissions.find(submission => submission.id === taskId);
+    return task && task.status === 'Completed';
+}
+
+
 // Function to delete task
+
 async function deleteTask(taskId) {
+    // Confirm deletion with the user
+    const isConfirmed = confirm('Are you sure you want to delete this comment Submission?');
+
+    if (!isConfirmed) {
+        console.log('Task deletion canceled by user.');
+        return;
+    }
+
     try {
         const response = await fetch(`/api/delete-task/${taskId}`, {
             method: 'DELETE',
