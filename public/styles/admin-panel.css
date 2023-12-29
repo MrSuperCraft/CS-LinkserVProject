@@ -149,7 +149,8 @@ button:hover {
     background-color: #4CAF50;
 }
 
-/* Add this CSS for the styled search container */
+
+/* Styles for the customized search input */
 
 .search {
     position: relative;
