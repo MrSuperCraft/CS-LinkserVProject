@@ -1,177 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <link rel="stylesheet" type="text/css" href="/styles/dropmenu.css">
-  <link rel="stylesheet" type="text/css" href="/styles/style.css">
-  <link rel="stylesheet" type="text/css" href="/styles/scroll.css">
-  <link rel="stylesheet" type="text/css" href="/styles/bgDesign.css">
-  <link rel="stylesheet" type="text/css" href="/styles/global.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles/design-page.css">
+  <link rel="stylesheet" href="/styles/fonts.css">
+  <link rel="stylesheet" href="/styles/scroll.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <title>Linkserv | Your Design Page</title>
 
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Outfit">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-    rel="stylesheet">
+  <!-- scripts -->
+  <script src="dynamic.js"></script>
 </head>
 
 <body>
+  <div class="sidebar">
+    <h2>Welcome Back!</h2>
+    <div class="icontext"><a href="/" class="reftext"><i class="fa-solid fa-backward"></i> Back To LinkserV</a></div>
+    <ul>
+      <li><a href="#" class="menu-link"><i class="fas fa-eye"></i> View</a></li>
+      <li><a href="#" class="menu-link"><i class="fas fa-paint-brush"></i> Design</a></li>
+      <li><a href="#" class="menu-link"><i class="fas fa-palette"></i> Presets</a></li>
+      <li><a href="#" class="menu-link"><i class="fas fa-image"></i> Background</a></li>
+      <li><a href="#" class="menu-link"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
 
+      <!-- Add more menu items as needed -->
+    </ul>
+  </div>
 
-  <div class="background">
-    <div class="container">
-      <nav class="navcontainer2" id="navbar">
-        <img src="/clipIcon.png" class="clipimg"></img>
-        <div class="icontext"><a href="/" class="reftext">LinkserV</a></div>
-        <div class="space"></div>
-        <ul class="navbar">
-          <li class="navtext">
-            <a class="menu-link" id="viewButton">View</a>
-          </li>
-          <li class="navtext">
-            <a data-menu="menu1" class="menu-link">Design</a>
-          </li>
-          <li class="navtext">
-            <a data-menu="menu2" class="menu-link">Presets</a>
-          </li>
-          <li class="navtext">
-            <a data-menu="menu3" class="menu-link">Background</a>
-          </li>
-        </ul>
-      </nav>
-      <div id="content">
-        <div id="menu1" class="menu" data-menu-content="menu1">
-          <div class="mcc1"></div>
-          <div class="slider">
+  <div class="content">
+    <!-- Design elements and content go here -->
 
-            <!-- Border Radius -->
-            <input type="range" id="slider" min="0" max="120" value="30"
-              oninput="radiusValue.innerText = this.value; updateRadius(this.value)">
-            <p id="radiusValue">30</p>
-          </div>
+    <div class="content-navbar">
+      <div class="navbar-content">
+        <button class="navbar-info" onclick="openInfoModal()">
+          <i class="fas fa-info-circle"></i>&nbsp;Info
+        </button>
+        <div class="navbar-text">
+          <div id="dynamic-nav-text"></div>
         </div>
-
-
-        <div id="menu2" class="menu" data-menu-content="menu2">
-          <div class="presets">
-            <div class="presetContainer">
-              <a class="preset1" onclick="applyPreset('preset1')">
-                <div class="preset-box"><img src="/preset1.png" class="presetimg"></div>
-              </a>
-            </div>
-            <div class="presetContainer">
-              <a class="preset2" onclick="applyPreset('preset2')">
-                <div class="preset-box"><img src="/preset2.png" class="presetimg"></div>
-              </a>
-            </div>
-            <div class="presetContainer">
-              <a class="preset3" onclick="applyPreset('preset3')">
-                <div class="preset-box"><img src="/preset3.png" class="presetimg"></div>
-              </a>
-            </div>
-            <div class="presetContainer">
-              <a class="preset4" onclick="applyPreset('preset4')">
-                <div class="preset-box"><img src="/preset4.png" class="presetimg"></div>
-              </a>
-            </div>
-            <div class="presetContainer">
-              <a class="preset5" onclick="applyPreset('preset5')">
-                <div class="preset-box"><img src="/preset5.png" class="presetimg"></div>
-              </a>
-            </div>
-            <div class="presetContainer">
-              <a class="preset6" onclick="applyPreset('preset6')">
-                <div class="preset-box"><img src="/preset6.png" class="presetimg"></div>
-              </a>
-            </div>
-            <div class="presetContainer">
-              <a class="preset7" onclick="applyPreset('preset7')">
-                <div class="preset-box"><img src="/preset7.png" class="presetimg"></div>
-              </a>
-            </div>
-            <div class="presetContainer">
-              <a class="preset8" onclick="applyPreset('preset8')">
-                <div class="preset-box"><img src="/preset8.png" class="presetimg"></div>
-              </a>
-            </div>
-          </div>
+        <div class="navbar-share" onclick="openShareModal()">
+          <i class="fas fa-share"></i>&nbsp;Share
         </div>
+      </div>
+    </div>
 
-        <div id="menu3" class="menu" data-menu-content="menu3">
-          <div class="bgcon">
-            <label class="custom-file-upload">
-              <span>CHOOSE A FILE</span>
-              <input id="imageUpload" type="file" />
-            </label>
+    <!-- pfp handler-->
+    <div class="profile-picture-container">
+      <div class="profile-picture-overlay" id="editOverlay">
+        <i class="fas fa-pencil-alt" id="editIcon"></i>
+      </div>
+      <img src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg"
+        id="profileImage" alt="profile-picture">
+    </div>
 
-            <button class="imgremove" id="removeImageButton">Remove Background Image</button>
-            <!-- <button class="radial"></button> work tomorrow -->
-          </div>
-        </div>
+    <div id="dynamicUsername"></div>
 
-        <!-- Front / no menu view -->
+    <div id="buttonContainer">
+      <!-- Buttons will be dynamically added here -->
+    </div>
 
-        <div class="center-container">
-          <div class="profile">
-            <input type="file" id="profilePicInput" style="display: none;">
-            <img id="profilePic"
-              src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg"
-              alt="Your Profile Picture">
-            <div class="overlay" id="overlay"><i class="editIconProfile">✏</i></div>
-          </div>
+    <button id="addElementButton">Add Element</button>
+  </div>
+  <!-- Include Font Awesome script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"
+    integrity="sha512-GWzVrcGlo0TxTRvz9ttioyYJ+Wwk9Ck0G81D+eO63BaqHaJ3YZX9wuqjwgfcV/MrB2PhaVX9DkYVhbFpStnqpQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-          <div class="username" id="dynamicUsername">Username</div>
-
-          <div class="bio">
-            <div class="textarea-container">
-              <textarea name="bio" class="bioinput" id="bioinput"
-                placeholder="Hey, I am a LinkserV user and this is my bio!" maxlength="200"></textarea>
-              <span class="char-count">0/200</span>
-            </div>
-          </div>
-
-          <div id="button-container">
-            <div id="dynamic-btn-container"></div>
-            <button id="addButton" onclick="createButtonFromAddButton()">Create Button</button>
-          </div>
-        </div>
-
-
-
-        <!-- Modal structure -->
-        <div id="editModal" class="modal">
-          <div class="modal-content">
-            <span class="close" onclick="closeEditModal()">&times;</span>
-            <h2 id="modalTitle"></h2>
-            <p id="modal-text"></p>
-            <div id="edit-section">
-              <label for="button-Name">Button Name:</label>
-              <input type="text" id="button-Name" placeholder="My Awesome Link!">
-
-              <label for="button-URL">Button URL:</label>
-              <input type="text" id="button-URL" placeholder="e.g https://LinkserV.com">
-            </div>
-            <button id="updateButton" onclick="updateLink()">Update Link</button>
-          </div>
-        </div>
-
-
-        <!-- scripts-->
-        <script src="/presets.js"></script>
-        <script src="/dropmenu.js"></script>
-        <script src="/btnprops.js"></script>
-        <script src="/presetApply.js"></script>
-        <script src="/pfp.js"></script>
-        <script src="/imgrender.js"></script>
-        <script src="/dynamic.js"></script>
-        <!---->
-
-
-
-
+  <script src="/dynamic.js"></script>
+  <script src="/share.js"></script>
+  <script src="/pfp.js"></script>
+  <script src="/addElement.js"></script>
 </body>
+
+<div class="modal" id="infoModal">
+  <div id="infoModalContent" class="modal-content">
+    <label for="pageInfo" id="info-label">Page Info:</label>
+    <div class="textarea-container">
+      <textarea id="pageInfo" rows="4" placeholder="Write something about your page or yourself..." maxlength="200"
+        oninput="updateInfo() ; charCount();"></textarea>
+
+      <!-- Character count span -->
+      <span class="char-count">0/200</span>
+    </div>
+
+    <div id="previewSection">
+      <h3>Here's what people will see on your page:</h3>
+      <div id="previewInfo"></div>
+    </div>
+
+    <button onclick="updateInfo()">Save Changes</button>
+    <button class="close-btn" onclick="closeInfoModal()">Close</button>
+  </div>
+</div>
+
+
+<div class="modal" id="shareModal">
+  <div class="modal-content">
+    <span class="close" onclick="closeShareModal()">&times;</span>
+    <h2 id="share-dynamic-text"></h2>
+    <div id="shareModalContent">
+
+      <!-- Add more share buttons as needed -->
+    </div>
+    <div id="copyLinkContainer">
+      <button id="copyLinkInput" onclick="copyLinkToClipboard()">
+        <i class="fa-solid fa-link"></i>
+        <span id="url-address"></span>
+        <span id="copyStatus">Copy</span>
+    </div>
+    <hr class="modal-divider">
+
+    <div class="additional-section">
+      <h3>Create Your Own LinkserV page</h3>
+      <p>Design & Customize with ease</p>
+      <a href="/Signup" class="black-button">Sign Up</a>
+      <a href="/" class="find-out-more-button">Find Out More</a>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="addElementModal">
+  <div class="modal-content" id="element-content">
+    <span class="close" onclick="closeAddElementModal()">&times;</span>
+    <h2>Which element do you want to add?</h2>
+
+    <!-- Example elements to add -->
+    <div class="buttons-container">
+      <button onclick="addElement('button')"><i class="fas fa-square"></i> <span>Add Button</span></button>
+      <button onclick="addElement('textfield')"><i class="fas fa-font"></i><span>Add Text Field</span> </button>
+      <button onclick="addElement('image')"><i class="fas fa-image"></i><span>Add image</span></button>
+      <button onclick="addElement('social')"><i class="fas fa-share-alt"></i><span>Add Social Media Icon</span></button>
+    </div>
+  </div>
+</div>
+
 
 </html>
