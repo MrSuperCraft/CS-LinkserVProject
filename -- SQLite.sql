@@ -60,8 +60,19 @@ CREATE TABLE IF NOT EXISTS settings (
 
 
 
+-- CREATE TABLE IF NOT EXISTS files (
+--     id INTEGER PRIMARY KEY,
+--     filename TEXT,
+--     data BLOB,
+--     mimetype TEXT,
+--     user_id INTEGER,
+--     FOREIGN KEY (user_id) REFERENCES Users(id)
+-- );
+
+
 
 -- View the table data
 SELECT * FROM Users;
 SELECT * FROM contact_submissions;
 SELECT * FROM settings;
+SELECT * FROM files

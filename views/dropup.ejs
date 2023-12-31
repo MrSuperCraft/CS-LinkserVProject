@@ -8,10 +8,10 @@
   <link rel="stylesheet" href="/styles/fonts.css">
   <link rel="stylesheet" href="/styles/scroll.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+
   <title>Linkserv | Your Design Page</title>
 
-  <!-- scripts -->
-  <script src="dynamic.js"></script>
 </head>
 
 <body>
@@ -45,33 +45,40 @@
         </div>
       </div>
     </div>
-
-    <!-- pfp handler-->
-    <div class="profile-picture-container">
-      <div class="profile-picture-overlay" id="editOverlay">
-        <i class="fas fa-pencil-alt" id="editIcon"></i>
+    <div class="profile-content">
+      <!-- pfp handler-->
+      <div class="profile-picture-container">
+        <div class="profile-picture-overlay" id="editOverlay">
+          <i class="fas fa-pencil-alt" id="editIcon"></i>
+        </div>
+        <img src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg"
+          id="profileImage" alt="profile-picture">
       </div>
-      <img src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg"
-        id="profileImage" alt="profile-picture">
+
+      <div id="dynamicUsername"></div>
+      <div id="social-links-dynamic"></div>
     </div>
-
-    <div id="dynamicUsername"></div>
-
     <div id="buttonContainer">
       <!-- Buttons will be dynamically added here -->
     </div>
 
+    <div id="images-container">
+      <!-- The Gallery will be placed here-->
+
+    </div>
     <button id="addElementButton">Add Element</button>
   </div>
   <!-- Include Font Awesome script -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"
     integrity="sha512-GWzVrcGlo0TxTRvz9ttioyYJ+Wwk9Ck0G81D+eO63BaqHaJ3YZX9wuqjwgfcV/MrB2PhaVX9DkYVhbFpStnqpQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="/scripts/share.js"></script>
+  <script src="/scripts/pfp.js"></script>
+  <script src="/scripts/addElement.js"></script>
+  <script src="/scripts/dynamicContent.js" defer></script>
+  <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+  <script src="/scripts/dropzone.js"></script>
 
-  <script src="/dynamic.js"></script>
-  <script src="/share.js"></script>
-  <script src="/pfp.js"></script>
-  <script src="/addElement.js"></script>
 </body>
 
 <div class="modal" id="infoModal">
@@ -136,5 +143,29 @@
   </div>
 </div>
 
+<div class="modal" id="customizeElementModal">
+  <div class="modal-content" id="customize-element-content">
+    <span class="close" onclick="closeCustomizeElementModal()">&times;</span>
+    <h2 id="modalTitle">Customize Element</h2>
+
+    <!-- Text customization section -->
+    <div id="textEditSection">
+      <label for="elementText">Text:</label>
+      <input type="text" id="elementDescription" placeholder="Tip: keep it short!">
+    </div>
+
+    <!-- Image customization section -->
+    <div id="imageEditSection">
+      <label for="elementImage">Image URL:</label>
+      <input type="text" id="imageUrl" placeholder="Or enter a URL...">
+      <form action="/file-upload" id="dropzone" class="dropzone"></form> <!-- Dropzone container -->
+    </div>
+
+    <!-- Overlay for image editing -->
+    <div id="imageOverlay" onclick="enableImageEdit()" style="display: none;">Click to Edit Image</div>
+
+    <button onclick="customizeElement()">Apply Changes</button>
+  </div>
+</div>
 
 </html>

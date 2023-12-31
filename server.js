@@ -2,14 +2,17 @@ const express = require('express');
 const session = require('express-session');
 const app = express();
 const path = require('path');
+const multer = require('multer');
 const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcrypt');
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
 app.use(express.static('resources'));
-app.use(express.static('scripts'));
 app.use(express.static('presets'));
+app.use('/scripts', express.static('scripts'));
+
+
 app.use(express.json());
 
 // SQLite database connection
@@ -73,19 +76,37 @@ app.get('/credits', (req, res) => {
     res.render("credits");
 });
 
-app.use('/design', isAuthenticated);
+app.get('/design', isAuthenticated, (req, res) => {
+    const username = req.session.username;
 
-app.get('/design', (req, res) => {
-    console.log('Session in /design route:', req.session);
-    res.render('dropup', { username: req.session.username });
-});
-
-// Your existing route handling for /design
-app.get('/design/:username', (req, res) => {
-    const { username } = req.params;
+    // Render the page with the retrieved username
     res.render('dropup', { username });
 });
 
+
+app.get('/design/:identifier', async (req, res) => {
+    try {
+        // Properly decode the identifier
+        const decodedIdentifier = decodeURIComponent(req.params.identifier);
+        console.log('Decoded Identifier:', decodedIdentifier);
+
+        // Query the database to get the user based on the email or username
+        const user = await getUserByEmailOrUsername(decodedIdentifier);
+        const username = user.username;
+        if (username) {
+            // Use the retrieved username for rendering the page
+            console.log('User found:', user);
+            res.render('dropup', { username: user.username });
+        } else {
+            // Handle the case when the user is not found
+            console.log('User not found for identifier:', decodedIdentifier);
+            res.render('dropup', { username: 'Guest' }); // You can set a default or handle it as needed
+        }
+    } catch (err) {
+        console.error('Error fetching user:', err);
+        res.status(500).render('500'); // Render an error page for server errors
+    }
+});
 
 function isAuthenticated(req, res, next) {
     console.log('Session in isAuthenticated middleware:', req.session);
@@ -164,7 +185,8 @@ app.post('/authenticate', async (req, res) => {
                 console.log('Session saved successfully.');
 
                 // Redirect after the session is saved
-                return res.status(200).json({ success: true, message: 'Login successful', username: user.username });
+                const redirectRoute = user.isAdmin ? '/admin-panel' : `/design/${encodeURIComponent(user.username)}`;
+                return res.status(200).json({ success: true, message: 'Login successful', redirect: redirectRoute });
             });
         } else {
             console.log('Invalid credentials');
@@ -210,6 +232,13 @@ app.post('/signup', async (req, res) => {
         // Send a JSON response with an error message
         res.status(500).json({ success: false, message: 'Internal Server Error. Please try again later.' });
     }
+    setTimeout(3000);
+});
+
+
+app.get('/get-user-id', (req, res) => {
+    const userId = req.session.userId; // Assuming user ID is stored in the session
+    res.json({ userId });
 });
 
 // Add this route to handle fetching the username
@@ -232,12 +261,36 @@ app.post('/get-username', async (req, res) => {
     }
 });
 
+// Middleware to authenticate the user and set user information in the session
+app.use(async (req, res, next) => {
+    // Check if the username is present in the session
+    if (req.session.username) {
+        try {
+            // Query the database to get the user ID based on the username
+            const user = await getUserByUsername(req.session.username);
+
+            // Check if the user is found and has an ID
+            if (user && user.id) {
+                // Set the user ID in the session
+                req.session.userId = user.id;
+            }
+        } catch (err) {
+            console.error('Error fetching user ID:', err);
+        }
+    }
+
+    // Continue to the next middleware/route handler
+    next();
+});
+
+
+
 // Middleware to check if the username exists in the database
 app.use('/design', isAuthenticated);
 
 // Your existing route handling for /design
 app.get('/design', (req, res) => {
-    res.render('dropup', { username: req.session.username });
+    res.render('dropup');
 });
 
 
@@ -251,7 +304,9 @@ app.get('/logout', (req, res) => {
 // Function to get user by email or username
 async function getUserByEmailOrUsername(identifier) {
     return new Promise((resolve, reject) => {
-        db.get('SELECT Email, Username, Password FROM Users WHERE Email = ? OR Username = ?', [identifier, identifier], (err, row) => {
+        const query = 'SELECT Email, Username, Password FROM Users WHERE Email = ? OR Username = ?';
+        console.log('SQL Query:', query);
+        db.get(query, [identifier, identifier], (err, row) => {
             if (err) {
                 reject(err);
             } else {
@@ -262,28 +317,6 @@ async function getUserByEmailOrUsername(identifier) {
                     email: row ? row.Email : null,
                     username: row ? row.Username : null,
                     password: row ? row.Password : null,
-                };
-
-                resolve(user);
-            }
-        });
-    });
-}
-
-async function getUserByUsername(username) {
-    return new Promise((resolve, reject) => {
-        db.get('SELECT Email, Username, Password, isAdmin FROM Users WHERE Username = ?', [username], (err, row) => {
-            if (err) {
-                reject(err);
-            } else {
-                console.log('Retrieved user row:', row);
-
-                // Ensure the user object has 'email', 'username', 'password', and 'isAdmin' properties
-                const user = {
-                    email: row ? row.Email : null,
-                    username: row ? row.Username : null,
-                    password: row ? row.Password : null,
-                    isAdmin: row ? row.isAdmin : null,
                 };
 
                 resolve(user);
@@ -706,11 +739,88 @@ app.delete('/api/users/:id', isAdminAuthenticated, (req, res) => {
 
 
 
+// API for File Mgmt
+
+
+// Multer storage setup
+const storage = multer.memoryStorage(); // Store files in memory
+const upload = multer({ storage: storage });
+
+app.post('/file-upload', upload.single('file'), async (req, res) => {
+    try {
+        const { originalname, buffer, mimetype } = req.file;
+
+        // Get user ID from the session or any other method you use for authentication
+        const userId = req.session.userId;
+
+        // Store file metadata in the database, associating it with the user's ID
+        const result = await insertFileMetadata(originalname, buffer, mimetype, userId);
+
+        res.json({ message: 'File uploaded successfully', fileId: result.id });
+    } catch (err) {
+        console.error('Error uploading file:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Function to insert file metadata into the database
+function insertFileMetadata(filename, buffer, mimetype, userId) {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO files (filename, data, mimetype, user_id) VALUES (?, ?, ?, ?)';
+
+        db.run(query, [filename, buffer, mimetype, userId], function (err) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve({ id: this.lastID });
+            }
+        });
+    });
+}
+
+// Endpoint to handle file requests
+app.get('/file/:filename', async (req, res) => {
+    const filename = req.params.filename;
+
+    try {
+        // Fetch file data from the database based on the filename
+        db.get('SELECT data, mimetype FROM files WHERE filename = ?', [filename], (err, row) => {
+            if (err) {
+                console.error('Error fetching file data:', err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            if (!row) {
+                console.error('File not found:', filename);
+                return res.status(404).send('File not found');
+            }
+
+            // Set the appropriate content type based on the mimetype
+            res.setHeader('Content-Type', row.mimetype);
+
+            // Send the file data
+            res.send(row.data);
+        });
+    } catch (error) {
+        console.error('Unexpected error:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 
 
 
-// Add the 404 route at the end of your routes
+
+
+
+
+
+
+
+
+
+
+// Now, you can handle other 404 cases or define your regular routes below this middleware
 app.use((req, res) => {
     res.status(404).render('404'); // Assuming '404' is the name of your 404 page
 });

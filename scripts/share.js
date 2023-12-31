@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 
-// Add this section in your dynamic.js file or script section
 function openInfoModal() {
     const infoModal = document.getElementById('infoModal');
     infoModal.style.display = 'block';
