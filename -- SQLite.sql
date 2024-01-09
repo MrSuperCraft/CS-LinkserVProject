@@ -25,21 +25,30 @@ CREATE TABLE IF NOT EXISTS settings (
 
 
 CREATE TABLE IF NOT EXISTS contact_submissions (
-    user_name TEXT,
+    name TEXT,
     Email TEXT,
     Topic TEXT,
     Title TEXT,
     Message TEXT,
+    Status TEXT
+);
+
+
+CREATE TABLE IF NOT EXISTS files (
+    filename TEXT,
+    mime_type TEXT,
+    data BLOB,
+    user_id REFERENCES Users(ID)
 );
 
 
 -- set status: UPDATE contact_submissions SET status = 'Pending';
 
--- INSERT INTO Users (Email, Password, Username, isAdmin)
--- VALUES
--- ('123@gmail.com', '$2a$10$0NtO.PpvJXqJ0gbKl/zIDOCSj37u2YnMZ97CzBQltA5Uox6PLcGK.', 'MrSuperCraft', 1),
--- ('admin@linkserv.com' , '$2a$10$0NtO.PpvJXqJ0gbKl/zIDOCSj37u2YnMZ97CzBQltA5Uox6PLcGK.', 'Admin', 1);
---   ('user3@example.com', '$2b$10$YourHashedPassword3', 'user3', 0),
+--INSERT INTO Users (Email, Password, Username, isAdmin)
+--VALUES
+--('123@gmail.com', '$2a$10$0NtO.PpvJXqJ0gbKl/zIDOCSj37u2YnMZ97CzBQltA5Uox6PLcGK.', 'MrSuperCraft', 1),
+--('admin@linkserv.com' , '$2a$10$sbtrTRVjQURahG1O54Ll5.34Ccz/N3myw0ce7Pahz62j.ruV7o9kG', 'Admin', 1);
+-- ('user3@example.com', '$2b$10$YourHashedPassword3', 'user3', 0);
 --   ('user4@example.com', '$2b$10$YourHashedPassword4', 'user4', 0),
 --   ('user5@example.com', '$2b$10$YourHashedPassword5', 'user5', 0),
 --   ('user6@example.com', '$2b$10$YourHashedPassword6', 'user6', 0),
@@ -67,8 +76,6 @@ CREATE TABLE IF NOT EXISTS contact_submissions (
 --   ('user28@example.com', '$2b$10$YourHashedPassword28', 'user28', 0),
 --   ('user29@example.com', '$2b$10$YourHashedPassword29', 'user29', 0),
 --   ('user30@example.com', '$2b$10$YourHashedPassword30', 'user30', 0);
-
-
 
 
 
