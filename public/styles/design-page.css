@@ -714,6 +714,31 @@ body {
     border-radius: 20px;
 }
 
+
+.gallery-item {
+    position: relative;
+    flex: 0 0 calc(50% - 15px);
+    /* Adjusted to 50% for two items in a row */
+    margin: 15px;
+    box-sizing: border-box;
+    height: 400px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 30px;
+    transition: all 0.2s ease-in-out;
+}
+
+@media (min-width: 768px) {
+    .gallery-item {
+        flex: 0 0 calc(33.33% - 30px);
+        /* Adjusted to include margin for three items in a row */
+    }
+}
+
+.gallery-item:hover {
+    transform: scale(1.03);
+    filter: grayscale(100%);
+}
+
 .gallery-description {
     font-size: 20px;
     margin-top: 0px;
@@ -817,4 +842,223 @@ body {
 
 .gallery-overlay:hover {
     opacity: 1;
+}
+
+.delete-button {
+    background-color: #ff3333;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+
+
+/* Social Media Section Design */
+
+/* Buttons within Modals */
+.buttons-container button {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.buttons-container button:hover {
+    background-color: #45a049;
+}
+
+/* Textarea in Info Modal */
+.textarea-container textarea {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+/* Character count span */
+.char-count {
+    display: block;
+    margin-top: 5px;
+}
+
+
+
+#socialMediaEditSection label,
+#socialMediaEditSection select,
+#socialMediaEditSection input,
+#socialMediaEditSection button {
+    width: 100%;
+    margin-top: 5px;
+}
+
+#buttonPreview,
+.social-media-preview {
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+/* Style for the color picker */
+#color-picker {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+/* Style for the social media icons form */
+#socialMediaEditSection {
+    display: none;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.wrapper {
+    width: calc(100% - 40px);
+    margin: auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 7px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.06);
+}
+
+.wrapper .gradient-box {
+    height: 60px;
+    width: 100%;
+    border-radius: 7px;
+    background: linear-gradient(to left top, #5665E9, #A271F8);
+}
+
+.wrapper .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px 0;
+    justify-content: space-between;
+}
+
+.options p {
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+
+.row .column {
+    width: calc(50% - 10px);
+    margin-bottom: 10px;
+}
+
+.row .column:first-child {
+    margin-bottom: 10px;
+    /* Adjust this value as needed */
+}
+
+.row button {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.options .select-box {
+    border-radius: 5px;
+    padding: 8px 12px;
+    border: 1px solid #aaa;
+}
+
+.select-box select {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    background: none;
+}
+
+
+.colors input {
+    height: 35px;
+    width: calc(50% - 10px);
+    margin-bottom: 10px;
+}
+
+.wrapper textarea {
+    width: 100%;
+    color: #333;
+    font-size: 1rem;
+    resize: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.buttons button {
+    padding: 12px 0;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+@media screen and (max-width: 432px) {
+    .wrapper {
+        width: calc(100% - 30px);
+    }
+
+    .row .column {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+
+    .row button {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .options .select-box {
+        padding: 8px 12px;
+    }
+
+    .options .palette {
+        margin-top: 15px;
+    }
+
+    .colors input {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+}
+
+
+
+.options-card {
+    position: absolute;
+    width: 200px;
+    /* Adjust the width as needed */
+    z-index: 1;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    max-height: 120px;
+    overflow-y: auto;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.options-card div {
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    transition: background-color .3s ease-in-out;
+}
+
+.options-card div:hover {
+    background-color: #ececec;
+}
+
+.options-card div:last-child {
+    border-bottom: none;
 }

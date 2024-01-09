@@ -9,6 +9,15 @@
   <link rel="stylesheet" href="/styles/scroll.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.css" />
+  <!-- Include jQuery before Spectrum -->
+  <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+    integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+  <!-- Include Spectrum script -->
+  <script src="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.js"></script>
+
+
 
   <title>Linkserv | Your Design Page</title>
 
@@ -68,7 +77,9 @@
     </div>
     <button id="addElementButton">Add Element</button>
   </div>
-  <!-- Include Font Awesome script -->
+
+
+  <!-- Scripts & Utils -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"
     integrity="sha512-GWzVrcGlo0TxTRvz9ttioyYJ+Wwk9Ck0G81D+eO63BaqHaJ3YZX9wuqjwgfcV/MrB2PhaVX9DkYVhbFpStnqpQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -78,6 +89,9 @@
   <script src="/scripts/dynamicContent.js" defer></script>
   <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
   <script src="/scripts/dropzone.js"></script>
+  <!-- Include your color picker script after Spectrum -->
+  <script src="/scripts/colorpick.js"></script>
+
 
 </body>
 
@@ -148,24 +162,105 @@
     <span class="close" onclick="closeCustomizeElementModal()">&times;</span>
     <h2 id="modalTitle">Customize Element</h2>
 
-    <!-- Text customization section -->
-    <div id="textEditSection">
-      <label for="elementText">Text:</label>
-      <input type="text" id="elementDescription" placeholder="Tip: keep it short!">
+    <div id="image-modal">
+      <!-- Text customization section -->
+      <div id="textEditSection">
+        <label for="elementText">Text:</label>
+        <input type="text" id="elementDescription" placeholder="Tip: keep it short!">
+      </div>
+
+      <!-- Image customization section -->
+      <div id="imageEditSection">
+        <label for="elementImage">Image URL:</label>
+        <input type="text" id="imageUrl" placeholder="Or enter a URL...">
+        <form action="/file-upload" id="dropzone" class="dropzone"></form> <!-- Dropzone container -->
+      </div>
+
+
+      <button id="applyChangesButton">Apply Changes</button>
     </div>
 
-    <!-- Image customization section -->
-    <div id="imageEditSection">
-      <label for="elementImage">Image URL:</label>
-      <input type="text" id="imageUrl" placeholder="Or enter a URL...">
-      <form action="/file-upload" id="dropzone" class="dropzone"></form> <!-- Dropzone container -->
-    </div>
+    <!-- Social Media Icon customization section -->
+    <div id="socialMediaEditSection" style="display: none;">
 
-    <!-- Overlay for image editing -->
-    <div id="imageOverlay" onclick="enableImageEdit()" style="display: none;">Click to Edit Image</div>
+      <div class="form-group">
+        <label for="socialMediaPlatform">Social Media Platform:</label>
+        <div id="socialMediaSearchContainer"></div>
+        <select id="socialMediaPlatform" class="platform-select">
+          <!-- Social Media -->
+          <option value="facebook">Facebook</option>
+          <option value="twitter">Twitter</option>
+          <option value="instagram">Instagram</option>
+          <option value="linkedin">LinkedIn</option>
+          <option value="youtube">YouTube</option>
+          <option value="pinterest">Pinterest</option>
+          <option value="snapchat">Snapchat</option>
+          <option value="tiktok">TikTok</option>
+          <option value="reddit">Reddit</option>
+          <option value="whatsapp">WhatsApp</option>
+          <option value="behance">Behance</option>
+          <option value="dribbble">Dribbble</option>
 
-    <button onclick="customizeElement()">Apply Changes</button>
-  </div>
-</div>
+          <!-- Music Platforms -->
+          <option value="spotify">Spotify</option>
+          <option value="soundcloud">SoundCloud</option>
+          <option value="apple-music">Apple Music</option>
+          <option value="bandcamp">Bandcamp</option>
+
+          <!-- Forums and Others -->
+          <option value="github">GitHub</option>
+          <option value="discord">Discord</option>
+          <option value="slack">Slack</option>
+          <option value="tumblr">Tumblr</option>
+          <option value="medium">Medium</option>
+          <option value="quora">Quora</option>
+          <option value="stack-overflow">Stack Overflow</option>
+          <option value="steam">Steam</option>
+          <option value="amazon">Amazon</option>
+          <option value="etsy">Etsy</option>
+          <option value="google">Google</option>
+          <option value="paypal">PayPal</option>
+          <option value="twitch">Twitch</option>
+          <option value="telegram">Telegram</option>
+        </select>
+        <div id="optionsDiv"></div>
+      </div>
+
+      <label for="href-text">URL:</label>
+      <input type="url" name="href-text" id="href-text">
+      <div class="form-group">
+
+        <h3>Button Color:</h3>
+        <div class="wrapper">
+          <div class="gradient-box"></div>
+          <div class="row options">
+            <div class="column direction">
+              <p>Direction</p>
+              <div class="select-box">
+                <select>
+                  <option value="to top">Top</option>
+                  <option value="to right top">Right top</option>
+                  <option value="to right">Right</option>
+                  <option value="to right bottom">Right bottom</option>
+                  <option value="to bottom">Bottom</option>
+                  <option value="to left bottom">Left bottom</option>
+                  <option value="to left">Left</option>
+                  <option value="to left top" selected>Left top</option>
+                </select>
+              </div>
+            </div>
+            <div class="column palette">
+              <p>Colors</p>
+              <div class="colors">
+                <input type="color" value="#5665E9">
+                <input type="color" value="#A271F8">
+              </div>
+            </div>
+          </div>
+          <button id="addSocialMediaButton" onclick="">Add Social Media Icon</button>
+        </div>
+
+
+      </div>
 
 </html>
