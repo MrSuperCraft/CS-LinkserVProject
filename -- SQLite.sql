@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS Users (
     ID INTEGER PRIMARY KEY,
     Username TEXT,
     Email TEXT,
-    Password TEXT
+    Password TEXT,
+    isAdmin BOOLEAN
 );
 
 -- Update a user
@@ -23,12 +24,21 @@ CREATE TABLE IF NOT EXISTS settings (
 );
 
 
+CREATE TABLE IF NOT EXISTS contact_submissions (
+    user_name TEXT,
+    Email TEXT,
+    Topic TEXT,
+    Title TEXT,
+    Message TEXT,
+);
+
+
 -- set status: UPDATE contact_submissions SET status = 'Pending';
 
 -- INSERT INTO Users (Email, Password, Username, isAdmin)
 -- VALUES
---   ('user1@example.com', '$2b$10$YourHashedPassword1', 'user1', 0),
---   ('user2@example.com', '$2b$10$YourHashedPassword2', 'user2', 0),
+-- ('123@gmail.com', '$2a$10$0NtO.PpvJXqJ0gbKl/zIDOCSj37u2YnMZ97CzBQltA5Uox6PLcGK.', 'MrSuperCraft', 1),
+-- ('admin@linkserv.com' , '$2a$10$0NtO.PpvJXqJ0gbKl/zIDOCSj37u2YnMZ97CzBQltA5Uox6PLcGK.', 'Admin', 1);
 --   ('user3@example.com', '$2b$10$YourHashedPassword3', 'user3', 0),
 --   ('user4@example.com', '$2b$10$YourHashedPassword4', 'user4', 0),
 --   ('user5@example.com', '$2b$10$YourHashedPassword5', 'user5', 0),
@@ -60,14 +70,6 @@ CREATE TABLE IF NOT EXISTS settings (
 
 
 
--- CREATE TABLE IF NOT EXISTS files (
---     id INTEGER PRIMARY KEY,
---     filename TEXT,
---     data BLOB,
---     mimetype TEXT,
---     user_id INTEGER,
---     FOREIGN KEY (user_id) REFERENCES Users(id)
--- );
 
 
 
@@ -75,4 +77,4 @@ CREATE TABLE IF NOT EXISTS settings (
 SELECT * FROM Users;
 SELECT * FROM contact_submissions;
 SELECT * FROM settings;
-SELECT * FROM files
+SELECT * FROM files;
