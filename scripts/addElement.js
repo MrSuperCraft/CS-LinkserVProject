@@ -373,11 +373,6 @@ function updateGalleryDescription(galleryElement, elementDescription) {
 }
 
 
-function showSocialMediaSection() {
-    document.getElementById('image-modal').style.display = 'none';
-    document.getElementById('imageEditSection').style.display = 'none';
-    document.getElementById('socialMediaEditSection').style.display = 'block';
-}
 
 function showImageSection() {
     document.getElementById('image-modal').style.display = 'block';
@@ -387,164 +382,13 @@ function showImageSection() {
 
 }
 
+function EditSocialMedia() {
+    document.getElementById('image-modal').style.display = 'none';
+    document.getElementById('imageEditSection').style.display = 'none';
+    document.getElementById('socialMediaEditSection').style.display = 'block';
+    document.getElementById('saveChangesButton').style.display = 'block';
+    document.getElementById('addSocialMediaButton').style.display = 'none';
+}
 
-
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Find the select element
-    const platformSelect = document.getElementById('socialMediaPlatform');
-
-    // Hide the original select element
-    platformSelect.style.display = 'none';
-
-    // Add an input element for searching
-    const platformSearch = document.createElement('input');
-    platformSearch.setAttribute('type', 'text');
-    platformSearch.setAttribute('placeholder', 'Search for a platform...');
-    platformSearch.setAttribute('id', 'platformSearch');
-    platformSearch.style.marginBottom = '10px';
-
-    // Create a container for the search input and options card
-    const searchContainer = document.getElementById('socialMediaSearchContainer');
-
-    // Create a container for the options card
-    const optionsCard = document.createElement('div');
-    optionsCard.setAttribute('class', 'options-card');
-
-    // Append the search input and options card to the search container
-    searchContainer.appendChild(platformSearch);
-    searchContainer.appendChild(optionsCard);
-
-    // Event listener for the search input
-    platformSearch.addEventListener('input', function () {
-        const searchTerm = platformSearch.value.toLowerCase();
-
-        // Check if the search input is empty
-        if (searchTerm.trim() === '') {
-            // Hide the options card
-            optionsCard.style.display = 'none';
-        } else {
-            // Filter and display matching options
-            const matchingOptions = Array.from(platformSelect.options).filter(option =>
-                option.text.toLowerCase().includes(searchTerm)
-            );
-
-            displayOptions(matchingOptions);
-        }
-    });
-
-    // Function to display filtered options
-    function displayOptions(options) {
-        // Clear existing options
-        optionsCard.innerHTML = '';
-
-        // Add filtered options
-        options.forEach(option => {
-            const optionItem = document.createElement('div');
-            optionItem.textContent = option.text;
-
-            // Get the icon class for the current platform
-            const iconClass = getIconClass(option.value);
-
-
-            // Create an icon element
-            const iconElement = document.createElement('i');
-            iconElement.setAttribute('class', iconClass);
-            iconElement.style.marginLeft = '8px'; // Adjust the value as needed
-
-
-            // Append the icon and text to the option item
-            optionItem.appendChild(iconElement);
-
-            optionItem.addEventListener('click', function () {
-                // Set the selected option in the hidden select element
-                platformSelect.value = option.value;
-
-                // Trigger the change event manually
-                platformSelect.dispatchEvent(new Event('change'));
-
-                // Update the search input with the selected option
-                platformSearch.value = option.text;
-
-                // Clear the displayed options
-                optionsCard.innerHTML = '';
-            });
-
-            optionsCard.appendChild(optionItem);
-        });
-
-        // Display the options card
-        optionsCard.style.display = 'block';
-    }
-
-
-
-    // Getting icons for the options
-    function getIconClass(platform) {
-        switch (platform) {
-            // Social Media Icons
-            case 'facebook':
-                return 'fab fa-facebook';
-            case 'twitter':
-                return 'fab fa-twitter';
-            case 'instagram':
-                return 'fab fa-instagram';
-            case 'linkedin':
-                return 'fab fa-linkedin';
-            case 'youtube':
-                return 'fab fa-youtube';
-            case 'pinterest':
-                return 'fab fa-pinterest';
-            case 'snapchat':
-                return 'fab fa-snapchat-ghost';
-            case 'tiktok':
-                return 'fab fa-tiktok';
-            case 'reddit':
-                return 'fab fa-reddit';
-            case 'whatsapp':
-                return 'fab fa-whatsapp';
-            // Add more cases for other social media platforms
-
-            // Music Platform Icons
-            case 'spotify':
-                return 'fab fa-spotify';
-            case 'soundcloud':
-                return 'fab fa-soundcloud';
-            case 'apple-music':
-                return 'fab fa-apple';
-            case 'google-play-music':
-                return 'fab fa-google-play';
-            case 'amazon-music':
-                return 'fab fa-amazon';
-            // Add more cases for other music platforms
-
-            // Other Icons
-            case 'github':
-                return 'fab fa-github';
-            case 'discord':
-                return 'fab fa-discord';
-            case 'medium':
-                return 'fab fa-medium';
-            case 'twitch':
-                return 'fab fa-twitch';
-            case 'steam':
-                return 'fab fa-steam';
-            case 'stack overflow':
-                return 'fa-brands fa-stack-overflow';
-            case 'etsy':
-                return 'fa-brands fa-etsy';
-            case 'telegram':
-                return 'fa-brands fa-telegram';
-
-            // Add more cases for other platforms
-
-            // Default icon if no match is found
-            default:
-                return 'fas fa-question-circle'; // or any default icon you prefer
-        }
-    }
-});
 
 

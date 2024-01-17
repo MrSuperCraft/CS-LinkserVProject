@@ -32,7 +32,7 @@
       <li><a href="#" class="menu-link"><i class="fas fa-paint-brush"></i> Design</a></li>
       <li><a href="#" class="menu-link"><i class="fas fa-palette"></i> Presets</a></li>
       <li><a href="#" class="menu-link"><i class="fas fa-image"></i> Background</a></li>
-      <li><a href="#" class="menu-link"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
+      <li><a href="/logout" class="menu-link"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
 
       <!-- Add more menu items as needed -->
     </ul>
@@ -65,7 +65,7 @@
       </div>
 
       <div id="dynamicUsername"></div>
-      <div id="social-links-dynamic"></div>
+      <div id="social-links-dynamic" style="margin-top: 50px;"></div>
     </div>
     <div id="buttonContainer">
       <!-- Buttons will be dynamically added here -->
@@ -91,6 +91,7 @@
   <script src="/scripts/dropzone.js"></script>
   <!-- Include your color picker script after Spectrum -->
   <script src="/scripts/colorpick.js"></script>
+  <script src="/scripts/socialMedia.js"></script>
 
 
 </body>
@@ -160,7 +161,7 @@
 <div class="modal" id="customizeElementModal">
   <div class="modal-content" id="customize-element-content">
     <span class="close" onclick="closeCustomizeElementModal()">&times;</span>
-    <h2 id="modalTitle">Customize Element</h2>
+    <h2 id="modalTitle" style="margin: 3px;">Customize Element</h2>
 
     <div id="image-modal">
       <!-- Text customization section -->
@@ -212,13 +213,10 @@
           <option value="discord">Discord</option>
           <option value="slack">Slack</option>
           <option value="tumblr">Tumblr</option>
-          <option value="medium">Medium</option>
           <option value="quora">Quora</option>
           <option value="stack-overflow">Stack Overflow</option>
           <option value="steam">Steam</option>
-          <option value="amazon">Amazon</option>
           <option value="etsy">Etsy</option>
-          <option value="google">Google</option>
           <option value="paypal">PayPal</option>
           <option value="twitch">Twitch</option>
           <option value="telegram">Telegram</option>
@@ -230,7 +228,7 @@
       <input type="url" name="href-text" id="href-text">
       <div class="form-group">
 
-        <h3>Button Color:</h3>
+        <h3 style="margin: 0;">Button Color:</h3>
         <div class="wrapper">
           <div class="gradient-box"></div>
           <div class="row options">
@@ -257,9 +255,15 @@
               </div>
             </div>
           </div>
-          <button id="addSocialMediaButton" onclick="">Add Social Media Icon</button>
         </div>
 
+        <!-- Icon color modifier -->
+        <div class="icon-color" style="display: none;">
+          <p>Icon Color</p>
+          <input type="color" id="iconColor" value="#FFFFFF">
+        </div>
+        <button id="addSocialMediaButton">Add Social Media Icon</button>
+        <button id="saveChangesButton" style="display: none">Save Changes</button>
 
       </div>
 

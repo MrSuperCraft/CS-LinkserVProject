@@ -942,7 +942,6 @@ body {
 .wrapper .row {
     display: flex;
     flex-wrap: wrap;
-    margin: 20px 0;
     justify-content: space-between;
 }
 
@@ -972,6 +971,10 @@ body {
     border: 1px solid #aaa;
 }
 
+.select-box {
+    position: relative;
+}
+
 .select-box select {
     width: 100%;
     border: none;
@@ -980,6 +983,12 @@ body {
     background: none;
 }
 
+#selectedDirection {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+}
 
 .colors input {
     height: 35px;
@@ -1061,4 +1070,46 @@ body {
 
 .options-card div:last-child {
     border-bottom: none;
+}
+
+
+#social-links-dynamic {
+    width: 500px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.social-button-container {
+    position: relative;
+    width: 80px;
+    /* Adjust the width as needed */
+    height: 80px;
+    /* Adjust the height as needed */
+    /* Add any other necessary styles */
+}
+
+.social-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    font-size: 30px;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    /* Adjust the background color and opacity as needed */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    /* Initially invisible */
+    transition: opacity 0.3s ease;
+    /* Add a smooth transition effect */
+    cursor: pointer;
+}
+
+.social-overlay:hover {
+    opacity: 1;
 }

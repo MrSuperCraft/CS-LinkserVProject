@@ -1,15 +1,20 @@
-document.addEventListener('input', function (event) {
-    if (event.target.matches('.palette input')) {
-        updateGradientPreview();
-    }
-});
-
-function updateGradientPreview() {
-    const colors = document.querySelectorAll('.palette input');
-    const direction = document.querySelector('.select-box select').value;
+document.addEventListener('DOMContentLoaded', () => {
+    const paletteInputs = document.querySelectorAll('.palette input');
+    const directionSelect = document.querySelector('.direction select');
     const gradientBox = document.querySelector('.gradient-box');
 
-    const gradientColors = Array.from(colors).map(colorInput => colorInput.value).join(', ');
+    // Event listener for palette inputs and direction select
+    document.querySelector('.row.options').addEventListener('input', function (event) {
+        if (event.target.matches('.palette input') || event.target.matches('.direction select')) {
+            updateGradientPreview();
+        }
+    });
 
-    gradientBox.style.background = `linear-gradient(${direction}, ${gradientColors})`;
-}
+    // Function to update gradient preview
+    function updateGradientPreview() {
+        const gradientColors = Array.from(paletteInputs).map(colorInput => colorInput.value).join(', ');
+        const selectedDirection = directionSelect.value;
+
+        gradientBox.style.background = `linear-gradient(${selectedDirection}, ${gradientColors})`;
+    }
+});
