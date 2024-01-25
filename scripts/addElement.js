@@ -58,8 +58,21 @@ function addElement(type) {
 
     if (type === 'image') {
         showImageSection();
+
     } else if (type === 'social') {
+        // Reset values in the modal
+        document.getElementById('platformSearch').value = '';  // Reset platform input
+        document.getElementById('href-text').value = '';  // Reset URL input
+        document.querySelectorAll('.colors input')[0].value = '#5665E9';  // Reset color1 to default color
+        document.querySelectorAll('.colors input')[1].value = '#A271F8';  // Reset color2 to default color
+        const directionSelect = document.querySelector('.select-box select');
+        directionSelect.value = 'to left top';
+
         showSocialMediaSection();
+
+
+    } else if (type === 'textfield') {
+        showTextFieldSection();
     }
 }
 
@@ -390,5 +403,9 @@ function EditSocialMedia() {
     document.getElementById('addSocialMediaButton').style.display = 'none';
 }
 
-
-
+function showTextFieldSection() {
+    document.getElementById('image-modal').style.display = 'none';
+    document.getElementById('socialMediaEditSection').style.display = 'none';
+    document.getElementById('textColorSection').style.display = 'none';
+    document.getElementById('textFieldSection').style.display = 'block';
+}

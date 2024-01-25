@@ -11,6 +11,7 @@
   <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" type="text/css"
     href="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.css" />
+  <link rel="stylesheet" href="/styles/colors.css">
   <!-- Include jQuery before Spectrum -->
   <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
     integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
@@ -234,7 +235,7 @@
           <div class="row options">
             <div class="column direction">
               <p>Direction</p>
-              <div class="select-box">
+              <div class="select-box" id="directionSelect">
                 <select>
                   <option value="to top">Top</option>
                   <option value="to right top">Right top</option>
@@ -258,13 +259,97 @@
         </div>
 
         <!-- Icon color modifier -->
-        <div class="icon-color" style="display: none;">
-          <p>Icon Color</p>
-          <input type="color" id="iconColor" value="#FFFFFF">
+        <div id="textColorSection" style="display: none;">
+          <div class="form-group">
+            <label for="text-color">Icon Color:</label>
+            <div id="textColorSearchContainer"></div>
+            <select id="text-color" class="text-color-select">
+              <!-- Generated color options with classes -->
+              <option value="plain-white" data-demo="white">Plain White</option>
+              <option value="pastel-red" data-demo="Pastel Red">Pastel Red</option>
+              <option value="pastel-orange" data-demo="Pastel Orange">Pastel Orange</option>
+              <option value="pastel-yellow" data-demo="Pastel Yellow">Pastel Yellow</option>
+              <option value="pastel-green" data-demo="Pastel Green">Pastel Green</option>
+              <option value="pastel-blue" data-demo="Pastel Blue">Pastel Blue</option>
+              <option value="lavender" data-demo="Lavender">Lavender</option>
+              <option value="mint-green" data-demo="Mint Green">Mint Green</option>
+              <option value="peach" data-demo="Peach">Peach</option>
+              <option value="sky-blue" data-demo="Sky Blue">Sky Blue</option>
+              <option value="rose-pink" data-demo="Rose Pink">Rose Pink</option>
+              <option value="aqua" data-demo="Aqua">Aqua</option>
+              <option value="lilac" data-demo="Lilac">Lilac</option>
+              <option value="coral" data-demo="Coral">Coral</option>
+              <option value="sunflower-yellow" data-demo="Sunflower Yellow">Sunflower Yellow</option>
+              <option value="turquoise" data-demo="Turquoise">Turquoise</option>
+              <option value="cherry-blossom-pink" data-demo="Cherry Blossom Pink">Cherry Blossom Pink</option>
+              <option value="pearl-white" data-demo="Pearl White">Pearl White</option>
+              <option value="sage-green" data-demo="Sage Green">Sage Green</option>
+              <option value="mustard-yellow" data-demo="Mustard Yellow">Mustard Yellow</option>
+              <option value="teal" data-demo="Teal">Teal</option>
+              <option value="blush" data-demo="Blush">Blush</option>
+              <option value="periwinkle" data-demo="Periwinkle">Periwinkle</option>
+              <option value="amber" data-demo="Amber">Amber</option>
+              <option value="slate-gray" data-demo="Slate Gray">Slate Gray</option>
+              <option value="burgundy" data-demo="Burgundy">Burgundy</option>
+              <option value="ivory" data-demo="Ivory">Ivory</option>
+              <option value="olive" data-demo="Olive">Olive</option>
+              <option value="crimson" data-demo="Crimson">Crimson</option>
+              <option value="powder-blue" data-demo="Powder Blue">Powder Blue</option>
+              <option value="sepia" data-demo="Sepia">Sepia</option>
+              <option value="azure" data-demo="Azure">Azure</option>
+              <option value="marigold" data-demo="Marigold">Marigold</option>
+              <option value="sienna" data-demo="Sienna">Sienna</option>
+              <option value="mauve" data-demo="Mauve">Mauve</option>
+              <option value="charcoal" data-demo="Charcoal">Charcoal</option>
+              <option value="tangerine" data-demo="Tangerine">Tangerine</option>
+              <option value="eggshell" data-demo="Eggshell">Eggshell</option>
+              <option value="cobalt-blue" data-demo="Cobalt Blue">Cobalt Blue</option>
+              <option value="magenta" data-demo="Magenta">Magenta</option>
+              <option value="pistachio" data-demo="Pistachio">Pistachio</option>
+              <option value="topaz" data-demo="Topaz">Topaz</option>
+              <option value="cyan" data-demo="Cyan">Cyan</option>
+              <option value="brick-red" data-demo="Brick Red">Brick Red</option>
+              <option value="emerald-green" data-demo="Emerald Green">Emerald Green</option>
+              <option value="plum" data-demo="Plum">Plum</option>
+              <option value="coral-pink" data-demo="Coral Pink">Coral Pink</option>
+              <option value="caramel" data-demo="Caramel">Caramel</option>
+              <option value="mulberry" data-demo="Mulberry">Mulberry</option>
+              <option value="steel-blue" data-demo="Steel Blue">Steel Blue</option>
+              <option value="goldenrod" data-demo="Goldenrod">Goldenrod</option>
+              <!-- Add more color options as needed -->
+            </select>
+          </div>
         </div>
-        <button id="addSocialMediaButton">Add Social Media Icon</button>
-        <button id="saveChangesButton" style="display: none">Save Changes</button>
-
       </div>
+      <button id="addSocialMediaButton">Add Social Media Icon</button>
+      <button id="saveChangesButton" style="display: none">Save Changes</button>
+      <button id="socialDelete" style="display: none; background-color: rgb(170, 16, 16);"
+        onclick="deleteSocialMediaButton()">Delete <i class="fa-solid fa-trash"></i></button>
+
+    </div>
+
+    <div id="textFieldSection" style="display: none;">
+
+      <h3>Add Your Text Field</h3>
+
+      <!-- Text field form -->
+      <form id="textFieldForm">
+        <div class="form-group">
+          <label for="textFieldTitle">Title:</label>
+          <input type="text" id="textFieldTitle" placeholder="Enter title">
+        </div>
+
+        <div class="form-group">
+          <label for="text">
+          </label>
+        </div>
+
+        <!-- Additional options can be added as needed -->
+
+        <button type="button" onclick="createTextField()">Create Text Field</button>
+      </form>
+
+    </div>
+  </div>
 
 </html>

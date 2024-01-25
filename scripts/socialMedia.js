@@ -33,6 +33,8 @@ function EditSocialMedia() {
     document.getElementById('socialMediaEditSection').style.display = 'block';
     document.getElementById('saveChangesButton').style.display = 'block';
     document.getElementById('addSocialMediaButton').style.display = 'none';
+    document.getElementById('socialDelete').style.display = 'block';
+
 }
 
 function showSocialMediaSection() {
@@ -41,14 +43,21 @@ function showSocialMediaSection() {
     document.getElementById('socialMediaEditSection').style.display = 'block';
     document.getElementById('addSocialMediaButton').style.display = 'block';
     document.getElementById('saveChangesButton').style.display = 'none';
+    document.getElementById('textColorSection').style.display = 'none';
+    document.getElementById('socialDelete').style.display = 'none';
+
+
 }
 
 function enableSocialEdit() {
     document.getElementById('image-modal').style.display = 'none';
+    document.getElementById('modalTitle').innerText = 'Customize Your Icon';
     document.getElementById('imageEditSection').style.display = 'none';
     document.getElementById('socialMediaEditSection').style.display = 'block';
     document.getElementById('addSocialMediaButton').style.display = 'none';
+    document.getElementById('textColorSection').style.display = 'block';
     document.getElementById('saveChangesButton').style.display = 'block';
+    document.getElementById('socialDelete').style.display = 'block';
 }
 
 
@@ -168,13 +177,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
-
 // Function to create a social media button
-function createSocialMediaButton(platform, url, direction, color1, color2) {
+function createSocialMediaButton(platform, url, direction, color1, color2, textColorClass = 'plain-white') {
     // Create a container for the button and overlay
     const buttonContainer = document.createElement('div');
     buttonContainer.classList.add('social-button-container');
+    buttonContainer.dataset.platform = platform;  // Set the dataset property
+
+    const textColor = getCustomColor(textColorClass);
 
     // Create an overlay div
     const overlay = document.createElement('div');
@@ -194,11 +204,14 @@ function createSocialMediaButton(platform, url, direction, color1, color2) {
     buttonLink.style.justifyContent = 'center';
     buttonLink.style.textDecoration = 'none'; // Remove underline from the link
 
-    // Create an icon element
+
+    // Create an icon element as an i element
     const iconElement = document.createElement('i');
-    iconElement.className = getIconClass(platform);
+    iconElement.className = getIconClass(platform); // Update the icon class based on the platform
     iconElement.style.color = 'white';
     iconElement.style.fontSize = '30px'; // Adjust the font size as needed
+    iconElement.style.color = textColor; // Set the text color dynamically
+
 
     // Append the icon to the anchor element
     buttonLink.appendChild(iconElement);
@@ -215,26 +228,31 @@ function createSocialMediaButton(platform, url, direction, color1, color2) {
     // Add click event listener to the overlay
     overlay.addEventListener('click', function (event) {
         event.stopPropagation(); // Prevent the click from reaching the button
-        openEditSocialMediaModal(buttonContainer, platform, url, color1, color2, direction);
-    });
 
+        // Analyze the gradient and select the corresponding option
+        analyzeAndSelectGradient(directionSelect);
+
+        // Open the edit modal
+        openEditSocialMediaModal(buttonContainer, platform, url, color1, color2, direction);
+        console.log(openEditSocialMediaModal(buttonContainer, platform, url, color1, color2, direction));
+    });
 
     return buttonContainer;
 }
 
+
 // Event listener for the "Add Social Media Icon" button in Customize Element modal
 window.addEventListener('load', (event) => {
     const addSocialMediaButton = document.getElementById('addSocialMediaButton');
-    console.log(addSocialMediaButton);
 
     addSocialMediaButton.addEventListener('click', function () {
         // Retrieve values from the inputs
-        const platform = document.getElementById('socialMediaPlatform').value;
-        const url = document.getElementById('href-text').value;
+        const platform = document.getElementById('socialMediaPlatform').value || 'facebook';
+        const url = document.getElementById('href-text').value || 'https://example.com';
         const directionSelect = document.querySelector('.select-box select');
         const direction = directionSelect.value || 'Left Top'; // Default to 'Left Top' if no direction is selected
-        const color1 = document.querySelectorAll('.colors input')[0].value;
-        const color2 = document.querySelectorAll('.colors input')[1].value;
+        const color1 = document.querySelectorAll('.colors input')[0].value || '#5665E9';
+        const color2 = document.querySelectorAll('.colors input')[1].value || '#A271F8';
 
         // Create a new button element
         const newSocialMediaButton = createSocialMediaButton(platform, url, direction, color1, color2);
@@ -258,23 +276,43 @@ window.addEventListener('load', (event) => {
     });
 });
 
-function openEditSocialMediaModal(buttonContainer, platform, url, color1, color2) {
+function openEditSocialMediaModal(buttonContainer, platform, url, color1, color2, direction) {
+    // Save the current search value
+    const currentSearchValue = document.getElementById('platformSearch').value;
+
     // Populate your modal with the values
     document.getElementById('socialMediaPlatform').value = platform;
     document.getElementById('href-text').value = url;
 
+    console.log('Platform before updating icon:', platform);
+
     // Find the select element for direction
     const directionSelect = document.querySelector('.select-box select');
 
+    console.log('Icon class before update:', getIconClass(platform));
+
+    // Retrieve the data-platform attribute
+    const dataPlatform = buttonContainer.dataset.platform;
+    console.log('Data Platform:', dataPlatform);
+
     // Find the option with the specified value
-    const selectedOption = Array.from(directionSelect.options).find(option => option.text === platform);
+    const selectedOption = Array.from(directionSelect.options).find(option => option.text.toLowerCase() === direction.toLowerCase());
 
     // Set the selected attribute for the found option
     if (selectedOption) {
-        selectedOption.selected = true;
+        // Update the platform based on the selected option
+        directionSelect.value = selectedOption.value;  // Update the direction based on the selected option
+        directionSelect.dispatchEvent(new Event('change'));
+
+        // Directly set the platform input value
+        document.getElementById('socialMediaPlatform').value = dataPlatform || 'facebook';
     } else {
         // If the option is not found, set a default value or handle it as needed
         directionSelect.value = 'Left Top';
+        directionSelect.dispatchEvent(new Event('change'));
+
+        // Directly set the platform input value to the default
+        document.getElementById('socialMediaPlatform').value = 'facebook'; // or any default platform
     }
 
     // Trigger the change event
@@ -283,18 +321,11 @@ function openEditSocialMediaModal(buttonContainer, platform, url, color1, color2
     document.querySelectorAll('.colors input')[0].value = color1;
     document.querySelectorAll('.colors input')[1].value = color2;
 
-    // Set default direction if no direction is selected
-    if (!directionSelect.value) {
-        directionSelect.value = 'Left Top';
-        directionSelect.dispatchEvent(new Event('change'));
-    }
-
     // Analyze the current gradient and automatically select the corresponding option
     analyzeAndSelectGradient(directionSelect);
 
-    // Clear other inputs
-    document.getElementById('platformSearch').value = ''; // Assuming this is the search input
-    // Add more input clearing if needed
+    // Restore the search value
+    document.getElementById('platformSearch').value = currentSearchValue;
 
     enableSocialEdit();
 
@@ -305,29 +336,45 @@ function openEditSocialMediaModal(buttonContainer, platform, url, color1, color2
     openCustomizeElementModal();
 }
 
+
 // Function to analyze the current gradient and automatically select the corresponding option
 function analyzeAndSelectGradient(directionSelect) {
     const editingContainer = document.querySelector('.social-button-container.editing');
 
-    if (editingContainer) {
+
+    if (editingContainer && directionSelect) {
         const editedButtonLink = editingContainer.querySelector('a');
         const computedStyle = window.getComputedStyle(editedButtonLink);
-        const gradient = computedStyle.backgroundImage;
 
-        // Extract direction from gradient
-        const directionMatch = gradient.match(/to\s(\w+(\s\w+)*)/i);
-        const direction = directionMatch ? directionMatch[1].replace(/\s/g, ' ') : 'Left Top';
+        // Extract the background image value
+        const backgroundImageValue = computedStyle.backgroundImage;
 
-        // Find the option with the determined direction
-        const matchingOption = Array.from(directionSelect.options).find(option =>
-            option.text.toLowerCase().includes(direction.toLowerCase())
-        );
+        console.log('Background Image:', backgroundImageValue); // Log the background image value
 
-        // Set the selected attribute for the found option
-        if (matchingOption) {
-            // Set the selected attribute for the found option
-            directionSelect.value = matchingOption.value;
-            directionSelect.dispatchEvent(new Event('change'));
+        // Check if the background image contains the gradient keyword
+        if (backgroundImageValue.includes('linear-gradient')) {
+            console.log('Contains Linear Gradient!');
+
+            // Extract direction from gradient using a regex
+            const directionMatch = backgroundImageValue.match(/to\s(\w+(\s\w+)*)/i);
+            const direction = directionMatch ? directionMatch[1].replace(/\s/g, ' ') : 'Left Top';
+
+            console.log('Extracted Direction:', direction); // Log the extracted direction
+
+            // Check if directionSelect has options
+            if (directionSelect.options) {
+                // Find the option with the determined direction
+                const matchingOption = Array.from(directionSelect.options).find(option =>
+                    option.text.toLowerCase().includes(direction.toLowerCase())
+                );
+
+                // Log the matching option
+                console.log('Matching Option:', matchingOption);
+
+                // Set the selected attribute for the found option
+                directionSelect.value = matchingOption ? matchingOption.value : '';
+                directionSelect.dispatchEvent(new Event('change'));
+            }
         }
     }
 }
@@ -344,28 +391,31 @@ function saveChanges() {
     const color1 = document.querySelectorAll('.colors input')[0].value;
     const color2 = document.querySelectorAll('.colors input')[1].value;
 
+    // Add this line to retrieve the text color value
+    const textColor = document.querySelectorAll('#text-color')[0].value;
+
     // Find the edited social media button container
     const editingContainer = document.querySelector('.social-button-container.editing');
 
     // Check if the element exists before trying to modify it
     if (editingContainer) {
-        const editedButtonLink = editingContainer.querySelector('a');
-        const editedIconElement = editedButtonLink.querySelector('i');
+        // Remove the existing button
+        editingContainer.remove();
 
-        // Update the button link with the new values
-        editedButtonLink.href = url.startsWith('http') ? url : `http://${url}`;
-        editedButtonLink.style.background = `linear-gradient(${direction}, ${color1}, ${color2})`;
+        // Create a new button element with the updated values, including textColor
+        const newSocialMediaButton = createSocialMediaButton(platform, url, direction, color1, color2, textColor);
 
-        // Update the icon element with the new platform icon
-        editedIconElement.className = getIconClass(platform);
+        console.log("The selected color is:" + textColor);
 
-        // Remove the 'editing' class to indicate that the button has been saved
-        editingContainer.classList.remove('editing');
+        // Add the new button to your page or container
+        document.getElementById('buttonContainer').appendChild(newSocialMediaButton);
 
+        console.log('changes saved.')
         // Close the modal
-        closeCustomizeElementModal();
+        setTimeout(closeCustomizeElementModal, 200);
     }
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
     // Add an event listener for the "Save Changes" button in the modal
@@ -391,41 +441,7 @@ buttonContainer.addEventListener('click', function () {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Getting icons for the options
+// Function to get icon class for the specified platform
 function getIconClass(platform) {
     switch (platform) {
         // Social Media Icons
@@ -453,44 +469,44 @@ function getIconClass(platform) {
 
         // Music Platform Icons
         case 'spotify':
-            return 'fa-brands fa-spotify';
+            return 'fab fa-spotify';
         case 'soundcloud':
-            return 'fa-brands fa-soundcloud';
+            return 'fab fa-soundcloud';
         case 'apple-music':
-            return 'fa-brands fa-apple';
+            return 'fab fa-apple';
         case 'google-play-music':
-            return 'fa-brands fa-google-play';
+            return 'fab fa-google-play';
         case 'amazon-music':
-            return 'fa-brands fa-amazon';
+            return 'fab fa-amazon';
         // Add more cases for other music platforms
 
         // Other Icons
         case 'github':
-            return 'fa-brands fa-github';
+            return 'fab fa-github';
         case 'discord':
-            return 'fa-brands fa-discord';
+            return 'fab fa-discord';
         case 'medium':
-            return 'fa-brands fa-medium';
+            return 'fab fa-medium';
         case 'twitch':
-            return 'fa-brands fa-twitch';
+            return 'fab fa-twitch';
         case 'steam':
-            return 'fa-brands fa-steam';
+            return 'fab fa-steam';
         case 'stack-overflow':
-            return 'fa-brands fa-stack-overflow';
+            return 'fab fa-stack-overflow';
         case 'etsy':
-            return 'fa-brands fa-etsy';
+            return 'fab fa-etsy';
         case 'telegram':
-            return 'fa-brands fa-telegram';
+            return 'fab fa-telegram';
         case 'slack':
-            return 'fa-brands fa-slack';
+            return 'fab fa-slack';
         case 'behance':
-            return 'fa-brands fa-behance';
+            return 'fab fa-behance';
         case 'quora':
-            return 'fa-brands fa-quora';
+            return 'fab fa-quora';
         case 'paypal':
-            return 'fa-brands fa-paypal';
+            return 'fab fa-paypal';
         case 'bandcamp':
-            return 'fa-brands fa-bandcamp';
+            return 'fab fa-bandcamp';
         // Add more cases for other platforms
 
         // Default icon if no match is found
@@ -498,3 +514,391 @@ function getIconClass(platform) {
             return 'fas fa-question-circle'; // or any default icon you prefer
     }
 }
+
+
+
+// Function to update the icon
+function updateIcon(platform) {
+    const iconClass = getIconClass(platform);
+    const socialButton = document.querySelector('.social-button-container.editing');
+
+    // Remove existing icon (both SVG and i element)
+    const existingIcon = socialButton.querySelector('svg');
+    if (existingIcon) {
+        existingIcon.remove();
+    }
+
+    // Create and append the new SVG element
+    const newIcon = createSvgElement(iconClass);
+    socialButton.appendChild(newIcon);
+}
+
+// Function to create an SVG element based on the platform
+function createSvgElement(iconClass) {
+    const div = document.createElement('div');
+    div.innerHTML = `<i class="${iconClass}"></i>`;
+    return div.firstChild;
+}
+
+
+function deleteSocialMediaButton() {
+
+    const buttonContainer = document.querySelector('.social-button-container.editing');
+    // Check if the element exists before trying to remove it
+    if (buttonContainer) {
+        // Remove the button container
+        buttonContainer.remove();
+
+        // Optionally, add any additional cleanup logic here
+
+        console.log('Button deleted.');
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//  Manually define custom color classes and their hex values
+const customColorClasses = [
+    { name: 'pastel-red', hex: '#FF6E70' },
+    { name: 'pastel-orange', hex: '#FFA07A' },
+    { name: 'pastel-yellow', hex: '#FFD700' },
+    { name: 'pastel-green', hex: '#98FB98' },
+    { name: 'pastel-blue', hex: '#ADD8E6' },
+    { name: 'lavender', hex: '#E6E6FA' },
+    { name: 'mint-green', hex: '#98FF98' },
+    { name: 'peach', hex: '#FFDAB9' },
+    { name: 'sky-blue', hex: '#87CEEB' },
+    { name: 'rose-pink', hex: '#FFB6C1' },
+    { name: 'aqua', hex: '#00FFFF' },
+    { name: 'lilac', hex: '#C8A2C8' },
+    { name: 'coral', hex: '#FF7F50' },
+    { name: 'sunflower-yellow', hex: '#FFD700' },
+    { name: 'turquoise', hex: '#40E0D0' },
+    { name: 'cherry-blossom-pink', hex: '#FFB6C1' },
+    { name: 'pearl-white', hex: '#FFF' },
+    { name: 'sage-green', hex: '#9ACD32' },
+    { name: 'mustard-yellow', hex: '#FFDB58' },
+    { name: 'teal', hex: '#008080' },
+    { name: 'blush', hex: '#DE5D83' },
+    { name: 'periwinkle', hex: '#CCCCFF' },
+    { name: 'amber', hex: '#FFBF00' },
+    { name: 'slate-gray', hex: '#708090' },
+    { name: 'burgundy', hex: '#800000' },
+    { name: 'ivory', hex: '#FFFFF0' },
+    { name: 'olive', hex: '#808000' },
+    { name: 'crimson', hex: '#DC143C' },
+    { name: 'powder-blue', hex: '#B0E0E6' },
+    { name: 'sepia', hex: '#704214' },
+    { name: 'azure', hex: '#007FFF' },
+    { name: 'marigold', hex: '#FFD700' },
+    { name: 'sienna', hex: '#A0522D' },
+    { name: 'mauve', hex: '#E0B0FF' },
+    { name: 'charcoal', hex: '#36454F' },
+    { name: 'tangerine', hex: '#FFA500' },
+    { name: 'eggshell', hex: '#FFF4E1' },
+    { name: 'cobalt-blue', hex: '#0047AB' },
+    { name: 'magenta', hex: '#FF00FF' },
+    { name: 'pistachio', hex: '#93C572' },
+    { name: 'topaz', hex: '#FFD700' },
+    { name: 'cyan', hex: '#00FFFF' },
+    { name: 'brick-red', hex: '#FF4500' },
+    { name: 'emerald-green', hex: '#008000' },
+    { name: 'plum', hex: '#8E4585' },
+    { name: 'coral-pink', hex: '#FF6F74' },
+    { name: 'caramel', hex: '#FFD700' },
+    { name: 'mulberry', hex: '#C8509B' },
+    { name: 'steel-blue', hex: '#4682B4' },
+    { name: 'goldenrod', hex: '#DAA520' },
+    { name: 'plain-white', hex: '#FFF' }
+];
+
+// Function to get the corresponding color from customColorClasses
+function getCustomColor(value) {
+    const colorObject = customColorClasses.find(color => color.name === value);
+    return colorObject ? colorObject.hex : '#000'; // Default to black if not found
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Find the select element
+    const colorSelect = document.getElementById('text-color');
+
+    // Hide the original select element
+    colorSelect.style.display = 'none';
+
+    // Add an input element for searching
+    const colorSearch = document.createElement('input');
+    colorSearch.setAttribute('type', 'text');
+    colorSearch.setAttribute('placeholder', 'Search for a color...');
+    colorSearch.setAttribute('id', 'colorSearch');
+    colorSearch.style.marginBottom = '10px';
+
+    // Create a container for the search input and options card
+    const searchContainer = document.getElementById('textColorSearchContainer');
+    const optionsCard = document.createElement('div');
+    optionsCard.setAttribute('class', 'options-card');
+    optionsCard.style.width = '300px';
+    optionsCard.style.overflowX = 'hidden'; // Add this line to hide the sideways scrollbar
+
+    // Append the search input and options card to the search container
+    searchContainer.appendChild(colorSearch);
+    searchContainer.appendChild(optionsCard);
+
+    // Event listener for the search input
+    colorSearch.addEventListener('input', function () {
+        const searchTerm = colorSearch.value.toLowerCase();
+
+        // Check if the search input is empty
+        if (searchTerm.trim() === '') {
+            // Hide the options card
+            optionsCard.style.display = 'none';
+        } else {
+            // Filter and display matching options
+            const matchingOptions = Array.from(colorSelect.options).filter(option =>
+                option.textContent.toLowerCase().includes(searchTerm)
+            );
+
+            displayOptions(matchingOptions);
+        }
+    });
+
+    // Function to display filtered options
+    function displayOptions(options) {
+        // Clear existing options
+        optionsCard.innerHTML = '';
+
+        // Add filtered options
+        options.forEach(option => {
+            const optionItem = document.createElement('div');
+            optionItem.style.width = '280px';
+            optionItem.style.padding = '8px';
+            optionItem.style.boxSizing = 'border-box'; // Include padding in the total width
+            optionItem.style.textAlign = 'left';
+
+            // Get the demo text for the current color
+            const demoText = option.getAttribute('data-demo');
+
+            // Create a demo element for the color square
+            const demoSquare = document.createElement('div');
+            demoSquare.style.width = '20px';
+            demoSquare.style.height = '20px';
+            demoSquare.style.backgroundColor = getCustomColor(option.value); // Get corresponding color from customColorClasses
+            demoSquare.classList.add('color-square');
+            demoSquare.style.display = 'inline-block';
+            demoSquare.style.marginRight = '8px';
+
+            // Create a text element for the color name
+            const colorName = document.createElement('span');
+            colorName.textContent = demoText;
+
+            // Append the demo square and color name to the option item
+            optionItem.appendChild(demoSquare);
+            optionItem.appendChild(colorName);
+
+            optionItem.addEventListener('click', function () {
+                // Set the selected option in the hidden select element
+                colorSelect.value = option.value;
+
+                // Trigger the change event manually
+                colorSelect.dispatchEvent(new Event('change'));
+
+                // Update the search input with the selected option
+                colorSearch.value = demoText;
+
+                // Clear the displayed options
+                optionsCard.innerHTML = '';
+            });
+
+            optionsCard.appendChild(optionItem);
+        });
+
+        // Display the options card
+        optionsCard.style.display = 'block';
+    }
+
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // Manually define custom color classes and their hex values
+// const customColorClasses = [
+//     { name: 'red', hex: '#FF6E70' },
+//     { name: 'orange', hex: '#FFA07A' },
+//     { name: 'yellow', hex: '#FFD700' },
+//     { name: 'green', hex: '#98FB98' },
+//     { name: 'blue', hex: '#ADD8E6' },
+//     { name: 'lavender', hex: '#E6E6FA' },
+//     { name: 'mint-green', hex: '#98FF98' },
+//     { name: 'peach', hex: '#FFDAB9' },
+//     { name: 'sky-blue', hex: '#87CEEB' },
+//     { name: 'rose-pink', hex: '#FFB6C1' },
+//     { name: 'aqua', hex: '#00FFFF' },
+//     { name: 'lilac', hex: '#C8A2C8' },
+//     { name: 'coral', hex: '#FF7F50' },
+//     { name: 'sunflower-yellow', hex: '#FFD700' },
+//     { name: 'turquoise', hex: '#40E0D0' },
+//     { name: 'cherry-blossom-pink', hex: '#FFB6C1' },
+//     { name: 'pearl-white', hex: '#FFF' },
+//     { name: 'sage-green', hex: '#9ACD32' },
+//     { name: 'mustard-yellow', hex: '#FFDB58' },
+//     { name: 'teal', hex: '#008080' },
+//     { name: 'blush', hex: '#DE5D83' },
+//     { name: 'periwinkle', hex: '#CCCCFF' },
+//     { name: 'amber', hex: '#FFBF00' },
+//     { name: 'slate-gray', hex: '#708090' },
+//     { name: 'burgundy', hex: '#800000' },
+//     { name: 'ivory', hex: '#FFFFF0' },
+//     { name: 'olive', hex: '#808000' },
+//     { name: 'crimson', hex: '#DC143C' },
+//     { name: 'powder-blue', hex: '#B0E0E6' },
+//     { name: 'sepia', hex: '#704214' },
+//     { name: 'azure', hex: '#007FFF' },
+//     { name: 'marigold', hex: '#FFD700' },
+//     { name: 'sienna', hex: '#A0522D' },
+//     { name: 'mauve', hex: '#E0B0FF' },
+//     { name: 'charcoal', hex: '#36454F' },
+//     { name: 'tangerine', hex: '#FFA500' },
+//     { name: 'eggshell', hex: '#FFF4E1' },
+//     { name: 'cobalt-blue', hex: '#0047AB' },
+//     { name: 'magenta', hex: '#FF00FF' },
+//     { name: 'pistachio', hex: '#93C572' },
+//     { name: 'topaz', hex: '#FFD700' },
+//     { name: 'cyan', hex: '#00FFFF' },
+//     { name: 'brick-red', hex: '#FF4500' },
+//     { name: 'emerald-green', hex: '#008000' },
+//     { name: 'plum', hex: '#8E4585' },
+//     { name: 'coral-pink', hex: '#FF6F74' },
+//     { name: 'caramel', hex: '#FFD700' },
+//     { name: 'mulberry', hex: '#C8509B' },
+//     { name: 'steel-blue', hex: '#4682B4' },
+//     { name: 'goldenrod', hex: '#DAA520' },
+// ];
