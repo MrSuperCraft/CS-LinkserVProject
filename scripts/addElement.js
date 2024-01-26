@@ -58,6 +58,8 @@ function addElement(type) {
 
     if (type === 'image') {
         showImageSection();
+        document.getElementById('textFieldSection').style.display = 'none';
+
 
     } else if (type === 'social') {
         // Reset values in the modal
@@ -392,6 +394,8 @@ function showImageSection() {
     document.getElementById('socialMediaEditSection').style.display = 'none';
     document.getElementById('textEditSection').style.display = 'block';
     document.getElementById('imageEditSection').style.display = 'block';
+    document.getElementById('textFieldSection').style.display = 'none';
+
 
 }
 
@@ -401,6 +405,8 @@ function EditSocialMedia() {
     document.getElementById('socialMediaEditSection').style.display = 'block';
     document.getElementById('saveChangesButton').style.display = 'block';
     document.getElementById('addSocialMediaButton').style.display = 'none';
+    document.getElementById('textFieldSection').style.display = 'none';
+
 }
 
 function showTextFieldSection() {
@@ -408,4 +414,16 @@ function showTextFieldSection() {
     document.getElementById('socialMediaEditSection').style.display = 'none';
     document.getElementById('textColorSection').style.display = 'none';
     document.getElementById('textFieldSection').style.display = 'block';
+
 }
+
+
+if (document.getElementById('modal').style.display == 'none') {
+
+    document.getElementById('image-modal').style.display = 'none';
+    document.getElementById('imageEditSection').style.display = 'none';
+    document.getElementById('socialMediaEditSection').style.display = 'none';
+    document.getElementById('saveChangesButton').style.display = 'none';
+    document.getElementById('addSocialMediaButton').style.display = 'none';
+    document.getElementById('textFieldSection').style.display = 'none';
+};

@@ -766,12 +766,15 @@ body {
     border-radius: 5px;
 }
 
-/* Style for the dropzone */
 
 
 
 /* Style for the submit button */
-#customize-element-content button {
+#customize-element-content #applyChangesButton,
+#addSocialMediaButton,
+#saveChangesButton,
+#addTextField,
+.dz-button {
     background-color: #3498db;
     color: white;
     padding: 10px;
@@ -785,7 +788,11 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-#customize-element-content button:hover {
+#customize-element-content #applyChangesButton:hover,
+#addSocialMediaButton:hover,
+#saveChangesButton:hover,
+#addTextField:hover,
+.dz-button:hover {
     background-color: #2980b9;
     color: #ecf0f1;
     transform: translateY(-5px);

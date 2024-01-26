@@ -19,6 +19,10 @@
   <script src="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.js"></script>
 
 
+  <!-- Quill Theme Stylesheet -->
+  <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+
 
   <title>Linkserv | Your Design Page</title>
 
@@ -93,6 +97,10 @@
   <!-- Include your color picker script after Spectrum -->
   <script src="/scripts/colorpick.js"></script>
   <script src="/scripts/socialMedia.js"></script>
+
+  <!-- Main Quill library -->
+  <script src="//cdn.quilljs.com/1.3.6/quill.js" defer></script>
+  <script src="/scripts/textField.js"></script>
 
 
 </body>
@@ -333,20 +341,11 @@
       <h3>Add Your Text Field</h3>
 
       <!-- Text field form -->
-      <form id="textFieldForm">
-        <div class="form-group">
-          <label for="textFieldTitle">Title:</label>
-          <input type="text" id="textFieldTitle" placeholder="Enter title">
-        </div>
+      <div id="editor"></div>
 
-        <div class="form-group">
-          <label for="text">
-          </label>
-        </div>
+      <!-- Additional options can be added as needed -->
 
-        <!-- Additional options can be added as needed -->
-
-        <button type="button" onclick="createTextField()">Create Text Field</button>
+      <button id="addTextField" type="button" onclick="createTextField()">Create Text Field</button>
       </form>
 
     </div>
