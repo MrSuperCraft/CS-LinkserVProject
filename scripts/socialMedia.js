@@ -24,6 +24,8 @@ function showImageSection() {
     document.getElementById('socialMediaEditSection').style.display = 'none';
     document.getElementById('textEditSection').style.display = 'block';
     document.getElementById('imageEditSection').style.display = 'block';
+    document.getElementById('textFieldSection').style.display = 'none';
+
 
 }
 
@@ -34,6 +36,8 @@ function EditSocialMedia() {
     document.getElementById('saveChangesButton').style.display = 'block';
     document.getElementById('addSocialMediaButton').style.display = 'none';
     document.getElementById('socialDelete').style.display = 'block';
+    document.getElementById('textFieldSection').style.display = 'none';
+
 
 }
 
@@ -45,7 +49,7 @@ function showSocialMediaSection() {
     document.getElementById('saveChangesButton').style.display = 'none';
     document.getElementById('textColorSection').style.display = 'none';
     document.getElementById('socialDelete').style.display = 'none';
-
+    document.getElementById('textFieldSection').style.display = 'none';
 
 }
 
@@ -58,6 +62,7 @@ function enableSocialEdit() {
     document.getElementById('textColorSection').style.display = 'block';
     document.getElementById('saveChangesButton').style.display = 'block';
     document.getElementById('socialDelete').style.display = 'block';
+    document.getElementById('textFieldSection').style.display = 'none';
 }
 
 
