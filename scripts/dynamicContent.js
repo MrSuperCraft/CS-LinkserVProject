@@ -1,7 +1,7 @@
 // Helper function to get the username from the URL
 
 
-// Example usage
+
 document.addEventListener('DOMContentLoaded', function () {
   const username = getUsernameFromURL();
 

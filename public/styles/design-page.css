@@ -155,6 +155,7 @@ body {
 .content-navbar {
     position: fixed;
     top: 30px;
+    left: 350px;
     width: calc(90% - 250px);
     background-color: rgba(255, 255, 255, 0.8);
     padding: 10px 0;
@@ -1155,12 +1156,6 @@ body {
 }
 
 
-
-
-
-
-
-
 .color-options {
     padding: 5px;
     font-size: 16px;
@@ -1209,4 +1204,202 @@ body {
     /* This allows buttons to wrap to the next line if the container is not wide enough */
     justify-content: space-around;
     /* Adjust as needed to control spacing between buttons */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Background Modification */
+
+#backgroundModification {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 3%;
+    height: 85vh;
+    margin-bottom: 20px;
+}
+
+#backgroundModification h1 {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+#backgroundColor,
+#backgroundImage {
+    margin-bottom: 10px;
+}
+
+#backgroundPreview {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+    display: none;
+    /* Or another appropriate value like 'flex' or 'inline-block' */
+}
+
+#backgroundModification button {
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 40px 10px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+#backgroundModification button:hover {
+    background-color: #2980b9;
+}
+
+#apply {
+    height: 50px;
+    font-size: 20px;
+    margin-bottom: 10px;
+
+}
+
+.card-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 20px;
+    /* Ensure cards stay in a single row */
+}
+
+.card {
+    width: 30%;
+    height: 60%;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-right: 10px;
+    /* Add some margin between cards */
+}
+
+.card h2 {
+    margin-bottom: 15px;
+}
+
+.card label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.card input,
+.card select,
+.card button {
+    width: 50%;
+    height: 30px;
+    margin-bottom: 15px;
+}
+
+/* Additional styling for the image card */
+.card #imageUrl {
+    margin-bottom: 20px;
+}
+
+
+/* Hide the default file input */
+.custom-file-input {
+    display: none;
+}
+
+/* Center the custom file input */
+.file-input-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Style the custom file input label */
+.custom-file-label {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #81c973;
+    color: #fff;
+    border-radius: 25px;
+    /* Pill shape */
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Style the button within the label */
+#backgroundModification .remove-image-button {
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    height: 50px;
+    padding: 10px 20px;
+    /* Adjusted padding */
+    border-radius: 5px;
+    margin: 10px 0;
+    /* Adjusted margin */
+    cursor: pointer;
+    font-size: 20px;
+    transition: background-color 0.3s ease-in-out;
+    width: calc(100% - 20px);
+    /* Adjusted width */
+    box-sizing: border-box;
+}
+
+
+/* Adjust styles for better visibility */
+.custom-file-label:hover,
+#backgroundModification .remove-image-button:hover {
+    background-color: #000000;
+}
+
+.preview-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#imagePreview {
+    border-radius: 30px;
+    width: 130px;
+    height: 130px;
+    /* Adjust height as needed */
+    background-size: cover;
+    background-position: center;
+}
+
+#gradientPreview {
+    max-width: 100%;
+    height: 100px;
+    /* Set a specific height that suits your design */
+    margin-top: 10px;
+    display: flex;
+    /* Ensure it's a flex container */
+    align-items: center;
+    /* Center content vertically */
+    justify-content: center;
+    /* Center content horizontally */
+}
+
+#gradientPreviewInner {
+    border-radius: 30px;
+    width: 100%;
+    height: 100%;
+    /* Ensure it takes the full height of the container */
+    background-size: cover;
+    background-position: center;
 }
