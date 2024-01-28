@@ -55,6 +55,8 @@ function addElement(type) {
     // Set modal title based on whether it's a new addition or an edit
     document.getElementById('modalTitle').innerText = (type === 'image') ? 'Add Image' : 'Add Element';
     document.getElementById('modalTitle').innerText = (type === 'social') ? 'Add a Social Media icon' : 'Add Element';
+    document.getElementById('modalTitle').innerText = (type === 'textfield') ? 'Add a Text Field' : 'Add Element';
+
 
     if (type === 'image') {
         showImageSection();
@@ -416,14 +418,3 @@ function showTextFieldSection() {
     document.getElementById('textFieldSection').style.display = 'block';
 
 }
-
-
-if (document.getElementById('modal').style.display == 'none') {
-
-    document.getElementById('image-modal').style.display = 'none';
-    document.getElementById('imageEditSection').style.display = 'none';
-    document.getElementById('socialMediaEditSection').style.display = 'none';
-    document.getElementById('saveChangesButton').style.display = 'none';
-    document.getElementById('addSocialMediaButton').style.display = 'none';
-    document.getElementById('textFieldSection').style.display = 'none';
-};
