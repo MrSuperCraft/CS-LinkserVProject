@@ -21,13 +21,18 @@ section {
 }
 
 header {
-  position: relative;
+  position: sticky;
   top: 0;
   width: 100%;
   padding: 30px 100px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0);
+  /* Initial transparent background */
+  transition: background-color 0.7s ease;
+  /* Smooth transition effect */
 }
 
 header .logo {
@@ -47,8 +52,14 @@ header .navigation a {
   letter-spacing: 1px;
   padding: 2px 15px;
   border-radius: 20px;
-  transition: 0.3s;
-  transition-property: background;
+  transition: all 0.3s ease-in-out;
+}
+
+#main-header.scrolled {
+  background-color: rgba(0, 0, 0, 0.4);
+  /* Adjust the opacity and color for the scrolled state */
+  color: white;
+  /* Change text color to white when scrolled */
 }
 
 .navigation-container {
@@ -56,19 +67,89 @@ header .navigation a {
   border-bottom: 2px solid rgba(211, 211, 211, 0.61);
 }
 
-.logbtn {
+a.logbtn {
+  display: inline-block;
   border-radius: 20px;
   background-color: rgb(201, 201, 201);
+  text-decoration: none;
+
+  will-change: transform;
+  /* Add this line for optimization */
+
+}
+
+#main-header .logbtn {
+  transition: background-color 0.7s ease-in-out, transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55), box-shadow 0.3s ease-in-out;
+
+}
+
+.logbtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+}
+
+
+#main-header.scrolled .logbtn {
+  transition: background-color 0.5s ease-in-out,
+    color 0.7s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  background-color: #4caf50;
+}
+
+.logbtn::before {
+  opacity: 0;
+  text-decoration: none;
 }
 
 header .navigation a:not(:last-child) {
   margin-right: 30px;
 }
 
-header .navigation a:hover {
-  background: #fff;
-  box-shadow: 0px 3px 9px 0px rgba(0, 0, 0, 0.58);
+header .navigation a {
+  color: black;
+  transition: color 0.7s ease-in-out;
+  position: relative;
+  color: black;
+  /* Initial text color, change to your default color */
+  text-decoration: none;
 }
+
+.logo {
+  color: black;
+  transition: color 0.7s ease-in-out;
+}
+
+#main-header.scrolled .logo {
+  color: white;
+}
+
+.navigation a::before {
+  content: "";
+  /* Create an empty content box for the pseudo-element */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  /* Adjust the thickness of the underline */
+  background-color: rgb(255, 255, 255);
+  /* Adjust the color of the underline */
+  transform: scaleX(0);
+  /* Initial state: no width */
+  transform-origin: bottom right;
+  /* Start the transformation from the right */
+  transition: transform 0.3s ease;
+  /* Smooth transition effect */
+}
+
+.navigation a:hover::before {
+  transform: scaleX(1);
+  /* Full width on hover */
+  transform-origin: bottom left;
+  /* End the transformation from the left */
+}
+
+
+
 
 .content {
   margin: 60px;
@@ -442,12 +523,15 @@ label {
   margin-block: 30px;
   align-items: center;
   align-self: center;
+  text-align: left;
+  font-weight: 600;
 }
 
 #contactForm h1 {
   font-size: 24px;
   margin-bottom: 20px;
   color: #333;
+  text-align: center;
   /* Adjust the text color as needed */
 }
 
