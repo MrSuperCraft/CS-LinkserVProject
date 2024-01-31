@@ -12,36 +12,39 @@ function openCustomizeElementModal() {
 }
 
 
-// On load
-document.addEventListener('DOMContentLoaded', () => {
+// Function to dynamically load Quill editor
+// function loadQuillEditor() {
+// var FontAttributor = Quill.import('formats/font');
+//     var fonts = ['Abril Fatface', 'Overpass', 'Comic Sans MS']; /* Add your fonts here */
+//     FontAttributor.whitelist = fonts;
+//     Quill.register(FontAttributor, true);
+// 
+//     var quill = new Quill('#editor-container', {
+//         modules: {
+//             toolbar: {
+//                 container: "#toolbar-container",
+//                 handlers: {
+//                     'font': function (value) {
+//                         // Update the font for the selected text
+//                         this.format('font', value);
+//                     }
+//                 }
+//             },
+//         },
+//         placeholder: 'Type something here',
+//         theme: 'snow',
+//     });
+// }
+// 
+// // Load the Quill editor when the page loads
+// document.addEventListener('DOMContentLoaded', function () {
+//     loadQuillEditor();
+// });
 
-    // Whitelist the fonts
-    let Font = Quill.import('formats/font');
-    Font.whitelist = ['Inconsolata', 'Roboto', 'Mirza', 'Arial', 'sans-serif'];
-    Quill.register(Font, true);
 
-    // Initialize Quill
-    var quill = new Quill('#editor', {
-        modules: {
-            toolbar: [
-                ['bold', 'italic', 'underline', 'strike'],
-                ['blockquote'],
-                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                [{ 'indent': '-1' }, { 'indent': '+1' }],
-                [{ 'direction': 'rtl' }],
-                [{ 'size': ['small', false, 'large'] }],
-                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                [{ 'color': [] }, { 'background': [] }],
-                [{ 'font': ['Inconsolata', 'Roboto', 'Mirza', 'Arial', 'sans-serif'] }],
-                [{ 'align': [] }],
-                ['clean'],
-            ]
-        },
-        placeholder: 'Compose an epic...',
-        theme: 'snow'
-    });
 
-});
+
+
 
 
 

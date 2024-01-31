@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="/styles/scroll.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="/styles/designSection.css">
   <link rel="stylesheet" type="text/css"
     href="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.css" />
   <link rel="stylesheet" href="/styles/colors.css">
@@ -83,6 +84,39 @@
     </div>
     <button id="addElementButton">Add Element</button>
   </div>
+
+  <div class="content" id="designSection" style="display: none;">
+    <div id="designModification">
+      <h1>Design Your Page</h1>
+
+      <div class="design-cards-container">
+        <div class="design-card" data-animation="neon">
+          Neon
+          <button class="design-button a-neon">Neon animation</button>
+        </div>
+        <div class="design-card" data-animation="angleBg">
+          Angle Background
+          <button class="design-button a-angle-bg">Angle Background animation</button>
+        </div>
+        <div class="design-card" data-animation="shadow">
+          Shadow
+          <button class="design-button a-shadow">Shadow animation</button>
+        </div>
+        <div class="design-card" data-animation="pulse">
+          Pulse
+          <button class="design-button a-pulse">Pulse animation</button>
+        </div>
+        <div class="design-card" data-animation="gradient">
+          Gradient
+          <button class="design-button a-gradient">Gradient animation</button>
+        </div>
+      </div>
+
+      <div class="preview-button" id="customButton">Click me!</div>
+    </div>
+  </div>
+
+
 
   <div class="content" id="backgroundSection" style="display: none;">
     <!-- Inside  #backgroundSection -->
@@ -169,6 +203,7 @@
 
   <!-- Section Menus for design -->
   <script src="/scripts/sectionManagement.js"></script>
+  <script src="/scripts/designSection.js"></script>
 
 
 </body>
@@ -409,7 +444,7 @@
       <h3>Add Your Text Field</h3>
 
       <!-- Text field form -->
-      <div id="editor"></div>
+      <div id="editor-container"></div>
 
       <!-- Additional options can be added as needed -->
 

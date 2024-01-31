@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-// lines 29 - ? : background modifications
+// lines 29 - 245 : background modifications
 
 
 
@@ -230,3 +230,25 @@ function displayGradientPreview() {
     const gradientPreview = document.getElementById('gradientPreview');
     gradientPreview.style.display = 'flex';  // Adjust the display style as needed
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////
+
+
+
+
+// Lines 250 - ? : 
+
+
+
+
