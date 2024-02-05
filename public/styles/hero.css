@@ -91,7 +91,7 @@ a.logbtn {
 
 #main-header.scrolled .logbtn {
   transition: background-color 0.5s ease-in-out,
-    color 0.7s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    color 0.1s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   background-color: #4caf50;
 }
 
@@ -106,7 +106,6 @@ header .navigation a:not(:last-child) {
 
 header .navigation a {
   color: black;
-  transition: color 0.7s ease-in-out;
   position: relative;
   color: black;
   /* Initial text color, change to your default color */
@@ -146,6 +145,10 @@ header .navigation a {
   /* Full width on hover */
   transform-origin: bottom left;
   /* End the transformation from the left */
+}
+
+#main-header .navigation a.active {
+  color: #9CD89E
 }
 
 

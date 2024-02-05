@@ -47,6 +47,9 @@ document.addEventListener("scroll", function () {
             link.style.color = "black";
         });
     }
+
+
+
 });
 
 
@@ -75,24 +78,65 @@ function highlightActiveSection() {
         if (isInViewport(section)) {
             section.classList.add('active');
             link.classList.add('active');
+            link.style.color = "red";
+
         } else {
             section.classList.remove('active');
             link.classList.remove('active');
+            link.style.color = "white";
         }
     });
+
+
 }
 
-// Event listener for scroll
-window.addEventListener('scroll', () => {
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    var scrollPosition = document.getElementById('FAQ').offsetTop - 100;
+
+    // Scroll to the FAQ section
+    window.onload = function () {
+        window.scrollTo(0, scrollPosition);
+    };
+
+
+    const navLinks = document.querySelectorAll('#main-header .navigation a:not(.logbtn):not(#homebtn)');
+
+    function highlightActiveSection() {
+        const scrollPosition = window.scrollY;
+        console.log(`Scroll Position: ${scrollPosition}`);
+
+        let activeSectionId = null;
+        navLinks.forEach(link => {
+            const sectionId = link.getAttribute('href').substring(1);
+            const section = document.getElementById(sectionId);
+
+            if (section && (section.offsetTop <= scrollPosition && section.offsetTop + section.offsetHeight > scrollPosition)) {
+                activeSectionId = sectionId;
+            }
+        });
+
+        console.log(`Active Section ID: ${activeSectionId}`);
+
+        // Add 'active' class to the link corresponding to the active section
+        navLinks.forEach(link => {
+            const sectionId = link.getAttribute('href').substring(1);
+            console.log(`Link: ${link.getAttribute('href')}, Section ID: ${sectionId}, Active Section: ${sectionId === activeSectionId}`);
+            link.classList.toggle('active', sectionId === activeSectionId);
+            if (sectionId === activeSectionId) {
+                link.style.color = '#9CD89E';
+
+            }
+        });
+    }
+
+    // Initial highlighting
     highlightActiveSection();
+
+    // Listen for scroll events
+    document.addEventListener('scroll', highlightActiveSection);
 });
 
-// Event listener for navigation links
-const navLinks = document.querySelectorAll('.navigation a');
-navLinks.forEach((link) => {
-    link.addEventListener('click', () => {
-        setTimeout(() => {
-            highlightActiveSection();
-        }, 500); // Adjust the timeout based on your animation duration
-    });
-});

@@ -38,9 +38,9 @@
                     </svg> LinkserV</a></h2>
             <div class="navigation-container">
                 <div class="navigation">
-                    <a href="#Home">Home</a>
+                    <a href="#Home" id="homebtn">Home</a>
                     <a href="#About">About</a>
-                    <a href="#FAQ">FAQ</a>
+                    <a href="#FAQ" id="faqbtn">FAQ</a>
                     <a href="/login" class="logbtn">
                         <% if (req.session.username) { %>
                             Start
@@ -83,9 +83,9 @@
             </div>
         </div>
 
-        <i id="About"></i>
         <!-- Second Section - About Us -->
-        <div class="second-section">
+        <div class="second-section" id="About">
+            <div class="divider" style="margin-top: 100px;"></div>
             <div class="white-box" data-aos="fade-up" data-aos-duration="500">
                 <h2>About Us</h2>
                 <p class="white-box-desc">Welcome to LinkserV - the platform that empowers you to effortlessly create
@@ -119,9 +119,9 @@
             </div>
         </div>
 
-        <i id="FAQ"></i>
-        <div class="third-section faq-section">
-            <div class="white-box" data-aos="fade-up" data-aos-duration="500" id="FAQ">
+
+        <div class="third-section faq-section" id="FAQ" style="margin-top: 100px;">
+            <div class="white-box" data-aos="fade-up" data-aos-duration="500" style="margin-top: 100px;">
                 <h2>Frequently Asked Questions</h2>
                 <h3 class="faq-desc"> Here are some questions that are asked often about the LinkserV service:</h3>
                 <div class="accordion">
@@ -131,7 +131,8 @@
                             <span class="toggle-icon">+</span>
                         </div>
                         <div class="accordion-content">
-                            <p>Our platform offers many customization features such as social media buttons and to aid
+                            <p>Our platform offers many customization features such as social media buttons and to
+                                aid
                                 you in creating an all - in one bio page!</p>
                         </div>
                     </div>
@@ -160,7 +161,8 @@
                             <span class="toggle-icon">+</span>
                         </div>
                         <div class="accordion-content">
-                            <p>Generally speaking, the page should be designed the same for all platforms and devices.
+                            <p>Generally speaking, the page should be designed the same for all platforms and
+                                devices.
                                 <br> However, the current stages of development only focus on Desktop support.
                             </p>
                         </div>
@@ -171,7 +173,8 @@
                             <span class="toggle-icon">+</span>
                         </div>
                         <div class="accordion-content">
-                            <p>New updates are not yet planned as core features are still being implemented, but they
+                            <p>New updates are not yet planned as core features are still being implemented, but
+                                they
                                 will start getting published after further development on the website.</p>
                         </div>
                     </div>
