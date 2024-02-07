@@ -33,7 +33,7 @@ async function fetchUsers(usersCount) {
         const users = await response.json();
 
         // Call the function to update the table with the retrieved user data
-        updateUsersTable(users);
+        updateUsersTableDynamic(users);
     } catch (error) {
         console.error('Error fetching users:', error);
     }
@@ -127,10 +127,32 @@ async function fetchContactSubmissions() {
     }
 }
 
+let buttonsAppended = false; // Add this global variable
+
 function updateUsersTableDynamic(users) {
     const tableBody = document.querySelector('#userTable tbody');
     // Clear existing table rows
     tableBody.innerHTML = '';
+
+    // Append action buttons only once
+    if (!buttonsAppended) {
+        const actionsCell = document.createElement('td');
+        actionsCell.classList.add('actions-column');
+        actionsCell.innerHTML = `
+            <button class="action-button green" onclick="visitUserPage('')">Visit Page</button>
+            <button class="action-button blue" onclick="openModificationModal()">Modify</button>
+            <button class="action-button red" onclick="openDeleteModal('')">Delete</button>
+        `;
+
+        // Add the actions cell to the header as well
+        const headerActionsCell = document.createElement('th');
+        headerActionsCell.textContent = 'Actions';
+
+        // Append header cell
+        document.querySelector('#userTable thead tr').appendChild(headerActionsCell);
+
+        buttonsAppended = true;
+    }
 
     // Iterate through each user and add a row to the table
     users.forEach(user => {
@@ -139,11 +161,23 @@ function updateUsersTableDynamic(users) {
             <td>${user.id}</td>
             <td>${user.email}</td>
             <td>${user.username}</td>
-            <!-- Add more cells for additional user data -->
         `;
+
+        // Append the actions cell to each row
+        const actionsCell = document.createElement('td');
+        actionsCell.classList.add('actions-column');
+        actionsCell.innerHTML = `
+            <button class="action-button green" onclick="visitUserPage('${user.username}')">Visit Page <i class="fa-solid fa-circle-user"></i></button>
+            <button class="action-button blue" onclick="toggleUserDetailsModal(true)">Modify <i class="fa-solid fa-circle-user"></i></button>
+            <button class="action-button red" onclick="openDeleteModal('${user.username}')">Delete <i class="fa-solid fa-circle-user"></i></button>
+        `;
+
+        row.appendChild(actionsCell);
         tableBody.appendChild(row);
     });
 }
+
+
 
 function updateContactSubmissions(contactSubmissions) {
     const contactSection = document.querySelector('.dynamic-contact');
@@ -484,3 +518,63 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+
+
+
+
+async function fetchUserDetails(userId) {
+    try {
+        const response = await fetch(`/api/getUserData`);
+        if (!response.ok) {
+            throw new Error(`Error fetching user details: ${response.statusText}`);
+        }
+
+        const userDetails = await response.json();
+        return userDetails;
+    } catch (error) {
+        console.error('Error fetching user details:', error);
+    }
+}
+
+
+async function updateUserDetails(userId, endpoint, updateObject) {
+    try {
+        const response = await fetch(`/api/${endpoint}/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updateObject),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error updating ${endpoint}: ${response.statusText}`);
+        }
+
+        const updatedUser = await response.json();
+        console.log(`${endpoint} updated successfully:`, updatedUser);
+
+        // Refresh the user table or perform any other necessary actions
+        refreshTable();
+    } catch (error) {
+        console.error(`Error updating ${endpoint}:`, error);
+    }
+}
+
+const userDetailsModal = document.getElementById('userDetailsModal')
+
+// Function to handle modal visibility
+function toggleUserDetailsModal(isVisible) {
+    userDetailsModal.style.display = isVisible ? 'flex' : 'none';
+}
+
+// Open the modal
+function openUserDetailsModal() {
+    toggleUserDetailsModal(true);
+}
+
+// Close the modal
+function closeUserDetailsModal() {
+    toggleUserDetailsModal(false);
+}

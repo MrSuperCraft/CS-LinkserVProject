@@ -339,41 +339,70 @@ app.post('/admin-authenticate', async (req, res) => {
         }
 
         // Check if the user is an admin
-        if (user.isAdmin !== 1) {
+        if (user.isAdmin && user.isAdmin === 1) {
+            // Ensure the user object has a 'password' property
+            if (!user.password) {
+                console.log('User password not found');
+                return res.status(500).json({ message: 'User password not found' });
+            }
+
+            // Compare the hashed password with the provided password
+            const passwordMatch = await bcrypt.compare(password, user.password);
+
+            if (passwordMatch) {
+                console.log('Admin login successful');
+
+                // Save admin information in the session
+                req.session.isAdmin = true;
+                req.session.username = user.username;
+
+                // Redirect the admin to the admin panel
+                res.redirect('/admin-panel');
+                return;
+            } else {
+                console.log('Invalid credentials');
+                console.log('Entered password:', password);
+                console.log('Stored hashed password:', user.password);
+                res.status(401).json({ success: false, message: 'Invalid credentials' });
+            }
+        } else {
             console.log('Not an admin');
             return res.status(403).json({ message: 'Not an admin' });
-        }
-
-        // Ensure the user object has a 'password' property
-        if (!user.password) {
-            console.log('User password not found');
-            return res.status(500).json({ message: 'User password not found' });
-        }
-
-        // Compare the hashed password with the provided password
-        const passwordMatch = await bcrypt.compare(password, user.password);
-
-        if (passwordMatch) {
-            console.log('Admin login successful');
-
-            // Save admin information in the session
-            req.session.isAdmin = true;
-            req.session.username = user.username;
-
-            // Redirect the admin to the admin panel
-            res.redirect('/admin-panel');
-            return;
-        } else {
-            console.log('Invalid credentials');
-            console.log('Entered password:', password);
-            console.log('Stored hashed password:', user.password);
-            res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 });
+
+
+// Function to get user by username
+async function getUserByUsername(username) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT Email, Username, Password, isAdmin FROM Users WHERE Username = ?';
+
+        console.log('SQL Query:', query);
+
+        db.get(query, [username], (err, row) => {
+            if (err) {
+                reject(err);
+            } else {
+                console.log('Retrieved user row:', row);
+
+                // Ensure the user object has 'email', 'username', 'password', and 'isAdmin' properties
+                const user = {
+                    email: row ? row.Email : null,
+                    username: row ? row.Username : null,
+                    password: row ? row.Password : null,
+                    isAdmin: row ? row.isAdmin : null,
+                };
+
+                resolve(user);
+            }
+        });
+    });
+}
+
 
 app.get('/admin-login', (req, res) => {
     res.render('admin-login');
@@ -396,6 +425,34 @@ app.get('/admin-panel/users', isAdminAuthenticated, async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+app.get('/api/getUserData', isAdminAuthenticated, async (req, res) => {
+    try {
+        const username = req.session.username;
+        // Fetch user data based on the username
+        const userData = await getUserData(username);
+
+        res.json(userData);
+    } catch (err) {
+        console.error('Error fetching user data:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Function to get user data from the database
+async function getUserData(username) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM Users WHERE Username = ?';
+
+        db.get(query, [username], (err, row) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(row);
+            }
+        });
+    });
+}
 
 app.get('/api/users', async (req, res) => {
     try {

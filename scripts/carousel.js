@@ -95,12 +95,6 @@ function highlightActiveSection() {
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    var scrollPosition = document.getElementById('FAQ').offsetTop - 100;
-
-    // Scroll to the FAQ section
-    window.onload = function () {
-        window.scrollTo(0, scrollPosition);
-    };
 
 
     const navLinks = document.querySelectorAll('#main-header .navigation a:not(.logbtn):not(#homebtn)');

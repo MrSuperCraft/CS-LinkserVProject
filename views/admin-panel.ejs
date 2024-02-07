@@ -83,6 +83,43 @@
 
         <!-- Section for User Data Table -->
         <div id="userSection" class="section">
+            <!-- User Details Modal -->
+            <div id="userDetailsModal" class="modal">
+                <div class="modal-content"
+                    style="background-color: #333; width: 50%; align-self: center; border-radius: 30px;">
+                    <span class="close" onclick="closeUserDetailsModal()"
+                        style="margin-right: 20px; font-size: 40px;">&times;</span>
+                    <h2 style="font-size:xx-large;">Edit User Details</h2>
+
+                    <!-- User Details Form -->
+                    <form id="userDetailsForm"
+                        style="margin: 30px; display: flex; flex-direction: column; text-align: left; font-weight: bold;">
+                        <label for="username" style="margin-top: 20px;">Username:</label>
+                        <div class="InputContainer" style="margin-top: 20px;">
+                            <input placeholder="Change the username here..." id="username" class="input" name="username"
+                                type="text" required autocomplete="off">
+                        </div>
+
+                        <label for="email" style="margin-top: 20px;">Email:</label>
+                        <div class="InputContainer" style="margin-top: 20px;">
+                            <input placeholder="Change the email here..." id="email" class="input" name="email"
+                                type="text" required autocomplete="off">
+                        </div>
+                        <label for="password" style="margin-top: 20px;">Password:</label>
+                        <div class="InputContainer" style="margin-top: 20px;">
+                            <input placeholder="Change the password here..." id="password" class="input" name="password"
+                                type="text" required autocomplete="off">
+                        </div>
+                        <!-- Add more fields as needed -->
+
+                        <button type="button" onclick="saveUserDetails()"
+                            style="margin-top: 20px; width: 80%; align-self: center;">Save
+                            Changes ✅</button>
+                    </form>
+                </div>
+            </div>
+
+
             <h2>User Data Table</h2>
             <div class="table-container">
                 <table id="userTable" class="styled-table">
@@ -91,7 +128,6 @@
                             <th>ID</th>
                             <th>Email</th>
                             <th>Username</th>
-                            <th>Actions</th> <!-- Add more columns as needed -->
                         </tr>
                     </thead>
                     <tbody>
@@ -139,6 +175,7 @@
 
         <!-- Rest of your existing content -->
 
+
         <script src="/scripts/table.js"></script>
         <script src="/scripts/settings.js"></script>
         <!-- Include Font Awesome script -->
@@ -147,5 +184,6 @@
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 </body>
+
 
 </html>

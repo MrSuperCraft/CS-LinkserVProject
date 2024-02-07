@@ -121,14 +121,25 @@ th {
     gap: 20px;
 }
 
+.dark-mode .content .section .card-content {
+    background-color: #5c5c5c;
+    /* Dark background color for dark mode */
+    color: #fff;
+    /* White text color for dark mode */
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+    /* Adjust box-shadow as needed */
+}
+
+
 .card-content {
-    background-color: #3c8dbc;
+    background-color: #cacaca;
     /* Stylish blue card */
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     flex: 1 1 calc(33.333% - 20px);
 }
+
 
 .card h3 {
     margin-bottom: 10px;
@@ -357,9 +368,10 @@ button:hover {
 }
 
 .card-content {
-    background-color: #565656;
     margin-bottom: 2rem;
 }
+
+
 
 #contactSearchInput {
     width: 300px;
@@ -393,4 +405,141 @@ button:hover {
 .tag-button.pressed {
     background-color: rgb(24, 75, 24);
     /* Set your desired color for Completed */
+}
+
+
+/* Add these styles to your CSS file or within a <style> tag in your HTML */
+
+/* Styles for the action buttons */
+.action-button {
+    padding: 8px 16px;
+    margin-right: 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Green button */
+.action-button.green {
+    background-color: #4caf50;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Blue button */
+.action-button.blue {
+    background-color: #2196f3;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Red button */
+.action-button.red {
+    background-color: #f44336;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover styles for the green button */
+.action-button.green:hover {
+    background-color: #296b2d;
+}
+
+/* Hover styles for the blue button */
+.action-button.blue:hover {
+    background-color: #104c80;
+}
+
+/* Hover styles for the red button */
+.action-button.red:hover {
+    background-color: #85211f;
+}
+
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    flex-direction: column;
+    justify-content: center;
+    z-index: 1000;
+    /* Increase the z-index value */
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow: auto;
+    text-align: center;
+}
+
+
+/* Close button */
+.modal .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.modal .close:hover,
+.modal .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Form Styles */
+.modalform {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modallabel {
+    font-weight: bold;
+}
+
+
+.modalbutton:hover {
+    background-color: #45a049;
+}
+
+.InputContainer {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom, rgb(121, 127, 128), rgba(27, 17, 17, 0.726));
+    border-radius: 30px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.input {
+    width: 100%;
+    height: 40px;
+    border: none;
+    outline: none;
+    caret-color: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
+    border-radius: 30px;
+    padding-left: 15px;
+    letter-spacing: 0.8px;
+    caret-color: black;
+
+    color: rgb(19, 19, 19);
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+
+}
+
+.input::placeholder {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
 }
