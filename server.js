@@ -748,51 +748,136 @@ async function deleteTaskById(taskId) {
 
 // Admin actions on the user
 
-app.put('/api/users/:id', isAdminAuthenticated, (req, res) => {
-    const userId = req.params.id;
-    const { email, username, isAdmin } = req.body;
 
-    // Validate input (add more validation as needed)
-    if (!email || !username || isAdmin === undefined) {
-        return res.status(400).json({ message: 'Invalid input' });
+
+app.delete('/api/users/:id', isAdminAuthenticated, async (req, res) => {
+    const userId = req.params.id;
+
+    try {
+        // Delete the user from the database
+        const query = 'DELETE FROM Users WHERE ID = ?';
+        db.run(query, [userId], function (err) {
+            if (err) {
+                console.error(err.message);
+                return res.status(500).json({ message: 'Internal Server Error' });
+            }
+
+            // Check if a user was actually deleted
+            if (this.changes === 0) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            res.json({ message: 'User deleted successfully' });
+        });
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
+
+// API endpoint to fetch user details by ID
+app.get('/api/userModify/:userId', isAdminAuthenticated, (req, res) => {
+    const userId = req.params.userId;
+
+    // Replace the following with your database query to get user details
+    // This is a placeholder; adjust it based on your actual database structure and queries
+    const query = 'SELECT * FROM Users WHERE ID = ?';
+    db.get(query, [userId], (err, row) => {
+        if (err) {
+            console.error('Error fetching user details:', err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        if (!row) {
+            console.error('User not found:', userId);
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Assuming your user details include fields like 'username', 'email', 'password', and 'userid'
+        const userDetails = {
+            username: row.Username,
+            email: row.Email,
+            password: row.Password,  // Note: Sending the password to the client is not recommended; this is just an example
+            userid: row.ID,
+        };
+
+        res.json(userDetails);
+    });
+});
+
+
+// Update user details endpoint
+app.put('/api/users/:userId', async (req, res) => {
+    const userId = req.params.userId;
+    const { username, email, password } = req.body;
+
+    // Construct the SET clause of the SQL query based on provided values
+    let setClause = '';
+    const values = [];
+
+    if (username) {
+        setClause += 'username = ?, ';
+        values.push(username);
     }
 
+    if (email && isValidEmail(email)) {
+        setClause += 'email = ?, ';
+        values.push(email);
+    }
+
+    if (password) {
+        // Check if the password is a non-empty string
+        if (typeof password === 'string' && password.trim().length > 0) {
+            // Hash the new password using await
+            const hashedPassword = await bcrypt.hash(password, 10);
+            setClause += 'password = ?, ';
+            values.push(hashedPassword);
+        }
+    }
+
+    // Trim the trailing comma and space from setClause
+    setClause = setClause.replace(/,\s*$/, '');
+
     // Update the user details in the database
-    const query = 'UPDATE Users SET Email = ?, Username = ?, isAdmin = ? WHERE ID = ?';
-    db.run(query, [email, username, isAdmin, userId], function (err) {
-        if (err) {
-            console.error(err.message);
-            return res.status(500).json({ message: 'Internal Server Error' });
+    db.run(
+        `UPDATE users SET ${setClause} WHERE ID = ?`,
+        [...values, userId],
+        async (err) => {
+            if (err) {
+                console.error('Error updating user details:', err.message);
+                res.status(500).send({ error: 'Internal Server Error' });
+            } else {
+                // Retrieve the updated user details from the database
+                db.get(
+                    'SELECT * FROM users WHERE ID = ?',
+                    [userId],
+                    (err, row) => {
+                        if (err) {
+                            console.error('Error fetching updated user details:', err.message);
+                            res.status(500).send({ error: 'Internal Server Error' });
+                        } else {
+                            console.log('User details updated successfully.');
+                            res.json(row); // Respond with the updated user details
+                        }
+                    }
+                );
+            }
         }
-
-        // Check if a user was actually updated
-        if (this.changes === 0) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        res.json({ message: 'User updated successfully' });
-    });
+    );
 });
 
-app.delete('/api/users/:id', isAdminAuthenticated, (req, res) => {
-    const userId = req.params.id;
 
-    // Delete the user from the database
-    const query = 'DELETE FROM Users WHERE ID = ?';
-    db.run(query, [userId], function (err) {
-        if (err) {
-            console.error(err.message);
-            return res.status(500).json({ message: 'Internal Server Error' });
-        }
+// Function to check if an email is valid
+function isValidEmail(email) {
+    // For simplicity, a basic regex pattern is used
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+}
 
-        // Check if a user was actually deleted
-        if (this.changes === 0) {
-            return res.status(404).json({ message: 'User not found' });
-        }
 
-        res.json({ message: 'User deleted successfully' });
-    });
-});
+
+
 
 
 

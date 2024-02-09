@@ -166,10 +166,11 @@ function updateUsersTableDynamic(users) {
         // Append the actions cell to each row
         const actionsCell = document.createElement('td');
         actionsCell.classList.add('actions-column');
-        actionsCell.innerHTML = `
-            <button class="action-button green" onclick="visitUserPage('${user.username}')">Visit Page <i class="fa-solid fa-circle-user"></i></button>
-            <button class="action-button blue" onclick="toggleUserDetailsModal(true)">Modify <i class="fa-solid fa-circle-user"></i></button>
-            <button class="action-button red" onclick="openDeleteModal('${user.username}')">Delete <i class="fa-solid fa-circle-user"></i></button>
+        actionsCell.innerHTML = `<div style="margin: auto;">
+            <button class="action-button green" onclick="visitUserPage('${user.username}')">Visit Page <i class="fa-solid fa-eye"></i></button>
+            <button class="action-button blue" onclick="openModificationModal('${user.id}')">Modify <i class="fa-solid fa-pencil"></i></button>
+            <button class="action-button red" onclick="confirmDeleteUser('${user.id}' , '${user.username}')">Delete <i class="fa-solid fa-user-slash"></i></button>
+            </div>
         `;
 
         row.appendChild(actionsCell);
@@ -525,12 +526,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
 async function fetchUserDetails(userId) {
     try {
-        const response = await fetch(`/api/getUserData`);
+        const response = await fetch(`/api/userModify/${userId}`);
         if (!response.ok) {
             throw new Error(`Error fetching user details: ${response.statusText}`);
         }
 
         const userDetails = await response.json();
+
+
+        // Open the modal
+        openUserDetailsModal();
+
         return userDetails;
     } catch (error) {
         console.error('Error fetching user details:', error);
@@ -538,43 +544,167 @@ async function fetchUserDetails(userId) {
 }
 
 
-async function updateUserDetails(userId, endpoint, updateObject) {
+
+
+
+// Define the editUser function
+function editUser() {
+    // Gather data from the form fields
+    const userId = document.getElementById('editUserId').value;
+    const username = document.getElementById('editUsername').value;
+    const email = document.getElementById('editEmail').value;
+    const password = document.getElementById('editPassword').value;
+
+    // Create an object with the updated user details
+    const updatedUser = {
+        id: userId,
+        username: username,
+        email: email,
+        password: password
+        // Add more fields as needed
+    };
+
+    // Use the Fetch API to send a PUT request to your API
+    fetch(`/api/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedUser),
+    })
+        .then(response => {
+            // Check if the API response indicates success (status code 2xx)
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to save changes');
+            }
+        })
+        .then(data => {
+            console.log('User details updated:', data);
+
+            // Show the snackbar with the appropriate success message
+            showSnackbar('Changes made successfully ✅', true);
+        })
+        .catch(error => {
+            console.error('Error updating user details:', error);
+
+            // Show the snackbar with the error message
+            showSnackbar(error.message, false);
+        });
+
+    closeUserDetailsModal();
+    refreshTable();
+}
+
+
+
+
+
+
+
+// Function to open the modification modal with user details
+function openModificationModal(userId) {
+
+    document.getElementById('editUserId').value = userId;
+
+    // Fetch user details based on userId
+    fetchUserDetails(userId)
+        .then(userDetails => {
+            // Populate the modal with user details
+            document.getElementById('editUsername').value = userDetails.username;
+            document.getElementById('editEmail').value = userDetails.email;
+            document.getElementById('editPassword').value = '';  // Clear password field for security reasons
+
+            // Open the modal
+            openUserDetailsModal();
+        })
+        .catch(error => {
+            console.error('Error fetching user details:', error);
+        });
+}
+
+function openUserDetailsModal() {
+    document.getElementById('userDetailsModal').style.display = 'flex';
+}
+
+function closeUserDetailsModal() {
+    document.getElementById('userDetailsModal').style.display = 'none';
+
+}
+
+
+// Add this function to your script
+function confirmDeleteUser(userId, username) {
+    // Assuming you have a modal with an ID 'deleteUserModal'
+    const deleteUserModal = document.getElementById('deleteUserModal');
+
+    // Populate modal with user details
+    document.getElementById('deleteUserId').value = userId;
+    document.getElementById('deleteUsername').textContent = username;
+
+    // Show the confirmation modal
+    deleteUserModal.style.display = 'flex';
+}
+
+// Function to handle actual user deletion
+async function deleteUser() {
+    const userId = document.getElementById('deleteUserId').value;
+
     try {
-        const response = await fetch(`/api/${endpoint}/${userId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(updateObject),
+        const response = await fetch(`/api/users/${userId}`, {
+            method: 'DELETE',
         });
 
         if (!response.ok) {
-            throw new Error(`Error updating ${endpoint}: ${response.statusText}`);
+            const errorData = await response.json();
+            throw new Error(`Error deleting user: ${errorData.message}`);
         }
 
-        const updatedUser = await response.json();
-        console.log(`${endpoint} updated successfully:`, updatedUser);
+        // Close the confirmation modal
+        closeDeleteUserModal();
 
-        // Refresh the user table or perform any other necessary actions
+        // Optionally, you can refresh the user table or perform other necessary actions
         refreshTable();
+
+        console.log('User deleted successfully');
     } catch (error) {
-        console.error(`Error updating ${endpoint}:`, error);
+        console.error('Error deleting user:', error);
     }
 }
 
-const userDetailsModal = document.getElementById('userDetailsModal')
-
-// Function to handle modal visibility
-function toggleUserDetailsModal(isVisible) {
-    userDetailsModal.style.display = isVisible ? 'flex' : 'none';
+// Function to close the confirmation modal
+function closeDeleteUserModal() {
+    const deleteUserModal = document.getElementById('deleteUserModal');
+    deleteUserModal.style.display = 'none';
 }
 
-// Open the modal
-function openUserDetailsModal() {
-    toggleUserDetailsModal(true);
+
+function closeEditUserModal() {
+    document.getElementById('userDetailsForm').style.display = 'none';
 }
 
-// Close the modal
-function closeUserDetailsModal() {
-    toggleUserDetailsModal(false);
+
+
+// Function to show the snackbar
+function showSnackbar(message, isSuccess) {
+    const snackbar = document.getElementById('snackbar');
+
+    // Customize the success message
+    const successMessage = 'Changes made successfully ✅';
+
+    // Set the snackbar text content based on success or failure
+    snackbar.textContent = isSuccess ? successMessage : message;
+
+    // Set the background color based on success or failure
+    snackbar.style.backgroundColor = isSuccess ? '#4CAF50' : '#F44336'; // Green for success, red for failure
+
+    // Display the snackbar
+    snackbar.classList.add('active'); // Add active class
+
+    // Hide the snackbar after 3 seconds (adjust as needed)
+    setTimeout(() => {
+        // Remove active class
+        snackbar.classList.remove('active');
+    }, 3000);
 }
