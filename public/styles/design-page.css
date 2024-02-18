@@ -751,7 +751,7 @@ body {
 /* image modal */
 
 #customize-element-content {
-    max-width: 400px;
+    max-width: 600px;
     margin: 0 auto;
 }
 
@@ -1403,4 +1403,142 @@ body {
     /* Ensure it takes the full height of the container */
     background-size: cover;
     background-position: center;
+}
+
+
+
+
+
+/* EditorJS styling */
+#editorjs {
+    max-height: 500px;
+    margin-top: 50px;
+    text-align: left;
+    border: 1px solid #ccc;
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    /* Add the following styles for scrolling */
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+    overflow-x: hidden;
+    /* Hide horizontal scrollbar */
+}
+
+
+#editorjs p {
+    margin: 0;
+    /* Remove default paragraph margins */
+}
+
+#editorjs h1,
+#editorjs h2,
+#editorjs h3,
+#editorjs h4,
+#editorjs h5,
+#editorjs h6 {
+    margin-top: 0;
+    /* Remove top margin for headings */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Style for the textfield-card element */
+.textfield-card {
+    position: relative;
+    align-self: center;
+    width: 60%;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px auto;
+    border-radius: 8px;
+    background-color: #fff;
+    text-align: left;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    /* Ensure menu button doesn't overflow */
+    display: flex;
+    flex-direction: column;
+    /* Align button and content in a column layout */
+}
+
+/* Additional styles for paragraphs inside textfield-card */
+.textfield-card p {
+    margin: 0;
+    line-height: 1.5;
+    font-size: 16px;
+    color: #333;
+}
+
+.menu-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    padding: 5px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-section {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    padding: 5px;
+    cursor: pointer;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    width: 120px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.menu-section:not(:last-child) {
+    margin-bottom: 5px;
+    /* Adjust the margin as needed for spacing between menu items */
+}
+
+.menu-section.edit-section {
+    top: 100%;
+    /* Adjust the positioning for the edit section */
+    margin-top: 20px;
+    /* Adjust the margin as needed for spacing */
+}
+
+.menu-button:hover .menu-section {
+    display: flex;
+}
+
+/* Add animation for a smoother appearance */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.menu-section {
+    animation: fadeIn 0.3s ease-in-out;
 }
