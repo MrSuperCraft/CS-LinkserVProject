@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // Function to create a social media button
-function createSocialMediaButton(platform, url, direction, color1, color2, textColorClass = 'plain-white') {
+function createSocialMediaButtonUI(platform, url, direction, color1, color2, textColorClass = 'plain-white') {
     // Create a container for the button and overlay
     const buttonContainer = document.createElement('div');
     buttonContainer.classList.add('social-button-container');
@@ -260,10 +260,10 @@ window.addEventListener('load', (event) => {
         const color2 = document.querySelectorAll('.colors input')[1].value || '#A271F8';
 
         // Create a new button element
-        const newSocialMediaButton = createSocialMediaButton(platform, url, direction, color1, color2);
+        const newSocialMediaButton = createSocialMediaButtonUI(platform, url, direction, color1, color2);
 
         // Add the button to your page or container
-        document.getElementById('buttonContainer').appendChild(newSocialMediaButton);
+        document.getElementById('social-links-dynamic').appendChild(newSocialMediaButton);
 
         // After adding the button to the page
         setTimeout(() => {
@@ -408,12 +408,12 @@ function saveChanges() {
         editingContainer.remove();
 
         // Create a new button element with the updated values, including textColor
-        const newSocialMediaButton = createSocialMediaButton(platform, url, direction, color1, color2, textColor);
+        const newSocialMediaButton = createSocialMediaButtonUI(platform, url, direction, color1, color2, textColor);
 
         console.log("The selected color is:" + textColor);
 
         // Add the new button to your page or container
-        document.getElementById('buttonContainer').appendChild(newSocialMediaButton);
+        document.getElementById('social-links-dynamic').appendChild(newSocialMediaButton);
 
         console.log('changes saved.')
         // Close the modal
@@ -429,7 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
+const buttonContainer = document.getElementById('social-links-dynamic');
 
 buttonContainer.addEventListener('click', function () {
     openEditSocialMediaModal(buttonContainer, platform, url, direction, color1, color2);
@@ -512,6 +512,10 @@ function getIconClass(platform) {
             return 'fab fa-paypal';
         case 'bandcamp':
             return 'fab fa-bandcamp';
+        case 'dribbble':
+            return 'fab fa-dribbble';
+        case 'tumblr':
+            return 'fab fa-tumblr';
         // Add more cases for other platforms
 
         // Default icon if no match is found
@@ -557,6 +561,7 @@ function deleteSocialMediaButton() {
         // Optionally, add any additional cleanup logic here
 
         console.log('Button deleted.');
+        closeCustomizeElementModal();
     }
 }
 
@@ -753,157 +758,121 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+// Function to get the user ID
+async function getUserId() {
+    try {
+        const response = await fetch('/get-user-id');
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch user ID. Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.userId;
+    } catch (error) {
+        console.error('Error fetching user ID:', error.message);
+        return null;
+    }
+}
+
+// Function to save a new social media button
+async function saveSocialMediaButton(platform, url, direction, color1, color2) {
+    const userId = await getUserId();
+
+    console.log('platform:', platform)
+    console.log('url:', url)
+    console.log('direction:', direction)
+    console.log('color1:', color1)
+    console.log('color2:', color2)
+
+
+    if (!userId) {
+        console.error('User ID not available');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/socialMedia', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_id: userId,
+                platform: platform,
+                href: url,
+                color1: color1,
+                color2: color2,
+                direction: direction,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to save social media button. Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Button saved:', data);
+
+        // Call a function to dynamically create the button on the UI
+        createSocialMediaButtonUI(platform, url, direction, color1, color2);
+    } catch (error) {
+        console.error('Error saving social media button:', error.message);
+    }
+}
+
+// Function to update an existing social media button
+async function updateSocialMediaButton(buttonId, platform, url, direction, color1, color2) {
+    try {
+        const response = await fetch(`/api/socialMedia/${buttonId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                platform: platform,
+                href: url,
+                color1,
+                color2,
+                direction,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to update social media button. Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Button updated:', data);
+
+        // Call a function to dynamically update the button on the UI
+        updateSocialMediaButtonUI(buttonId, platform, url, direction, color1, color2);
+    } catch (error) {
+        console.error('Error updating social media button:', error.message);
+    }
+}
+
+// Function to delete an existing social media button
+async function deleteSocialMediaButton(buttonId) {
+    try {
+        const response = await fetch(`/api/socialMedia/${buttonId}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to delete social media button. Status: ${response.status}`);
+        }
 
+        const data = await response.json();
+        console.log('Button deleted:', data);
 
+        // Call a function to dynamically remove the button from the UI
+        deleteSocialMediaButtonUI(buttonId);
+    } catch (error) {
+        console.error('Error deleting social media button:', error.message);
+    }
+}
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // Manually define custom color classes and their hex values
-// const customColorClasses = [
-//     { name: 'red', hex: '#FF6E70' },
-//     { name: 'orange', hex: '#FFA07A' },
-//     { name: 'yellow', hex: '#FFD700' },
-//     { name: 'green', hex: '#98FB98' },
-//     { name: 'blue', hex: '#ADD8E6' },
-//     { name: 'lavender', hex: '#E6E6FA' },
-//     { name: 'mint-green', hex: '#98FF98' },
-//     { name: 'peach', hex: '#FFDAB9' },
-//     { name: 'sky-blue', hex: '#87CEEB' },
-//     { name: 'rose-pink', hex: '#FFB6C1' },
-//     { name: 'aqua', hex: '#00FFFF' },
-//     { name: 'lilac', hex: '#C8A2C8' },
-//     { name: 'coral', hex: '#FF7F50' },
-//     { name: 'sunflower-yellow', hex: '#FFD700' },
-//     { name: 'turquoise', hex: '#40E0D0' },
-//     { name: 'cherry-blossom-pink', hex: '#FFB6C1' },
-//     { name: 'pearl-white', hex: '#FFF' },
-//     { name: 'sage-green', hex: '#9ACD32' },
-//     { name: 'mustard-yellow', hex: '#FFDB58' },
-//     { name: 'teal', hex: '#008080' },
-//     { name: 'blush', hex: '#DE5D83' },
-//     { name: 'periwinkle', hex: '#CCCCFF' },
-//     { name: 'amber', hex: '#FFBF00' },
-//     { name: 'slate-gray', hex: '#708090' },
-//     { name: 'burgundy', hex: '#800000' },
-//     { name: 'ivory', hex: '#FFFFF0' },
-//     { name: 'olive', hex: '#808000' },
-//     { name: 'crimson', hex: '#DC143C' },
-//     { name: 'powder-blue', hex: '#B0E0E6' },
-//     { name: 'sepia', hex: '#704214' },
-//     { name: 'azure', hex: '#007FFF' },
-//     { name: 'marigold', hex: '#FFD700' },
-//     { name: 'sienna', hex: '#A0522D' },
-//     { name: 'mauve', hex: '#E0B0FF' },
-//     { name: 'charcoal', hex: '#36454F' },
-//     { name: 'tangerine', hex: '#FFA500' },
-//     { name: 'eggshell', hex: '#FFF4E1' },
-//     { name: 'cobalt-blue', hex: '#0047AB' },
-//     { name: 'magenta', hex: '#FF00FF' },
-//     { name: 'pistachio', hex: '#93C572' },
-//     { name: 'topaz', hex: '#FFD700' },
-//     { name: 'cyan', hex: '#00FFFF' },
-//     { name: 'brick-red', hex: '#FF4500' },
-//     { name: 'emerald-green', hex: '#008000' },
-//     { name: 'plum', hex: '#8E4585' },
-//     { name: 'coral-pink', hex: '#FF6F74' },
-//     { name: 'caramel', hex: '#FFD700' },
-//     { name: 'mulberry', hex: '#C8509B' },
-//     { name: 'steel-blue', hex: '#4682B4' },
-//     { name: 'goldenrod', hex: '#DAA520' },
-// ];

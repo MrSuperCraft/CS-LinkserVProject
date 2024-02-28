@@ -76,20 +76,28 @@
       </div>
 
       <div id="dynamicUsername"></div>
-      <div id="social-links-dynamic" style="margin-top: 50px;"></div>
-    </div>
-    <div id="buttonContainer">
-      <!-- Buttons will be dynamically added here -->
+      <div id="social-links-dynamic" style="margin-top: 50px;">
+        <% for (const button of socialMediaButtons) { %>
+          <a href="<%= button.href %>" style=<%=this.style.backgroundColor=button.color %> target="_blank">
+            <i class="fab fa-<%= button.platform.toLowerCase() %>"></i>
+          </a>
+          <% } %>
+      </div>
+
+      <div id="customButtonsContainer" class="draggable-container">
+        <!-- Custom buttons will be added here dynamically -->
+      </div>
+
+      <div id="text-field-container">
+        <!-- Text fields will be dynamically added here-->
+      </div>
+      <div id="images-container">
+        <!-- The Gallery will be placed here-->
+
+      </div>
+      <button id="addElementButton">Add Element</button>
     </div>
 
-    <div id="text-field-container">
-      <!-- Text fields will be dynamically added here-->
-    </div>
-    <div id="images-container">
-      <!-- The Gallery will be placed here-->
-
-    </div>
-    <button id="addElementButton">Add Element</button>
   </div>
 
   <div class="content" id="designSection" style="display: none;">
@@ -186,33 +194,70 @@
       </div>
 
     </div>
-  </div>
-
-
-  <!-- Scripts & Utils -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"
-    integrity="sha512-GWzVrcGlo0TxTRvz9ttioyYJ+Wwk9Ck0G81D+eO63BaqHaJ3YZX9wuqjwgfcV/MrB2PhaVX9DkYVhbFpStnqpQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="/scripts/share.js"></script>
-  <script src="/scripts/pfp.js"></script>
-  <script src="/scripts/addElement.js"></script>
-  <script src="/scripts/dynamicContent.js" defer></script>
-  <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
-  <script src="/scripts/dropzone.js"></script>
-  <!-- Include your color picker script after Spectrum -->
-  <script src="/scripts/colorpick.js"></script>
-  <script src="/scripts/socialMedia.js"></script>
-
-
-  <!-- Editor.js library -->
-  <script src="/scripts/textField.js"></script>
-  <script src="/scripts/editor.js"></script>
 
 
 
-  <!-- Section Menus for design -->
-  <script src="/scripts/sectionManagement.js"></script>
-  <script src="/scripts/designSection.js"></script>
+
+
+
+
+    <!-- Scripts & Utils -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"
+      integrity="sha512-GWzVrcGlo0TxTRvz9ttioyYJ+Wwk9Ck0G81D+eO63BaqHaJ3YZX9wuqjwgfcV/MrB2PhaVX9DkYVhbFpStnqpQ=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="/scripts/share.js"></script>
+    <script src="/scripts/pfp.js"></script>
+
+    <script src="/scripts/addElement.js"></script>
+    <script src="/scripts/dynamicContent.js" defer></script>
+
+    <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+    <script src="/scripts/dropzone.js"></script>
+
+    <!-- Include color picker script -->
+    <script src="/scripts/colorpick.js"></script>
+    <script src="/scripts/socialMedia.js"></script>
+
+
+    <!-- Editor.js library -->
+    <script src="/scripts/textField.js"></script>
+    <script src="/scripts/editor.js"></script>
+
+    <!-- Buttton handlig -->
+    <script src="/scripts/btnprops.js"></script>
+
+    <!-- Section Menus for design -->
+    <script src="/scripts/sectionManagement.js"></script>
+    <script src="/scripts/designSection.js"></script>
+
+
+    <div class="modal" id="shareModal">
+      <div class="modal-content">
+        <span class="close" onclick="closeShareModal()">&times;</span>
+        <h2 id="share-dynamic-text"></h2>
+        <div id="shareModalContent">
+
+          <!-- Add more share buttons as needed -->
+        </div>
+        <div id="copyLinkContainer">
+          <button id="copyLinkInput" onclick="copyLinkToClipboard()">
+            <i class="fa-solid fa-link"></i>
+            <span id="url-address"></span>
+            <span id="copyStatus">Copy</span>
+        </div>
+        <hr class="modal-divider">
+
+        <div class="additional-section">
+          <h3>Create Your Own LinkserV page</h3>
+          <p>Design & Customize with ease</p>
+          <a href="/Signup" class="black-button">Sign Up</a>
+          <a href="/" class="find-out-more-button">Find Out More</a>
+        </div>
+      </div>
+    </div>
+
+
 
 
 </body>
@@ -239,6 +284,7 @@
 </div>
 
 
+
 <div class="modal" id="shareModal">
   <div class="modal-content">
     <span class="close" onclick="closeShareModal()">&times;</span>
@@ -263,6 +309,10 @@
     </div>
   </div>
 </div>
+
+
+
+
 
 <div class="modal" id="addElementModal">
   <div class="modal-content" id="element-content">
@@ -441,8 +491,8 @@
           </div>
         </div>
       </div>
-      <button id="addSocialMediaButton">Add Social Media Icon</button>
-      <button id="saveChangesButton" style="display: none">Save Changes</button>
+      <button id="addSocialMediaButton" onclick="saveSocialMediaButton()">Add Social Media Icon</button>
+      <button id="saveChangesButton" style="display: none" onclick="updateSocialMediaButton()">Save Changes</button>
       <button id="socialDelete" style="display: none; background-color: rgb(170, 16, 16);"
         onclick="deleteSocialMediaButton()">Delete <i class="fa-solid fa-trash"></i></button>
 
@@ -464,6 +514,61 @@
 
 
     </div>
+    <div id="buttonSection" style="display: none;">
+      <label for="buttonText">Button text:</label>
+      <input type="text" name="buttonText" id="buttonText" />
+
+      <div for="buttonStyle">Button style:</div>
+
+      <!-- Button Styles Preview Cards -->
+      <div id="buttonStyleCards">
+        <!-- Style 1 -->
+        <div class="button-style-card" onclick="selectButtonStyle('button1')">
+          <button class="button1" style="margin-bottom: 20px;"> Learn More
+          </button>
+          <p>Hard Press</p>
+        </div>
+
+        <!-- Style 2 -->
+        <div class="button-style-card" onclick="selectButtonStyle('button2')">
+          <div class="button2">Hover Me</div>
+          <p>Rise Up</p>
+        </div>
+
+        <!-- Style 3 -->
+        <div class="button-style-card" onclick="selectButtonStyle('button3')">
+          <button class="button3" style="margin-bottom: 10px;">
+            <span class="text">Hello!</span>
+          </button>
+          <p>Fade</p>
+        </div>
+
+        <!-- Style 4 -->
+        <div class="button-style-card" onclick="selectButtonStyle('button4')">
+          <button class="button4">Lookin' Neat!</button>
+          <p>Swiper</p>
+        </div>
+
+        <!-- Style 5 -->
+        <div class="button-style-card" onclick="selectButtonStyle('button5')">
+          <button class="button5" style="width: 175px; font-size: 15px;">
+            <span class="button-content">Watch Me Go</span>
+          </button>
+          <p style="margin-left: 20px;">Fill In</p>
+        </div>
+
+        <!-- Add more styles as needed -->
+      </div>
+      <label for="buttonLink">Button link:</label>
+      <input type="url" name="buttonLink" id="buttonLink" />
+
+      <label for="buttonTransition">Transition:</label>
+      <input type="text" name="buttonTransition" id="buttonTransition" />
+
+      <button onclick="addCustomButton()">Add Button</button>
+    </div>
+
   </div>
+</div>
 
 </html>

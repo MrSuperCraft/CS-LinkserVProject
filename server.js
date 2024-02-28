@@ -78,9 +78,9 @@ app.get('/credits', (req, res) => {
 
 app.get('/design', isAuthenticated, (req, res) => {
     const username = req.session.username;
-
+    const userId = req.session.userId;
     // Render the page with the retrieved username
-    res.render('dropup', { username });
+    res.render('dropup', { username, userId });
 });
 
 
@@ -93,10 +93,19 @@ app.get('/design/:identifier', async (req, res) => {
         // Query the database to get the user based on the email or username
         const user = await getUserByEmailOrUsername(decodedIdentifier);
         const username = user.username;
+
         if (username) {
-            // Use the retrieved username for rendering the page
-            console.log('User found:', user);
-            res.render('dropup', { username: user.username });
+            // Retrieve social media buttons for the user
+            const query = 'SELECT * FROM social_media_buttons WHERE user_id = (SELECT user_id FROM Users WHERE username = ?)';
+            db.all(query, [username], (err, socialMediaButtons) => {
+                if (err) {
+                    return res.status(500).json({ error: err.message });
+                }
+
+                // Use the retrieved username and social media buttons for rendering the page
+                console.log('User found:', user);
+                res.render('dropup', { username: user.username, socialMediaButtons, userId: user.ID });
+            });
         } else {
             // Handle the case when the user is not found
             console.log('User not found for identifier:', decodedIdentifier);
@@ -107,6 +116,7 @@ app.get('/design/:identifier', async (req, res) => {
         res.status(500).render('500'); // Render an error page for server errors
     }
 });
+
 
 function isAuthenticated(req, res, next) {
     console.log('Session in isAuthenticated middleware:', req.session);
@@ -171,22 +181,35 @@ app.post('/authenticate', async (req, res) => {
             // Save user information in the session
             req.session.username = user.username;
 
-            // Check if the user is an admin and set the isAdmin property in the session
-            if (user.isAdmin === 1) {
-                req.session.isAdmin = true;
-            }
-
-            req.session.save(err => {
+            // Fetch the user's ID from the database
+            const userIdQuery = 'SELECT ID FROM Users WHERE Username = ?';
+            db.get(userIdQuery, [user.username], (err, row) => {
                 if (err) {
-                    console.error('Error saving session:', err);
+                    console.error('Error fetching user ID:', err);
                     return res.status(500).json({ success: false, message: 'Internal Server Error' });
                 }
 
-                console.log('Session saved successfully.');
+                // Check if the user has an ID
+                if (row && row.ID) {
+                    req.session.userId = row.ID;
 
-                // Redirect after the session is saved
-                const redirectRoute = user.isAdmin ? '/admin-panel' : `/design/${encodeURIComponent(user.username)}`;
-                return res.status(200).json({ success: true, message: 'Login successful', redirect: redirectRoute });
+                    req.session.save(err => {
+                        if (err) {
+                            console.error('Error saving session:', err);
+                            return res.status(500).json({ success: false, message: 'Internal Server Error' });
+                        }
+
+                        console.log('Session saved successfully.');
+                        console.log('Session after save:', req.session);
+
+                        // Redirect after the session is saved
+                        const redirectRoute = user.isAdmin ? '/admin-panel' : `/design/${encodeURIComponent(user.username)}`;
+                        return res.status(200).json({ success: true, message: 'Login successful', redirect: redirectRoute });
+                    });
+                } else {
+                    console.error('User ID not found in the database.');
+                    return res.status(500).json({ success: false, message: 'Internal Server Error' });
+                }
             });
         } else {
             console.log('Invalid credentials');
@@ -236,7 +259,8 @@ app.post('/signup', async (req, res) => {
 });
 
 
-app.get('/get-user-id', (req, res) => {
+// Add this route to handle fetching the user ID
+app.get('/get-user-id', isAuthenticated, (req, res) => {
     const userId = req.session.userId; // Assuming user ID is stored in the session
     res.json({ userId });
 });
@@ -250,10 +274,10 @@ app.post('/get-username', async (req, res) => {
         const user = await getUserByEmailOrUsername(identifier);
 
         if (user) {
-            res.status(200).json({ username: user.username });
+            res.status(200).json({ username: user.username, userId: user.id });
         } else {
             // If user not found, you can set a default or handle it as needed
-            res.status(404).json({ username: 'Guest' });
+            res.status(404).json({ username: 'Guest', userId: null });
         }
     } catch (err) {
         console.error(err.message);
@@ -605,6 +629,7 @@ db.run(createTableQuery, (err) => {
     }
 });
 
+
 app.use(express.json());
 
 app.post('/api/submit-contact', (req, res) => {
@@ -948,6 +973,103 @@ app.get('/file/:filename', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Managing saves for social media buttons
+
+
+// POST endpoint to save a social media button for a user
+app.post('/api/socialMedia', (req, res) => {
+    const { user_id, platform, url, color1, color2, direction } = req.body;
+    const insertQuery = 'INSERT INTO social_media_buttons (user_id, platform, url, color1, color2, direction) VALUES (?, ?, ?, ?, ?, ?)';
+
+    db.run(insertQuery, [user_id, platform, url, color1, color2, direction], function (err) {
+        if (err) {
+            console.error('Error saving to database:', err.message);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        // Send a success response if the operation is completed without errors
+        res.json({ success: true });
+    });
+});
+
+// GET endpoint to retrieve all social media buttons for a user
+app.get('/api/socialMedia/:user_id', (req, res) => {
+    const user_id = req.params.user_id;
+    const query = 'SELECT * FROM social_media_buttons WHERE user_id = ?';
+    db.all(query, [user_id], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.json(rows);
+    });
+});
+
+// PUT endpoint to update a social media button
+app.put('/api/socialMedia/:button_id', (req, res) => {
+    const { platform, url, color1, color2, direction } = req.body;
+    const button_id = req.params.button_id;
+
+    const updateQuery = 'UPDATE social_media_buttons SET platform = ?, url = ?, color1 = ?, color2 = ?, direction = ? WHERE button_id = ?';
+
+    db.run(updateQuery, [platform, url, color1, color2, direction, button_id], function (err) {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+    });
+});
+
+// DELETE endpoint to delete a social media button
+app.delete('/api/socialMedia/:button_id', (req, res) => {
+    const button_id = req.params.button_id;
+
+    const deleteQuery = 'DELETE FROM social_media_buttons WHERE button_id = ?';
+
+    db.run(deleteQuery, [button_id], function (err) {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

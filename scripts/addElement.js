@@ -56,6 +56,7 @@ function addElement(type) {
     document.getElementById('modalTitle').innerText = (type === 'image') ? 'Add Image' : 'Add Element';
     document.getElementById('modalTitle').innerText = (type === 'social') ? 'Add a Social Media icon' : 'Add Element';
     document.getElementById('modalTitle').innerText = (type === 'textfield') ? 'Add a Text Field' : 'Add Element';
+    document.getElementById('modalTitle').innerText = (type === 'button') ? 'Add A New Button' : 'Add Element'
 
 
     if (type === 'image') {
@@ -77,6 +78,10 @@ function addElement(type) {
 
     } else if (type === 'textfield') {
         showTextFieldSection();
+    }
+
+    if (type === 'button') {
+        showButtonSection();
     }
 }
 

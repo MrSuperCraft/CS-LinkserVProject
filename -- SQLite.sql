@@ -78,6 +78,16 @@ CREATE TABLE IF NOT EXISTS files (
 --   ('user30@example.com', '$2b$10$YourHashedPassword30', 'user30', 0);
 
 
+CREATE TABLE IF NOT EXISTS social_media_buttons (
+    button_id INT PRIMARY KEY,
+    user_id INT,
+    platform VARCHAR(50) NOT NULL,
+    url VARCHAR(255) NOT NULL,
+    color1 VARCHAR(7) NOT NULL, -- Hex color code for color1
+    color2 VARCHAR(7) NOT NULL, -- Hex color code for color2
+    direction VARCHAR(20) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users(ID)
+  );  
 
 
 -- View the table data
@@ -85,3 +95,4 @@ SELECT * FROM Users;
 SELECT * FROM contact_submissions;
 SELECT * FROM settings;
 SELECT * FROM files;
+SELECT * FROM social_media_buttons;
