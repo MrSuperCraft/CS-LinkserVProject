@@ -76,12 +76,9 @@
       </div>
 
       <div id="dynamicUsername"></div>
+
       <div id="social-links-dynamic" style="margin-top: 50px;">
-        <% for (const button of socialMediaButtons) { %>
-          <a href="<%= button.href %>" style=<%=this.style.backgroundColor=button.color %> target="_blank">
-            <i class="fab fa-<%= button.platform.toLowerCase() %>"></i>
-          </a>
-          <% } %>
+        <!-- Social media buttons are added here -->
       </div>
 
       <div id="customButtonsContainer" class="draggable-container">
@@ -195,72 +192,97 @@
 
     </div>
 
+  </div>
+
+
+  <div id="messageFeed" class="message-feed"></div>
 
 
 
 
+  <!-- Scripts & Utils -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"
+    integrity="sha512-GWzVrcGlo0TxTRvz9ttioyYJ+Wwk9Ck0G81D+eO63BaqHaJ3YZX9wuqjwgfcV/MrB2PhaVX9DkYVhbFpStnqpQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script src="/scripts/share.js"></script>
+  <script src="/scripts/pfp.js"></script>
+
+  <!-- smart system cases -->
+  <script src="/scripts/feed.js"></script>
+
+  <script src="/scripts/addElement.js"></script>
+  <script src="/scripts/dynamicContent.js" defer></script>
+
+  <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+  <script src="/scripts/dropzone.js"></script>
+
+  <!-- Include color picker script -->
+  <script src="/scripts/colorpick.js"></script>
+  <script src="/scripts/socialMedia.js"></script>
 
 
-    <!-- Scripts & Utils -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"
-      integrity="sha512-GWzVrcGlo0TxTRvz9ttioyYJ+Wwk9Ck0G81D+eO63BaqHaJ3YZX9wuqjwgfcV/MrB2PhaVX9DkYVhbFpStnqpQ=="
-      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Editor.js library -->
+  <script src="/scripts/textField.js"></script>
+  <script src="/scripts/editor.js"></script>
 
-    <script src="/scripts/share.js"></script>
-    <script src="/scripts/pfp.js"></script>
+  <!-- Buttton handlig -->
+  <script src="/scripts/btnprops.js"></script>
 
-    <script src="/scripts/addElement.js"></script>
-    <script src="/scripts/dynamicContent.js" defer></script>
-
-    <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
-    <script src="/scripts/dropzone.js"></script>
-
-    <!-- Include color picker script -->
-    <script src="/scripts/colorpick.js"></script>
-    <script src="/scripts/socialMedia.js"></script>
+  <!-- Section Menus for design -->
+  <script src="/scripts/sectionManagement.js"></script>
+  <script src="/scripts/designSection.js"></script>
 
 
-    <!-- Editor.js library -->
-    <script src="/scripts/textField.js"></script>
-    <script src="/scripts/editor.js"></script>
-
-    <!-- Buttton handlig -->
-    <script src="/scripts/btnprops.js"></script>
-
-    <!-- Section Menus for design -->
-    <script src="/scripts/sectionManagement.js"></script>
-    <script src="/scripts/designSection.js"></script>
 
 
-    <div class="modal" id="shareModal">
-      <div class="modal-content">
-        <span class="close" onclick="closeShareModal()">&times;</span>
-        <h2 id="share-dynamic-text"></h2>
-        <div id="shareModalContent">
+  <div class="modal" id="shareModal">
+    <div class="modal-content">
+      <span class="close" onclick="closeShareModal()">&times;</span>
+      <h2 id="share-dynamic-text"></h2>
+      <div id="shareModalContent">
 
-          <!-- Add more share buttons as needed -->
-        </div>
-        <div id="copyLinkContainer">
-          <button id="copyLinkInput" onclick="copyLinkToClipboard()">
-            <i class="fa-solid fa-link"></i>
-            <span id="url-address"></span>
-            <span id="copyStatus">Copy</span>
-        </div>
-        <hr class="modal-divider">
+        <!-- Add more share buttons as needed -->
+      </div>
+      <div id="copyLinkContainer">
+        <button id="copyLinkInput" onclick="copyLinkToClipboard()">
+          <i class="fa-solid fa-link"></i>
+          <span id="url-address"></span>
+          <span id="copyStatus">Copy</span>
+      </div>
+      <hr class="modal-divider">
 
-        <div class="additional-section">
-          <h3>Create Your Own LinkserV page</h3>
-          <p>Design & Customize with ease</p>
-          <a href="/Signup" class="black-button">Sign Up</a>
-          <a href="/" class="find-out-more-button">Find Out More</a>
-        </div>
+      <div class="additional-section">
+        <h3>Create Your Own LinkserV page</h3>
+        <p>Design & Customize with ease</p>
+        <a href="/Signup" class="black-button">Sign Up</a>
+        <a href="/" class="find-out-more-button">Find Out More</a>
       </div>
     </div>
-
+  </div>
 
 
 
 </body>
+
+<div class="modal" id="addElementModal">
+  <div class="modal-content" id="element-content">
+    <span class="close" onclick="closeAddElementModal()">&times;</span>
+    <h2>Which element do you want to add?</h2>
+
+    <!-- Example elements to add -->
+    <div class="buttons-container">
+      <button onclick="addElement('button')"><i class="fas fa-square"></i> <span>Add Button</span></button>
+      <button onclick="addElement('textfield')"><i class="fas fa-font"></i><span>Add Text Field</span> </button>
+      <button onclick="addElement('image')"><i class="fas fa-image"></i><span>Add image</span></button>
+      <button onclick="addElement('social')"><i class="fas fa-share-alt"></i><span>Add Social Media
+          Icon</span></button>
+    </div>
+  </div>
+</div>
+
+
+
 
 <div class="modal" id="infoModal">
   <div id="infoModalContent" class="modal-content">
@@ -310,24 +332,6 @@
   </div>
 </div>
 
-
-
-
-
-<div class="modal" id="addElementModal">
-  <div class="modal-content" id="element-content">
-    <span class="close" onclick="closeAddElementModal()">&times;</span>
-    <h2>Which element do you want to add?</h2>
-
-    <!-- Example elements to add -->
-    <div class="buttons-container">
-      <button onclick="addElement('button')"><i class="fas fa-square"></i> <span>Add Button</span></button>
-      <button onclick="addElement('textfield')"><i class="fas fa-font"></i><span>Add Text Field</span> </button>
-      <button onclick="addElement('image')"><i class="fas fa-image"></i><span>Add image</span></button>
-      <button onclick="addElement('social')"><i class="fas fa-share-alt"></i><span>Add Social Media Icon</span></button>
-    </div>
-  </div>
-</div>
 
 <div class="modal" id="customizeElementModal">
   <div class="modal-content" id="customize-element-content">

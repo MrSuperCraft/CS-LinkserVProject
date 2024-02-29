@@ -3,6 +3,10 @@
 function closeCustomizeElementModal() {
     const customizeElementModal = document.getElementById('customizeElementModal');
     customizeElementModal.style.display = 'none';
+
+    const editingContainer = document.querySelector('.social-button-container.editing')
+    editingContainer.classList.remove('editing');
+
 }
 
 function openCustomizeElementModal() {
@@ -14,7 +18,17 @@ function openCustomizeElementModal() {
 
 // On Load
 document.addEventListener('DOMContentLoaded', () => {
+    const modalOverlay = document.getElementById('customizeElementModal'); // Replace with your actual modal overlay ID
 
+    // Add an event listener to the modal overlay
+    modalOverlay.addEventListener('click', function (event) {
+        // Check if the click is outside the modal content
+        if (!event.target.closest('#customize-element-content')) { // Replace with your actual modal content ID
+            // Remove the .editing class from all social media buttons
+            const editingButtons = document.querySelectorAll('.social-button-container.editing');
+            editingButtons.forEach(button => button.classList.remove('editing'));
+        }
+    });
 });
 
 
@@ -184,10 +198,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Function to create a social media button
 function createSocialMediaButtonUI(platform, url, direction, color1, color2, textColorClass = 'plain-white') {
+
     // Create a container for the button and overlay
     const buttonContainer = document.createElement('div');
     buttonContainer.classList.add('social-button-container');
-    buttonContainer.dataset.platform = platform;  // Set the dataset property
+
+    // Set the dataset property for both platform and buttonId
+    buttonContainer.dataset.platform = platform;
 
     const textColor = getCustomColor(textColorClass);
 
@@ -388,7 +405,7 @@ function analyzeAndSelectGradient(directionSelect) {
 const directionSelect = document.getElementById('directionSelect');
 const selectedDirection = document.querySelector('.select-box select');
 
-function saveChanges() {
+function updateSocialMediaButtonUI() {
     // Retrieve values from the inputs in the modal
     const platform = document.getElementById('socialMediaPlatform').value;
     const url = document.getElementById('href-text').value;
@@ -424,7 +441,7 @@ function saveChanges() {
 
 document.addEventListener('DOMContentLoaded', () => {
     // Add an event listener for the "Save Changes" button in the modal
-    document.getElementById('saveChangesButton').addEventListener('click', saveChanges);
+    document.getElementById('saveChangesButton').addEventListener('click', updateSocialMediaButtonUI);
 });
 
 
@@ -550,7 +567,7 @@ function createSvgElement(iconClass) {
 }
 
 
-function deleteSocialMediaButton() {
+function deleteSocialMediaButtonUI() {
 
     const buttonContainer = document.querySelector('.social-button-container.editing');
     // Check if the element exists before trying to remove it
@@ -775,21 +792,42 @@ async function getUserId() {
     }
 }
 
+
+
+
+
+
+// Function to get form values
+function getFormValues() {
+    const platform = document.getElementById('socialMediaPlatform').value;
+    const url = document.getElementById('href-text').value.trim();
+    const direction = document.querySelector('#directionSelect select').value; // Ensure this line is correctly retrieving the value
+    const color1 = document.querySelector('.colors input:nth-child(1)').value;
+    const color2 = document.querySelector('.colors input:nth-child(2)').value;
+
+    return { platform, url, direction, color1, color2 };
+}
+
 // Function to save a new social media button
-async function saveSocialMediaButton(platform, url, direction, color1, color2) {
+async function saveSocialMediaButton() {
     const userId = await getUserId();
-
-    console.log('platform:', platform)
-    console.log('url:', url)
-    console.log('direction:', direction)
-    console.log('color1:', color1)
-    console.log('color2:', color2)
-
-
     if (!userId) {
         console.error('User ID not available');
         return;
     }
+
+    const buttonId = generateUniqueId();
+
+    const { platform, direction, color1, color2, url } = getFormValues();
+
+    // Check if URL is not empty and is valid
+    if (!url || !isValidUrl(url)) {
+        console.error('Invalid or empty URL');
+        return;
+    }
+
+    // Format URL with protocol
+    const formattedUrl = formatUrlWithProtocol(url);
 
     try {
         const response = await fetch('/api/socialMedia', {
@@ -799,11 +837,12 @@ async function saveSocialMediaButton(platform, url, direction, color1, color2) {
             },
             body: JSON.stringify({
                 user_id: userId,
-                platform: platform,
-                href: url,
-                color1: color1,
-                color2: color2,
-                direction: direction,
+                button_id: buttonId,
+                platform,
+                url: formattedUrl, // Use the formatted URL
+                color1,
+                color2,
+                direction,
             }),
         });
 
@@ -815,23 +854,49 @@ async function saveSocialMediaButton(platform, url, direction, color1, color2) {
         console.log('Button saved:', data);
 
         // Call a function to dynamically create the button on the UI
-        createSocialMediaButtonUI(platform, url, direction, color1, color2);
+        createSocialMediaButtonUI(platform, formattedUrl, direction, color1, color2);
+
+        // Call showMessage for success
+        showMessage('Button saved successfully!', 'success');
     } catch (error) {
-        console.error('Error saving social media button:', error.message);
+        if (response && response.status === 500) {
+            // Server-side error
+            showMessage('Internal Server Error. Please try again later.', 'error');
+        } else {
+            showMessage('Failed to create button. Please try again.', 'error');
+        }
     }
 }
 
 // Function to update an existing social media button
-async function updateSocialMediaButton(buttonId, platform, url, direction, color1, color2) {
+async function updateSocialMediaButton(buttonId) {
+    const userId = await getUserId();
+    if (!userId) {
+        console.error('User ID not available');
+        return;
+    }
+
+    const { platform, direction, url, color1, color2 } = getFormValues();
+
+    const formattedUrl = formatUrlWithProtocol(url);
+
+    // Check if URL is not empty and is valid
+    if (!formattedUrl || !isValidUrl(formattedUrl)) {
+        console.error('Invalid or empty URL');
+        return;
+    }
+
+    let response; // Declare response outside the try block
+
     try {
-        const response = await fetch(`/api/socialMedia/${buttonId}`, {
+        response = await fetch(`/api/socialMedia/${userId}/${buttonId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                platform: platform,
-                href: url,
+                platform,
+                url: formattedUrl,
                 color1,
                 color2,
                 direction,
@@ -847,10 +912,19 @@ async function updateSocialMediaButton(buttonId, platform, url, direction, color
 
         // Call a function to dynamically update the button on the UI
         updateSocialMediaButtonUI(buttonId, platform, url, direction, color1, color2);
+
+        // Call showMessage for success
+        showMessage('Button updated successfully!', 'success');
     } catch (error) {
-        console.error('Error updating social media button:', error.message);
+        if (response && response.status === 500) {
+            // Server-side error
+            showMessage('Internal Server Error. Please try again later.', 'error');
+        } else {
+            showMessage('Failed to update button. Please try again.', 'error');
+        }
     }
 }
+
 
 // Function to delete an existing social media button
 async function deleteSocialMediaButton(buttonId) {
@@ -874,5 +948,86 @@ async function deleteSocialMediaButton(buttonId) {
 }
 
 
+// Helper functions
+
+// Function to check and modify URL to include a protocol
+function formatUrlWithProtocol(url) {
+    // Check if the URL starts with 'www.' and prepend 'https://' if true
+    if (url.startsWith('www.')) {
+        return 'https://' + url;
+    }
+
+    // Check if the URL starts with 'http://' or 'https://'
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+        return url; // No modification needed, already has a protocol
+    }
+
+    // If none of the above, assume 'https://' and prepend it
+    return 'https://' + url;
+}
+
+function isValidUrl(string) {
+    try {
+        // If the URL doesn't have a protocol, add 'https://'
+        if (!string.startsWith('http://') && !string.startsWith('https://')) {
+            string = 'https://' + string;
+        }
+
+        new URL(string);
+        return true;
+    } catch (_) {
+        return false;
+    }
+}
 
 
+
+// display of buttons on the UI
+
+
+
+
+// Function to create a social media button and render it
+function createAndRenderSocialMediaButton(platform, url, direction, color1, color2, button_id) {
+    const newSocialMediaButton = createSocialMediaButtonUI(platform, url, direction, color1, color2);
+
+    // Set the dataset on the button upon creation
+    newSocialMediaButton.dataset.button_id = button_id;
+
+    // Add the button to your page or container
+    document.getElementById('social-links-dynamic').appendChild(newSocialMediaButton);
+}
+
+// Function to display user's social media buttons
+async function displayUserSocialMediaButtons() {
+    const userId = await getUserId(); // Assuming you have a function to get the user ID
+
+    if (userId) {
+        const response = await fetch(`/api/socialMedia/${userId}`);
+        if (response.ok) {
+            const socialMediaButtons = await response.json();
+            socialMediaButtons.forEach(button => {
+                // Render each social media button
+                createAndRenderSocialMediaButton(button.platform, button.url, button.direction, button.color1, button.color2, button.button_id);
+            });
+        } else {
+            console.error('Failed to fetch user social media buttons.');
+        }
+    }
+}
+
+// Event listener for page load
+window.addEventListener('load', (event) => {
+    // Display user's social media buttons when the page loads
+    displayUserSocialMediaButtons();
+
+    // Other event listeners or actions as needed
+});
+
+
+
+// Function to generate a unique integer ID
+function generateUniqueId() {
+    // This example assumes a maximum ID range of 1 to 100000
+    return Math.floor(Math.random() * 100000) + 1;
+}

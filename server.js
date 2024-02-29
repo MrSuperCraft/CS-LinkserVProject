@@ -993,10 +993,11 @@ app.get('/file/:filename', async (req, res) => {
 
 // POST endpoint to save a social media button for a user
 app.post('/api/socialMedia', (req, res) => {
-    const { user_id, platform, url, color1, color2, direction } = req.body;
-    const insertQuery = 'INSERT INTO social_media_buttons (user_id, platform, url, color1, color2, direction) VALUES (?, ?, ?, ?, ?, ?)';
+    console.log('Received request:', req.body);
+    const { button_id, user_id, platform, url, color1, color2, direction } = req.body;
+    const insertQuery = 'INSERT INTO social_media_buttons (button_id, user_id, platform, url, color1, color2, direction) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
-    db.run(insertQuery, [user_id, platform, url, color1, color2, direction], function (err) {
+    db.run(insertQuery, [button_id, user_id, platform, url, color1, color2, direction], function (err) {
         if (err) {
             console.error('Error saving to database:', err.message);
             return res.status(500).json({ error: 'Internal Server Error' });
@@ -1006,7 +1007,6 @@ app.post('/api/socialMedia', (req, res) => {
         res.json({ success: true });
     });
 });
-
 // GET endpoint to retrieve all social media buttons for a user
 app.get('/api/socialMedia/:user_id', (req, res) => {
     const user_id = req.params.user_id;
@@ -1020,7 +1020,7 @@ app.get('/api/socialMedia/:user_id', (req, res) => {
 });
 
 // PUT endpoint to update a social media button
-app.put('/api/socialMedia/:button_id', (req, res) => {
+app.put('/api/socialMedia/:user_id/:button_id', (req, res) => {
     const { platform, url, color1, color2, direction } = req.body;
     const button_id = req.params.button_id;
 
@@ -1030,8 +1030,17 @@ app.put('/api/socialMedia/:button_id', (req, res) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         }
+
+        if (this.changes === 0) {
+            // No rows were affected, indicating that the button with the specified ID doesn't exist
+            return res.status(404).json({ error: 'Button not found' });
+        }
+
+        // Button updated successfully
+        res.json({ success: true });
     });
 });
+
 
 // DELETE endpoint to delete a social media button
 app.delete('/api/socialMedia/:button_id', (req, res) => {
