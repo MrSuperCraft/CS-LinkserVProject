@@ -154,7 +154,9 @@
 /* Barlow */
 @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&display=swap');
 
-/* Bold variants for each font */
+/*
+
+/* Bold variants for each font 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&display=swap');
@@ -211,315 +213,317 @@
 
 
 
-/* Poppins - Italic */
+/* Poppins - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@300;400;500;600;700;800;900&display=swap');
 
-/* Roboto - Italic */
+/* Roboto - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@300;400;500;700&display=swap');
 
-/* Open Sans - Italic */
+/* Open Sans - Italic
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@300;400;600;700&display=swap');
 
-/* Montserrat - Italic */
+/* Montserrat - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@300;400;500;600;700&display=swap');
 
-/* Lato - Italic */
+/* Lato - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@300;400;700&display=swap');
 
-/* Raleway - Italic */
+/* Raleway - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@300;400;500;600;700&display=swap');
 
-/* Nunito - Italic */
+/* Nunito - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@300;400;600;700&display=swap');
 
-/* Ubuntu - Italic */
+/* Ubuntu - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@300;400;500;700&display=swap');
 
-/* Source Sans Pro - Italic */
+/* Source Sans Pro - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@300;400;600;700&display=swap');
 
-/* Playfair Display - Italic */
+/* Playfair Display - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@400;500;600;700;800;900&display=swap');
 
-/* Merriweather - Italic */
+/* Merriweather - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@300;400;700;900&display=swap');
 
-/* Pacifico - Italic */
+/* Pacifico - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Pacifico:ital&display=swap');
 
-/* Quicksand - Italic */
+/* Quicksand - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:ital,wght@300;400;500;600;700&display=swap');
 
-/* Oswald - Italic */
+/* Oswald - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Oswald:ital,wght@300;400;500;600;700&display=swap');
 
-/* Roboto Condensed - Italic */
+/* Roboto Condensed - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@300;400;700&display=swap');
 
-/* Roboto Slab - Italic */
+/* Roboto Slab - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:ital,wght@300;400;700&display=swap');
 
-/* Dancing Script - Italic */
+/* Dancing Script - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:ital,wght@400;500;600;700&display=swap');
 
-/* Crimson Text - Italic */
+/* Crimson Text - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@400;600;700&display=swap');
 
-/* Roboto Mono - Italic */
+/* Roboto Mono - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@300;400;500;700&display=swap');
 
-/* Lora - Italic */
+/* Lora - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@400;500;600;700&display=swap');
 
-/* Bebas Neue - Italic */
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue:ital&display=swap');
+/* Bebas Neue - Italic 
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue:ital&display=swap')
 
-/* Yanone Kaffeesatz - Italic */
+/* Yanone Kaffeesatz - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:ital,wght@300;400;700&display=swap');
 
-/* Arvo - Italic */
+/* Arvo - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Arvo:ital,wght@400;700&display=swap');
 
-/* Archivo - Italic */
+/* Archivo - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@300;400;500;600;700&display=swap');
 
-/* Anton - Italic */
+/* Anton - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Anton:ital&display=swap');
 
-/* Cabin - Italic */
+/* Cabin - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@400;500;600;700&display=swap');
 
-/* Fira Sans - Italic */
+/* Fira Sans - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@300;400;500;600;700&display=swap');
 
-/* Bitter - Italic */
+/* Bitter - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Bitter:ital,wght@400;700&display=swap');
 
-/* Old Standard TT - Italic */
+/* Old Standard TT - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@400;700&display=swap');
 
-/* Lobster - Italic */
+/* Lobster - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Lobster:ital&display=swap');
 
-/* Noto Sans - Italic */
+/* Noto Sans - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@400;700&display=swap');
 
-/* Dosis - Italic */
+/* Dosis - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Dosis:ital,wght@300;400;500;600;700;800&display=swap');
 
-/* Inconsolata - Italic */
+/* Inconsolata - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:ital,wght@300;400;700&display=swap');
 
-/* Muli - Italic */
+/* Muli - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Muli:ital,wght@300;400;600;700&display=swap');
 
-/* Titillium Web - Italic */
+/* Titillium Web - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@300;400;600;700&display=swap');
 
-/* Baloo - Italic */
+/* Baloo - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Baloo:ital,wght@300;400;500;600;700&display=swap');
 
-/* Catamaran - Italic */
+/* Catamaran - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Catamaran:ital,wght@300;400;500;600;700&display=swap');
 
-/* Patua One - Italic */
+/* Patua One - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Patua+One:ital&display=swap');
 
-/* Exo - Italic */
+/* Exo - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Exo:ital,wght@300;400;500;600;700&display=swap');
 
-/* Pacifico - Italic */
+/* Pacifico - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Pacifico:ital&display=swap');
 
-/* Rajdhani - Italic */
+/* Rajdhani - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:ital,wght@300;400;500;600;700&display=swap');
 
-/* Roboto Slab - Italic */
+/* Roboto Slab - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:ital,wght@300;400;700&display=swap');
 
-/* Overpass - Italic */
+/* Overpass - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Overpass:ital,wght@300;400;600;700&display=swap');
 
-/* Abril Fatface - Italic */
+/* Abril Fatface - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface:ital&display=swap');
 
-/* Source Code Pro - Italic */
+/* Source Code Pro - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@300;400;500;600;700&display=swap');
 
-/* Cabin Sketch - Italic */
+/* Cabin Sketch - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch:ital,wght@400;700&display=swap');
 
-/* Lobster Two - Italic */
+/* Lobster Two - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Lobster+Two:ital,wght@400;700&display=swap');
 
-/* Archivo Narrow - Italic */
+/* Archivo Narrow - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@400;500;600;700&display=swap');
 
-/* Quattrocento - Italic */
+/* Quattrocento - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Quattrocento:ital,wght@400;700&display=swap');
 
-/* Fjalla One - Italic */
+/* Fjalla One - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Fjalla+One:ital&display=swap');
 
-/* Roboto Slab - Italic */
+/* Roboto Slab - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:ital,wght@300;400;700&display=swap');
 
-/* Barlow - Italic */
+/* Barlow - Italic 
 @import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@300;400;500;600;700&display=swap');
 
 
-/* Poppins Underline */
+/* Poppins Underline 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&text=%5F&display=swap');
 
-/* Roboto Underline */
+/* Roboto Underline 
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&text=%5F&display=swap');
 
-/* Open Sans Underline */
+/* Open Sans Underline 
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&text=%5F&display=swap');
 
-/* Montserrat Underline */
+/* Montserrat Underline 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&text=%5F&display=swap');
 
-/* Lato Underline */
+/* Lato Underline 
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&text=%5F&display=swap');
 
-/* Raleway Underline */
+/* Raleway Underline 
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&text=%5F&display=swap');
 
-/* Nunito Underline */
+/* Nunito Underline 
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&text=%5F&display=swap');
 
-/* Ubuntu Underline */
+/* Ubuntu Underline 
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&text=%5F&display=swap');
 
-/* Source Sans Pro Underline */
+/* Source Sans Pro Underline 
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&text=%5F&display=swap');
 
-/* Playfair Display Underline */
+/* Playfair Display Underline 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&text=%5F&display=swap');
 
-/* Merriweather Underline */
+/* Merriweather Underline 
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&text=%5F&display=swap');
 
-/* Pacifico Underline */
+/* Pacifico Underline 
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&text=%5F&display=swap');
 
-/* Quicksand Underline */
+/* Quicksand Underline 
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&text=%5F&display=swap');
 
-/* Oswald Underline */
+/* Oswald Underline 
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&text=%5F&display=swap');
 
-/* Roboto Condensed Underline */
+/* Roboto Condensed Underline 
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&text=%5F&display=swap');
 
-/* Roboto Slab Underline */
+/* Roboto Slab Underline 
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;700&text=%5F&display=swap');
 
-/* Dancing Script Underline */
+/* Dancing Script Underline 
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&text=%5F&display=swap');
 
-/* Crimson Text Underline */
+/* Crimson Text Underline 
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&text=%5F&display=swap');
 
-/* Roboto Mono Underline */
+/* Roboto Mono Underline 
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;700&text=%5F&display=swap');
 
-/* Lora Underline */
+/* Lora Underline 
 @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&text=%5F&display=swap');
 
-/* Bebas Neue Underline */
+/* Bebas Neue Underline 
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&text=%5F&display=swap');
 
-/* Yanone Kaffeesatz Underline */
+/* Yanone Kaffeesatz Underline 
 @import url('https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@300;400;700&text=%5F&display=swap');
 
-/* Arvo Underline */
+/* Arvo Underline 
 @import url('https://fonts.googleapis.com/css2?family=Arvo:wght@400;700&text=%5F&display=swap');
 
-/* Archivo Underline */
+/* Archivo Underline 
 @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&text=%5F&display=swap');
 
-/* Anton Underline */
+/* Anton Underline 
 @import url('https://fonts.googleapis.com/css2?family=Anton&text=%5F&display=swap');
 
-/* Cabin Underline */
+/* Cabin Underline 
 @import url('https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&text=%5F&display=swap');
 
-/* Fira Sans Underline */
+/* Fira Sans Underline 
 @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600;700&text=%5F&display=swap');
 
-/* Bitter Underline */
+/* Bitter Underline 
 @import url('https://fonts.googleapis.com/css2?family=Bitter:wght@400;700&text=%5F&display=swap');
 
-/* Old Standard TT Underline */
+/* Old Standard TT Underline 
 @import url('https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&text=%5F&display=swap');
 
-/* Lobster Underline */
+/* Lobster Underline 
 @import url('https://fonts.googleapis.com/css2?family=Lobster&text=%5F&display=swap');
 
-/* Noto Sans Underline */
+/* Noto Sans Underline 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&text=%5F&display=swap');
 
-/* Dosis Underline */
+/* Dosis Underline 
 @import url('https://fonts.googleapis.com/css2?family=Dosis:wght@300;400;500;600;700;800&text=%5F&display=swap');
 
-/* Inconsolata Underline */
+/* Inconsolata Underline 
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@300;400;700&text=%5F&display=swap');
 
-/* Muli Underline */
+/* Muli Underline 
 @import url('https://fonts.googleapis.com/css2?family=Muli:wght@300;400;600;700&text=%5F&display=swap');
 
-/* Titillium Web Underline */
+/* Titillium Web Underline 
 @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&text=%5F&display=swap');
 
-/* Baloo Underline */
+/* Baloo Underline 
 @import url('https://fonts.googleapis.com/css2?family=Baloo:wght@300;400;500;600;700&text=%5F&display=swap');
 
-/* Catamaran Underline */
+/* Catamaran Underline 
 @import url('https://fonts.googleapis.com/css2?family=Catamaran:wght@300;400;500;600;700&text=%5F&display=swap');
 
-/* Patua One Underline */
+/* Patua One Underline 
 @import url('https://fonts.googleapis.com/css2?family=Patua+One&text=%5F&display=swap');
 
-/* Exo Underline */
+/* Exo Underline 
 @import url('https://fonts.googleapis.com/css2?family=Exo:wght@300;400;500;600;700&text=%5F&display=swap');
 
-/* Pacifico Underline */
+/* Pacifico Underline 
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&text=%5F&display=swap');
 
-/* Rajdhani Underline */
+/* Rajdhani Underline 
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&text=%5F&display=swap');
 
-/* Roboto Slab Underline */
+/* Roboto Slab Underline 
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;700&text=%5F&display=swap');
 
-/* Overpass Underline */
+/* Overpass Underline 
 @import url('https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;700&text=%5F&display=swap');
 
-/* Abril Fatface Underline */
+/* Abril Fatface Underline 
 @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&text=%5F&display=swap');
 
-/* Source Code Pro Underline */
+/* Source Code Pro Underline 
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600;700&text=%5F&display=swap');
 
-/* Cabin Sketch Underline */
+/* Cabin Sketch Underline 
 @import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch&text=%5F&display=swap');
 
-/* Lobster Two Underline */
+/* Lobster Two Underline 
 @import url('https://fonts.googleapis.com/css2?family=Lobster+Two&text=%5F&display=swap');
 
-/* Archivo Narrow Underline */
+/* Archivo Narrow Underline 
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;500;600;700&text=%5F&display=swap');
 
-/* Quattrocento Underline */
+/* Quattrocento Underline 
 @import url('https://fonts.googleapis.com/css2?family=Quattrocento:wght@400;700&text=%5F&display=swap');
 
-/* Fjalla One Underline */
+/* Fjalla One Underline 
 @import url('https://fonts.googleapis.com/css2?family=Fjalla+One&text=%5F&display=swap');
 
-/* Roboto Slab Underline */
+/* Roboto Slab Underline 
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;700&text=%5F&display=swap');
 
-/* Barlow Underline */
+/* Barlow Underline 
 @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&text=%5F&display=swap');
+
+*/

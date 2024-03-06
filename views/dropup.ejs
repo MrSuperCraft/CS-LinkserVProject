@@ -287,6 +287,10 @@
 <div class="modal" id="infoModal">
   <div id="infoModalContent" class="modal-content">
     <label for="pageInfo" id="info-label">Page Info:</label>
+    <h5>Tell a bit about yourself or share some useful info. It's all up to you! <br> Feel free to use HTML like &lt; b
+      &gt;
+      or &lt; i &gt; tags to customize your text as well!
+      well!</h5>
     <div class="textarea-container">
       <textarea id="pageInfo" rows="4" placeholder="Write something about your page or yourself..." maxlength="200"
         oninput="updateInfo() ; charCount();"></textarea>
@@ -300,7 +304,7 @@
       <div id="previewInfo"></div>
     </div>
 
-    <button onclick="updateInfo()">Save Changes</button>
+    <button onclick="saveInfoChanges()">Save Changes</button>
     <button class="close-btn" onclick="closeInfoModal()">Close</button>
   </div>
 </div>
@@ -360,41 +364,46 @@
     <div id="socialMediaEditSection" style="display: none;">
 
       <div class="form-group">
+
+        <input type="text" name="btn_id" id="btn_id" aria-hidden="true" hidden />
+
         <label for="socialMediaPlatform">Social Media Platform:</label>
         <div id="socialMediaSearchContainer"></div>
         <select id="socialMediaPlatform" class="platform-select">
           <!-- Social Media -->
-          <option value="facebook">Facebook</option>
-          <option value="twitter">Twitter</option>
-          <option value="instagram">Instagram</option>
-          <option value="linkedin">LinkedIn</option>
-          <option value="youtube">YouTube</option>
-          <option value="pinterest">Pinterest</option>
-          <option value="snapchat">Snapchat</option>
-          <option value="tiktok">TikTok</option>
-          <option value="reddit">Reddit</option>
-          <option value="whatsapp">WhatsApp</option>
-          <option value="behance">Behance</option>
-          <option value="dribbble">Dribbble</option>
+          <option value="Facebook">Facebook</option>
+          <option value="Twitter">Twitter</option>
+          <option value="Instagram">Instagram</option>
+          <option value="Linkedin">LinkedIn</option>
+          <option value="Youtube">YouTube</option>
+          <option value="Pinterest">Pinterest</option>
+          <option value="Snapchat">Snapchat</option>
+          <option value="Tiktok">TikTok</option>
+          <option value="Reddit">Reddit</option>
+          <option value="WhatsApp">WhatsApp</option>
+          <option value="Behance">Behance</option>
+          <option value="Dribbble">Dribbble</option>
 
           <!-- Music Platforms -->
-          <option value="spotify">Spotify</option>
-          <option value="soundcloud">SoundCloud</option>
-          <option value="apple-music">Apple Music</option>
-          <option value="bandcamp">Bandcamp</option>
+          <option value="Spotify">Spotify</option>
+          <option value="Soundcloud">SoundCloud</option>
+          <option value="Apple Music">Apple Music</option>
+          <option value="Bandcamp">Bandcamp</option>
+          <option value="Amazon Music">Amazon Music</option>
+
 
           <!-- Forums and Others -->
-          <option value="github">GitHub</option>
-          <option value="discord">Discord</option>
-          <option value="slack">Slack</option>
-          <option value="tumblr">Tumblr</option>
-          <option value="quora">Quora</option>
-          <option value="stack-overflow">Stack Overflow</option>
-          <option value="steam">Steam</option>
-          <option value="etsy">Etsy</option>
-          <option value="paypal">PayPal</option>
-          <option value="twitch">Twitch</option>
-          <option value="telegram">Telegram</option>
+          <option value="GitHub">GitHub</option>
+          <option value="Discord">Discord</option>
+          <option value="Slack">Slack</option>
+          <option value="Tumblr">Tumblr</option>
+          <option value="Quora">Quora</option>
+          <option value="Stack Overflow">Stack Overflow</option>
+          <option value="Steam">Steam</option>
+          <option value="Etsy">Etsy</option>
+          <option value="PayPal">PayPal</option>
+          <option value="Twitch">Twitch</option>
+          <option value="Telegram">Telegram</option>
         </select>
         <div id="optionsDiv"></div>
       </div>
@@ -433,12 +442,12 @@
         </div>
 
         <!-- Icon color modifier -->
-        <div id="textColorSection" style="display: none;">
+        <!--<div id="textColorSection" style="display: none;">
           <div class="form-group">
             <label for="text-color">Icon Color:</label>
             <div id="textColorSearchContainer"></div>
             <select id="text-color" class="text-color-select">
-              <!-- Generated color options with classes -->
+              Generated color options with classes
               <option value="plain-white" data-demo="white">Plain White</option>
               <option value="pastel-red" data-demo="Pastel Red">Pastel Red</option>
               <option value="pastel-orange" data-demo="Pastel Orange">Pastel Orange</option>
@@ -490,89 +499,90 @@
               <option value="mulberry" data-demo="Mulberry">Mulberry</option>
               <option value="steel-blue" data-demo="Steel Blue">Steel Blue</option>
               <option value="goldenrod" data-demo="Goldenrod">Goldenrod</option>
-              <!-- Add more color options as needed -->
+               Add more color options as needed 
             </select>
           </div>
-        </div>
+        -->
       </div>
-      <button id="addSocialMediaButton" onclick="saveSocialMediaButton()">Add Social Media Icon</button>
-      <button id="saveChangesButton" style="display: none" onclick="updateSocialMediaButton()">Save Changes</button>
-      <button id="socialDelete" style="display: none; background-color: rgb(170, 16, 16);"
-        onclick="deleteSocialMediaButton()">Delete <i class="fa-solid fa-trash"></i></button>
-
     </div>
-
-    <div id="textFieldSection" style="display: none;">
-
-      <h3>Edit your text here, and then press "Create Text Field"!</h3>
-      <!-- Text field form -->
-      <div id="editorjs"></div>
-
-      <!-- Additional options can be added as needed -->
-      <label for="fontSelect">Select A Font</label>
-      <select name="fontSelect" id="fontSelect">
-        <!-- fonts will be dynamically loaded here -->
-      </select>
-
-      <button id="addTextField" type="button" onclick="handleEditor()">Create Text Field</button>
-
-
-    </div>
-    <div id="buttonSection" style="display: none;">
-      <label for="buttonText">Button text:</label>
-      <input type="text" name="buttonText" id="buttonText" />
-
-      <div for="buttonStyle">Button style:</div>
-
-      <!-- Button Styles Preview Cards -->
-      <div id="buttonStyleCards">
-        <!-- Style 1 -->
-        <div class="button-style-card" onclick="selectButtonStyle('button1')">
-          <button class="button1" style="margin-bottom: 20px;"> Learn More
-          </button>
-          <p>Hard Press</p>
-        </div>
-
-        <!-- Style 2 -->
-        <div class="button-style-card" onclick="selectButtonStyle('button2')">
-          <div class="button2">Hover Me</div>
-          <p>Rise Up</p>
-        </div>
-
-        <!-- Style 3 -->
-        <div class="button-style-card" onclick="selectButtonStyle('button3')">
-          <button class="button3" style="margin-bottom: 10px;">
-            <span class="text">Hello!</span>
-          </button>
-          <p>Fade</p>
-        </div>
-
-        <!-- Style 4 -->
-        <div class="button-style-card" onclick="selectButtonStyle('button4')">
-          <button class="button4">Lookin' Neat!</button>
-          <p>Swiper</p>
-        </div>
-
-        <!-- Style 5 -->
-        <div class="button-style-card" onclick="selectButtonStyle('button5')">
-          <button class="button5" style="width: 175px; font-size: 15px;">
-            <span class="button-content">Watch Me Go</span>
-          </button>
-          <p style="margin-left: 20px;">Fill In</p>
-        </div>
-
-        <!-- Add more styles as needed -->
-      </div>
-      <label for="buttonLink">Button link:</label>
-      <input type="url" name="buttonLink" id="buttonLink" />
-
-      <label for="buttonTransition">Transition:</label>
-      <input type="text" name="buttonTransition" id="buttonTransition" />
-
-      <button onclick="addCustomButton()">Add Button</button>
-    </div>
+    <button id="addSocialMediaButton" onclick="saveSocialMediaButton()">Add Social Media Icon</button>
+    <button id="saveChangesButton" style="display: none" onclick="updateSocialMediaButton()">Save Changes ✅</button>
+    <button id="socialDelete" style="display: none;" onclick="deleteSocialMediaButton()">Delete <i
+        class="fa-solid fa-trash"></i></button>
 
   </div>
+
+  <div id="textFieldSection" style="display: none;">
+
+    <h3>Edit your text here, and then press "Create Text Field"!</h3>
+    <!-- Text field form -->
+    <div id="editorjs"></div>
+
+    <!-- Additional options can be added as needed -->
+    <label for="fontSelect">Select A Font</label>
+    <select name="fontSelect" id="fontSelect">
+      <!-- fonts will be dynamically loaded here -->
+    </select>
+
+    <button id="addTextField" type="button" onclick="handleEditor()">Create Text Field</button>
+
+
+  </div>
+  <div id="buttonSection" style="display: none;">
+    <label for="buttonText">Button text:</label>
+    <input type="text" name="buttonText" id="buttonText" />
+
+    <div for="buttonStyle">Button style:</div>
+
+    <!-- Button Styles Preview Cards -->
+    <div id="buttonStyleCards">
+      <!-- Style 1 -->
+      <div class="button-style-card" onclick="selectButtonStyle('button1')">
+        <button class="button1" style="margin-bottom: 20px;"> Learn More
+        </button>
+        <p>Hard Press</p>
+      </div>
+
+      <!-- Style 2 -->
+      <div class="button-style-card" onclick="selectButtonStyle('button2')">
+        <div class="button2">Hover Me</div>
+        <p>Rise Up</p>
+      </div>
+
+      <!-- Style 3 -->
+      <div class="button-style-card" onclick="selectButtonStyle('button3')">
+        <button class="button3" style="margin-bottom: 10px;">
+          <span class="text">Hello!</span>
+        </button>
+        <p>Fade</p>
+      </div>
+
+      <!-- Style 4 -->
+      <div class="button-style-card" onclick="selectButtonStyle('button4')">
+        <button class="button4">Lookin' Neat!</button>
+        <p>Swiper</p>
+      </div>
+
+      <!-- Style 5 -->
+      <div class="button-style-card" onclick="selectButtonStyle('button5')">
+        <button class="button5" style="width: 175px; font-size: 15px;">
+          <span class="button-content">Watch Me Go</span>
+        </button>
+        <p style="margin-left: 20px;">Fill In</p>
+      </div>
+
+      <!-- Add more styles as needed -->
+    </div>
+    <label for="buttonLink">Button link:</label>
+    <input type="url" name="buttonLink" id="buttonLink" />
+
+    <label for="buttonTransition">Transition:</label>
+    <input type="text" name="buttonTransition" id="buttonTransition" />
+
+    <button onclick="addCustomButton()">Add Button</button>
+  </div>
+
+</div>
 </div>
 
 </html>

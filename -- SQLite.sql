@@ -90,9 +90,23 @@ CREATE TABLE IF NOT EXISTS social_media_buttons (
   );  
 
 
+CREATE TABLE IF NOT EXISTS user_text_info (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  page_info TEXT,
+  FOREIGN KEY (user_id) REFERENCES Users(ID)
+);
+
+
+-- Testing
+-- DELETE FROM social_media_buttons WHERE user_id="3";
+
+
+
 -- View the table data
 SELECT * FROM Users;
 SELECT * FROM contact_submissions;
 SELECT * FROM settings;
 SELECT * FROM files;
 SELECT * FROM social_media_buttons;
+select * FROM user_text_info;

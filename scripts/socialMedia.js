@@ -4,7 +4,7 @@ function closeCustomizeElementModal() {
     const customizeElementModal = document.getElementById('customizeElementModal');
     customizeElementModal.style.display = 'none';
 
-    const editingContainer = document.querySelector('.social-button-container.editing')
+    const editingContainer = document.querySelector('div').classList.contains('editing');
     editingContainer.classList.remove('editing');
 
 }
@@ -14,22 +14,50 @@ function openCustomizeElementModal() {
     customizeElementModal.style.display = 'block';
 }
 
+// Global Variables
+
+
+
 
 
 // On Load
 document.addEventListener('DOMContentLoaded', () => {
-    const modalOverlay = document.getElementById('customizeElementModal'); // Replace with your actual modal overlay ID
+    const modalOverlay = document.getElementById('customizeElementModal');
 
-    // Add an event listener to the modal overlay
     modalOverlay.addEventListener('click', function (event) {
-        // Check if the click is outside the modal content
-        if (!event.target.closest('#customize-element-content')) { // Replace with your actual modal content ID
-            // Remove the .editing class from all social media buttons
-            const editingButtons = document.querySelectorAll('.social-button-container.editing');
-            editingButtons.forEach(button => button.classList.remove('editing'));
+        // Check if the click was inside the modal content
+        const isInsideModalContent = event.target.closest('.modal-content');
+
+        if (!isInsideModalContent) {
+            // Get the closest social-button-container ancestor
+            const buttonContainer = event.target.closest('.social-button-container');
+
+            if (!buttonContainer) {
+                // Click was outside of any button, handle as needed
+                removeAllEditingClasses();
+            } else {
+                // Get the button_id from the clicked button
+                const buttonId = buttonContainer.dataset.button_id;
+
+                // Remove editing class from all buttons
+                removeAllEditingClasses();
+
+                // Add editing class to the clicked button
+                buttonContainer.classList.add('editing');
+
+                // Call the updateSocialMediaButton function with the buttonId
+                updateSocialMediaButton(buttonId);
+            }
         }
     });
 });
+
+// Function to remove the "editing" class from all buttons
+function removeAllEditingClasses() {
+    const editingButtons = document.querySelectorAll('.social-button-container.editing');
+    editingButtons.forEach(button => button.classList.remove('editing'));
+}
+
 
 
 
@@ -61,7 +89,7 @@ function showSocialMediaSection() {
     document.getElementById('socialMediaEditSection').style.display = 'block';
     document.getElementById('addSocialMediaButton').style.display = 'block';
     document.getElementById('saveChangesButton').style.display = 'none';
-    document.getElementById('textColorSection').style.display = 'none';
+    // document.getElementById('textColorSection').style.display = 'none';
     document.getElementById('socialDelete').style.display = 'none';
     document.getElementById('textFieldSection').style.display = 'none';
 
@@ -73,12 +101,11 @@ function enableSocialEdit() {
     document.getElementById('imageEditSection').style.display = 'none';
     document.getElementById('socialMediaEditSection').style.display = 'block';
     document.getElementById('addSocialMediaButton').style.display = 'none';
-    document.getElementById('textColorSection').style.display = 'block';
+    // document.getElementById('textColorSection').style.display = 'block';
     document.getElementById('saveChangesButton').style.display = 'block';
     document.getElementById('socialDelete').style.display = 'block';
     document.getElementById('textFieldSection').style.display = 'none';
 }
-
 
 
 
@@ -120,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             // Filter and display matching options
             const matchingOptions = Array.from(platformSelect.options).filter(option =>
-                option.text.toLowerCase().includes(searchTerm)
+                option.text.toLowerCase().includes(searchTerm) || option.value.includes(searchTerm)
             );
 
             displayOptions(matchingOptions);
@@ -151,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Append the icon and text to the option item
             optionItem.appendChild(iconElement);
 
-            optionItem.addEventListener('click', function () {
+            optionItem.addEventListener('click', function (event) {
                 // Set the selected option in the hidden select element
                 platformSelect.value = option.value;
 
@@ -163,6 +190,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Clear the displayed options
                 optionsCard.innerHTML = '';
+
+                // Get the closest parent with the 'social-button-container' class
+                const buttonContainer = this.closest('.social-button-container');
+
+                // Check if a button container is found
+                if (buttonContainer) {
+                    // Add or toggle the 'editing' class on the found button container
+                    buttonContainer.classList.toggle('editing', true);
+                }
+
+                // Stop further propagation of the event
+                event.stopPropagation();
             });
 
             optionsCard.appendChild(optionItem);
@@ -195,18 +234,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
 // Function to create a social media button
-function createSocialMediaButtonUI(platform, url, direction, color1, color2, textColorClass = 'plain-white') {
-
-    // Create a container for the button and overlay
+function createSocialMediaButtonUI(platform, url, direction, color1, color2, buttonId) {
     const buttonContainer = document.createElement('div');
     buttonContainer.classList.add('social-button-container');
 
     // Set the dataset property for both platform and buttonId
     buttonContainer.dataset.platform = platform;
+    buttonContainer.dataset.button_id = buttonId || generateUniqueId();
 
-    const textColor = getCustomColor(textColorClass);
+    // const textColor = getCustomColor(textColorClass);
 
     // Create an overlay div
     const overlay = document.createElement('div');
@@ -215,7 +252,7 @@ function createSocialMediaButtonUI(platform, url, direction, color1, color2, tex
 
     // Create an anchor element
     const buttonLink = document.createElement('a');
-    buttonLink.href = url.startsWith('http') ? url : `http://${url}`;
+    buttonLink.href = url && url.startsWith('http') ? url : `http://${url}`;
     buttonLink.target = "_blank";
     buttonLink.style.background = `linear-gradient(${direction}, ${color1}, ${color2})`;
     buttonLink.style.borderRadius = '50%'; // Make the button circular
@@ -226,14 +263,12 @@ function createSocialMediaButtonUI(platform, url, direction, color1, color2, tex
     buttonLink.style.justifyContent = 'center';
     buttonLink.style.textDecoration = 'none'; // Remove underline from the link
 
-
     // Create an icon element as an i element
     const iconElement = document.createElement('i');
     iconElement.className = getIconClass(platform); // Update the icon class based on the platform
     iconElement.style.color = 'white';
     iconElement.style.fontSize = '30px'; // Adjust the font size as needed
-    iconElement.style.color = textColor; // Set the text color dynamically
-
+    // iconElement.style.color = textColor; // Set the text color dynamically
 
     // Append the icon to the anchor element
     buttonLink.appendChild(iconElement);
@@ -254,13 +289,16 @@ function createSocialMediaButtonUI(platform, url, direction, color1, color2, tex
         // Analyze the gradient and select the corresponding option
         analyzeAndSelectGradient(directionSelect);
 
+        console.log('Direction value before modal:', direction);
+
         // Open the edit modal
         openEditSocialMediaModal(buttonContainer, platform, url, color1, color2, direction);
-        console.log(openEditSocialMediaModal(buttonContainer, platform, url, color1, color2, direction));
     });
 
     return buttonContainer;
 }
+
+
 
 
 // Event listener for the "Add Social Media Icon" button in Customize Element modal
@@ -298,43 +336,47 @@ window.addEventListener('load', (event) => {
     });
 });
 
-function openEditSocialMediaModal(buttonContainer, platform, url, color1, color2, direction) {
-    // Save the current search value
-    const currentSearchValue = document.getElementById('platformSearch').value;
+function openEditSocialMediaModal(buttonContainer, platform, url, color1, color2, direction, buttonId) {
 
-    // Populate your modal with the values
-    document.getElementById('socialMediaPlatform').value = platform;
+
+    const searchContainer = document.getElementById('socialMediaSearchContainer');
+
+    const dataPlatform = buttonContainer.dataset.platform || platform;
+    console.log('dataPlatform: ', dataPlatform)
+
+    const platformSearch = searchContainer.querySelector('#platformSearch');
+    console.log('platformSearch element:', platformSearch);
+
+    // Set the value for platformSearch
+    if (platformSearch) {
+        platformSearch.value = dataPlatform;
+    } else {
+        console.error('platformSearch element not found');
+    }
+
+
+
     document.getElementById('href-text').value = url;
-
-    console.log('Platform before updating icon:', platform);
 
     // Find the select element for direction
     const directionSelect = document.querySelector('.select-box select');
 
-    console.log('Icon class before update:', getIconClass(platform));
 
-    // Retrieve the data-platform attribute
-    const dataPlatform = buttonContainer.dataset.platform;
-    console.log('Data Platform:', dataPlatform);
+
 
     // Find the option with the specified value
     const selectedOption = Array.from(directionSelect.options).find(option => option.text.toLowerCase() === direction.toLowerCase());
 
     // Set the selected attribute for the found option
     if (selectedOption) {
-        // Update the platform based on the selected option
-        directionSelect.value = selectedOption.value;  // Update the direction based on the selected option
+        // Update the direction based on the selected option
+        directionSelect.value = selectedOption.value;
         directionSelect.dispatchEvent(new Event('change'));
-
-        // Directly set the platform input value
-        document.getElementById('socialMediaPlatform').value = dataPlatform || 'facebook';
     } else {
         // If the option is not found, set a default value or handle it as needed
-        directionSelect.value = 'Left Top';
+        directionSelect.value = 'to left top';
+        directionSelect.querySelector('option[value="to left top"]').setAttribute('selected', 'selected');
         directionSelect.dispatchEvent(new Event('change'));
-
-        // Directly set the platform input value to the default
-        document.getElementById('socialMediaPlatform').value = 'facebook'; // or any default platform
     }
 
     // Trigger the change event
@@ -346,14 +388,17 @@ function openEditSocialMediaModal(buttonContainer, platform, url, color1, color2
     // Analyze the current gradient and automatically select the corresponding option
     analyzeAndSelectGradient(directionSelect);
 
-    // Restore the search value
-    document.getElementById('platformSearch').value = currentSearchValue;
-
     enableSocialEdit();
 
     // Add 'editing' class to indicate that the button is being edited
     buttonContainer.classList.add('editing');
 
+    // Fetch the button ID using the promise
+    getButtonId().then(buttonId => {
+        // Set the button ID in the hidden input
+        document.getElementById('btn_id').value = buttonId;
+
+    });
     // Open the modal
     openCustomizeElementModal();
 }
@@ -361,7 +406,7 @@ function openEditSocialMediaModal(buttonContainer, platform, url, color1, color2
 
 // Function to analyze the current gradient and automatically select the corresponding option
 function analyzeAndSelectGradient(directionSelect) {
-    const editingContainer = document.querySelector('.social-button-container.editing');
+    let editingContainer = document.querySelector('.social-button-container.editing');
 
 
     if (editingContainer && directionSelect) {
@@ -375,13 +420,11 @@ function analyzeAndSelectGradient(directionSelect) {
 
         // Check if the background image contains the gradient keyword
         if (backgroundImageValue.includes('linear-gradient')) {
-            console.log('Contains Linear Gradient!');
 
             // Extract direction from gradient using a regex
             const directionMatch = backgroundImageValue.match(/to\s(\w+(\s\w+)*)/i);
             const direction = directionMatch ? directionMatch[1].replace(/\s/g, ' ') : 'Left Top';
 
-            console.log('Extracted Direction:', direction); // Log the extracted direction
 
             // Check if directionSelect has options
             if (directionSelect.options) {
@@ -390,8 +433,6 @@ function analyzeAndSelectGradient(directionSelect) {
                     option.text.toLowerCase().includes(direction.toLowerCase())
                 );
 
-                // Log the matching option
-                console.log('Matching Option:', matchingOption);
 
                 // Set the selected attribute for the found option
                 directionSelect.value = matchingOption ? matchingOption.value : '';
@@ -402,10 +443,12 @@ function analyzeAndSelectGradient(directionSelect) {
 }
 
 
-const directionSelect = document.getElementById('directionSelect');
+const directionSelect = document.querySelector('#directionSelect select');
 const selectedDirection = document.querySelector('.select-box select');
 
-function updateSocialMediaButtonUI() {
+async function updateSocialMediaButtonUI(buttonId) {
+    let editingContainer = document.querySelector('.editing');
+
     // Retrieve values from the inputs in the modal
     const platform = document.getElementById('socialMediaPlatform').value;
     const url = document.getElementById('href-text').value;
@@ -414,27 +457,37 @@ function updateSocialMediaButtonUI() {
     const color2 = document.querySelectorAll('.colors input')[1].value;
 
     // Add this line to retrieve the text color value
-    const textColor = document.querySelectorAll('#text-color')[0].value;
-
-    // Find the edited social media button container
-    const editingContainer = document.querySelector('.social-button-container.editing');
+    // const textColor = document.querySelectorAll('#text-color')[0].value;
 
     // Check if the element exists before trying to modify it
-    if (editingContainer) {
-        // Remove the existing button
-        editingContainer.remove();
+    if (editingContainer && editingContainer.classList.contains('editing')) {
+
+        console.log("Is editing class present:", editingContainer.classList.contains('editing'));
+
+        // If a buttonId is not provided or is -1, generate a new ID
+        if (!buttonId || buttonId === -1) {
+            buttonId = generateUniqueId(); // Replace with your logic to generate a new ID
+        }
 
         // Create a new button element with the updated values, including textColor
-        const newSocialMediaButton = createSocialMediaButtonUI(platform, url, direction, color1, color2, textColor);
+        const newSocialMediaButton = createSocialMediaButtonUI(platform, url, direction, color1, color2, buttonId);
+        newSocialMediaButton.dataset.platform = platform;
+        newSocialMediaButton.dataset.url = url;
+        newSocialMediaButton.dataset.direction = direction;
+        newSocialMediaButton.dataset.color1 = color1;
+        newSocialMediaButton.dataset.color2 = color2;
 
-        console.log("The selected color is:" + textColor);
+        //console.log("The selected color is:" + textColor);
 
         // Add the new button to your page or container
         document.getElementById('social-links-dynamic').appendChild(newSocialMediaButton);
 
         console.log('changes saved.')
         // Close the modal
-        setTimeout(closeCustomizeElementModal, 200);
+        // Remove the existing button
+        editingContainer.remove();
+
+        setTimeout(closeCustomizeElementModal, 300);
     }
 }
 
@@ -467,71 +520,67 @@ buttonContainer.addEventListener('click', function () {
 function getIconClass(platform) {
     switch (platform) {
         // Social Media Icons
-        case 'facebook':
+        case 'Facebook':
             return 'fab fa-facebook';
-        case 'twitter':
+        case 'Twitter':
             return 'fab fa-twitter';
-        case 'instagram':
+        case 'Instagram':
             return 'fab fa-instagram';
-        case 'linkedin':
+        case 'Linkedin':
             return 'fab fa-linkedin';
-        case 'youtube':
+        case 'Youtube':
             return 'fab fa-youtube';
-        case 'pinterest':
+        case 'Pinterest':
             return 'fab fa-pinterest';
-        case 'snapchat':
+        case 'Snapchat':
             return 'fab fa-snapchat-ghost';
-        case 'tiktok':
+        case 'Tiktok':
             return 'fab fa-tiktok';
-        case 'reddit':
+        case 'Reddit':
             return 'fab fa-reddit';
-        case 'whatsapp':
+        case 'WhatsApp':
             return 'fab fa-whatsapp';
         // Add more cases for other social media platforms
 
         // Music Platform Icons
-        case 'spotify':
+        case 'Spotify':
             return 'fab fa-spotify';
-        case 'soundcloud':
+        case 'Soundcloud':
             return 'fab fa-soundcloud';
-        case 'apple-music':
+        case 'Apple Music':
             return 'fab fa-apple';
-        case 'google-play-music':
-            return 'fab fa-google-play';
-        case 'amazon-music':
+        case 'Amazon Music':
             return 'fab fa-amazon';
         // Add more cases for other music platforms
 
         // Other Icons
-        case 'github':
+        case 'GitHub':
             return 'fab fa-github';
-        case 'discord':
+        case 'Discord':
             return 'fab fa-discord';
-        case 'medium':
-            return 'fab fa-medium';
-        case 'twitch':
+        case 'Twitch':
             return 'fab fa-twitch';
-        case 'steam':
+        case 'Steam':
             return 'fab fa-steam';
-        case 'stack-overflow':
+        case 'Stack Overflow':
             return 'fab fa-stack-overflow';
-        case 'etsy':
+        case 'Etsy':
             return 'fab fa-etsy';
-        case 'telegram':
+        case 'Telegram':
             return 'fab fa-telegram';
-        case 'slack':
+        case 'Slack':
             return 'fab fa-slack';
-        case 'behance':
+        case 'Behance':
             return 'fab fa-behance';
-        case 'quora':
+        case 'Quora':
             return 'fab fa-quora';
-        case 'paypal':
+        case 'PayPal':
             return 'fab fa-paypal';
-        case 'bandcamp':
+        case 'Bandcamp':
             return 'fab fa-bandcamp';
-        case 'dribbble':
+        case 'Dribbble':
             return 'fab fa-dribbble';
-        case 'tumblr':
+        case 'Tumblr':
             return 'fab fa-tumblr';
         // Add more cases for other platforms
 
@@ -567,18 +616,36 @@ function createSvgElement(iconClass) {
 }
 
 
-function deleteSocialMediaButtonUI() {
 
+
+
+
+
+
+
+
+
+
+
+function deleteSocialMediaButtonUI() {
+    console.log('Attempting to delete button from UI...');
     const buttonContainer = document.querySelector('.social-button-container.editing');
-    // Check if the element exists before trying to remove it
+
     if (buttonContainer) {
+        console.log('Button container found, attempting to remove...');
         // Remove the button container
         buttonContainer.remove();
 
         // Optionally, add any additional cleanup logic here
 
-        console.log('Button deleted.');
-        closeCustomizeElementModal();
+        console.log('Button deleted from UI.');
+
+        // Delay closing the modal to ensure DOM update
+        setTimeout(() => {
+            closeCustomizeElementModal();
+        }, 100); // Adjust the delay time if needed
+    } else {
+        console.log('Button container not found.');
     }
 }
 
@@ -586,18 +653,7 @@ function deleteSocialMediaButtonUI() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-//  Manually define custom color classes and their hex values
+/*  Manually define custom color classes and their hex values
 const customColorClasses = [
     { name: 'pastel-red', hex: '#FF6E70' },
     { name: 'pastel-orange', hex: '#FFA07A' },
@@ -652,11 +708,13 @@ const customColorClasses = [
     { name: 'plain-white', hex: '#FFF' }
 ];
 
+*/
+
 // Function to get the corresponding color from customColorClasses
-function getCustomColor(value) {
-    const colorObject = customColorClasses.find(color => color.name === value);
-    return colorObject ? colorObject.hex : '#000'; // Default to black if not found
-}
+//function getCustomColor(value) {
+//    const colorObject = customColorClasses.find(color => color.name === value);
+//    return colorObject ? colorObject.hex : '#000'; // Default to black if not found
+//}
 
 
 
@@ -668,109 +726,109 @@ function getCustomColor(value) {
 
 
 
+// Temporarily removed feature - color selection for the icon
 
 
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Find the select element
-    const colorSelect = document.getElementById('text-color');
-
-    // Hide the original select element
-    colorSelect.style.display = 'none';
-
-    // Add an input element for searching
-    const colorSearch = document.createElement('input');
-    colorSearch.setAttribute('type', 'text');
-    colorSearch.setAttribute('placeholder', 'Search for a color...');
-    colorSearch.setAttribute('id', 'colorSearch');
-    colorSearch.style.marginBottom = '10px';
-
-    // Create a container for the search input and options card
-    const searchContainer = document.getElementById('textColorSearchContainer');
-    const optionsCard = document.createElement('div');
-    optionsCard.setAttribute('class', 'options-card');
-    optionsCard.style.width = '300px';
-    optionsCard.style.overflowX = 'hidden'; // Add this line to hide the sideways scrollbar
-
-    // Append the search input and options card to the search container
-    searchContainer.appendChild(colorSearch);
-    searchContainer.appendChild(optionsCard);
-
-    // Event listener for the search input
-    colorSearch.addEventListener('input', function () {
-        const searchTerm = colorSearch.value.toLowerCase();
-
-        // Check if the search input is empty
-        if (searchTerm.trim() === '') {
-            // Hide the options card
-            optionsCard.style.display = 'none';
-        } else {
-            // Filter and display matching options
-            const matchingOptions = Array.from(colorSelect.options).filter(option =>
-                option.textContent.toLowerCase().includes(searchTerm)
-            );
-
-            displayOptions(matchingOptions);
-        }
-    });
-
-    // Function to display filtered options
-    function displayOptions(options) {
-        // Clear existing options
-        optionsCard.innerHTML = '';
-
-        // Add filtered options
-        options.forEach(option => {
-            const optionItem = document.createElement('div');
-            optionItem.style.width = '280px';
-            optionItem.style.padding = '8px';
-            optionItem.style.boxSizing = 'border-box'; // Include padding in the total width
-            optionItem.style.textAlign = 'left';
-
-            // Get the demo text for the current color
-            const demoText = option.getAttribute('data-demo');
-
-            // Create a demo element for the color square
-            const demoSquare = document.createElement('div');
-            demoSquare.style.width = '20px';
-            demoSquare.style.height = '20px';
-            demoSquare.style.backgroundColor = getCustomColor(option.value); // Get corresponding color from customColorClasses
-            demoSquare.classList.add('color-square');
-            demoSquare.style.display = 'inline-block';
-            demoSquare.style.marginRight = '8px';
-
-            // Create a text element for the color name
-            const colorName = document.createElement('span');
-            colorName.textContent = demoText;
-
-            // Append the demo square and color name to the option item
-            optionItem.appendChild(demoSquare);
-            optionItem.appendChild(colorName);
-
-            optionItem.addEventListener('click', function () {
-                // Set the selected option in the hidden select element
-                colorSelect.value = option.value;
-
-                // Trigger the change event manually
-                colorSelect.dispatchEvent(new Event('change'));
-
-                // Update the search input with the selected option
-                colorSearch.value = demoText;
-
-                // Clear the displayed options
-                optionsCard.innerHTML = '';
-            });
-
-            optionsCard.appendChild(optionItem);
-        });
-
-        // Display the options card
-        optionsCard.style.display = 'block';
-    }
-
-
-
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//     // Find the select element
+//     const colorSelect = document.getElementById('text-color');
+// 
+//     // Hide the original select element
+//     colorSelect.style.display = 'none';
+// 
+//     // Add an input element for searching
+//     const colorSearch = document.createElement('input');
+//     colorSearch.setAttribute('type', 'text');
+//     colorSearch.setAttribute('placeholder', 'Search for a color...');
+//     colorSearch.setAttribute('id', 'colorSearch');
+//     colorSearch.style.marginBottom = '10px';
+// 
+//     // Create a container for the search input and options card
+//     const searchContainer = document.getElementById('textColorSearchContainer');
+//     const optionsCard = document.createElement('div');
+//     optionsCard.setAttribute('class', 'options-card');
+//     optionsCard.style.width = '300px';
+//     optionsCard.style.overflowX = 'hidden'; // Add this line to hide the sideways scrollbar
+// 
+//     // Append the search input and options card to the search container
+//     searchContainer.appendChild(colorSearch);
+//     searchContainer.appendChild(optionsCard);
+// 
+//     // Event listener for the search input
+//     colorSearch.addEventListener('input', function () {
+//         const searchTerm = colorSearch.value.toLowerCase();
+// 
+//         // Check if the search input is empty
+//         if (searchTerm.trim() === '') {
+//             // Hide the options card
+//             optionsCard.style.display = 'none';
+//         } else {
+//             // Filter and display matching options
+//             const matchingOptions = Array.from(colorSelect.options).filter(option =>
+//                 option.textContent.toLowerCase().includes(searchTerm)
+//             );
+// 
+//             displayOptions(matchingOptions);
+//         }
+//     });
+// 
+//     // Function to display filtered options
+//     function displayOptions(options) {
+//         // Clear existing options
+//         optionsCard.innerHTML = '';
+// 
+//         // Add filtered options
+//         options.forEach(option => {
+//             const optionItem = document.createElement('div');
+//             optionItem.style.width = '280px';
+//             optionItem.style.padding = '8px';
+//             optionItem.style.boxSizing = 'border-box'; // Include padding in the total width
+//             optionItem.style.textAlign = 'left';
+// 
+//             // Get the demo text for the current color
+//             const demoText = option.getAttribute('data-demo');
+// 
+//             // Create a demo element for the color square
+//             const demoSquare = document.createElement('div');
+//             demoSquare.style.width = '20px';
+//             demoSquare.style.height = '20px';
+//             demoSquare.style.backgroundColor = getCustomColor(option.value); // Get corresponding color from customColorClasses
+//             demoSquare.classList.add('color-square');
+//             demoSquare.style.display = 'inline-block';
+//             demoSquare.style.marginRight = '8px';
+// 
+//             // Create a text element for the color name
+//             const colorName = document.createElement('span');
+//             colorName.textContent = demoText;
+// 
+//             // Append the demo square and color name to the option item
+//             optionItem.appendChild(demoSquare);
+//             optionItem.appendChild(colorName);
+// 
+//             optionItem.addEventListener('click', function () {
+//                 // Set the selected option in the hidden select element
+//                 colorSelect.value = option.value;
+// 
+//                 // Trigger the change event manually
+//                 colorSelect.dispatchEvent(new Event('change'));
+// 
+//                 // Update the search input with the selected option
+//                 colorSearch.value = demoText;
+// 
+//                 // Clear the displayed options
+//                 optionsCard.innerHTML = '';
+//             });
+// 
+//             optionsCard.appendChild(optionItem);
+//         });
+// 
+//         // Display the options card
+//         optionsCard.style.display = 'block';
+//     }
+// 
+// 
+// 
+// });
 
 
 
@@ -793,10 +851,6 @@ async function getUserId() {
 }
 
 
-
-
-
-
 // Function to get form values
 function getFormValues() {
     const platform = document.getElementById('socialMediaPlatform').value;
@@ -807,6 +861,7 @@ function getFormValues() {
 
     return { platform, url, direction, color1, color2 };
 }
+
 
 // Function to save a new social media button
 async function saveSocialMediaButton() {
@@ -854,47 +909,56 @@ async function saveSocialMediaButton() {
         console.log('Button saved:', data);
 
         // Call a function to dynamically create the button on the UI
-        createSocialMediaButtonUI(platform, formattedUrl, direction, color1, color2);
+        createSocialMediaButtonUI(platform, formattedUrl, direction, color1, color2, buttonId);
 
         // Call showMessage for success
         showMessage('Button saved successfully!', 'success');
     } catch (error) {
         if (response && response.status === 500) {
             // Server-side error
-            showMessage('Internal Server Error. Please try again later.', 'error');
+            showMessage('Internal Server Error. Please try again later.', 'warning');
         } else {
             showMessage('Failed to create button. Please try again.', 'error');
         }
     }
 }
 
-// Function to update an existing social media button
-async function updateSocialMediaButton(buttonId) {
+// Function to save a new social media button
+async function updateSocialMediaButton() {
     const userId = await getUserId();
     if (!userId) {
         console.error('User ID not available');
         return;
     }
 
-    const { platform, direction, url, color1, color2 } = getFormValues();
+    const buttonId = document.getElementById('btn_id').value;
+    if (!buttonId) {
+        console.error('Button ID not available');
+        return;
+    }
 
-    const formattedUrl = formatUrlWithProtocol(url);
+    const { platform, direction, color1, color2, url } = getFormValues();
 
     // Check if URL is not empty and is valid
-    if (!formattedUrl || !isValidUrl(formattedUrl)) {
+    if (!url || !isValidUrl(url)) {
         console.error('Invalid or empty URL');
         return;
     }
 
-    let response; // Declare response outside the try block
+    // Format URL with protocol
+    const formattedUrl = formatUrlWithProtocol(url);
 
     try {
-        response = await fetch(`/api/socialMedia/${userId}/${buttonId}`, {
-            method: 'PUT',
+        console.log('Sending PUT request to:', `/api/socialMedia/${userId}/${buttonId}`);
+
+        const response = await fetch(`/api/socialMedia/${userId}/${buttonId}`, {
+            method: 'PUT', // Use PUT for updates
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
+                user_id: userId,
+                button_id: buttonId,
                 platform,
                 url: formattedUrl,
                 color1,
@@ -902,6 +966,8 @@ async function updateSocialMediaButton(buttonId) {
                 direction,
             }),
         });
+
+        console.log('PUT request completed. Response:', response);
 
         if (!response.ok) {
             throw new Error(`Failed to update social media button. Status: ${response.status}`);
@@ -911,41 +977,85 @@ async function updateSocialMediaButton(buttonId) {
         console.log('Button updated:', data);
 
         // Call a function to dynamically update the button on the UI
-        updateSocialMediaButtonUI(buttonId, platform, url, direction, color1, color2);
+        updateSocialMediaButtonUI(buttonId);
 
         // Call showMessage for success
         showMessage('Button updated successfully!', 'success');
     } catch (error) {
-        if (response && response.status === 500) {
-            // Server-side error
-            showMessage('Internal Server Error. Please try again later.', 'error');
-        } else {
-            showMessage('Failed to update button. Please try again.', 'error');
-        }
+        console.error('Error updating button:', error);
+        // Handle errors as needed
+        showMessage('Failed to update button. Please try again.', 'error');
     }
 }
+
+
+// Modified getButtonId function
+async function getButtonId() {
+    return new Promise((resolve) => {
+        const checkForButtonId = async () => {
+            let container = document.querySelector('.editing');
+
+            if (container && container.dataset && container.dataset.button_id) {
+                resolve(container.dataset.button_id);
+            } else {
+                // Fetch the button ID before retrying
+                await sleep(100); // Add a delay to avoid excessive checks
+                requestAnimationFrame(checkForButtonId);
+            }
+        };
+
+        // Start checking for the button ID
+        checkForButtonId();
+    });
+}
+
+
+// Function to introduce a delay
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+
 
 
 // Function to delete an existing social media button
-async function deleteSocialMediaButton(buttonId) {
+async function deleteSocialMediaButton() {
+    console.log('running the function: deleteSocialMediaButton()')
     try {
-        const response = await fetch(`/api/socialMedia/${buttonId}`, {
-            method: 'DELETE',
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to delete social media button. Status: ${response.status}`);
+        const buttonId = document.getElementById('btn_id').value;
+        if (!buttonId) {
+            console.error('Button ID not available');
+            showMessage('Failed to delete, ID not found', 'error');
+            return;
         }
 
-        const data = await response.json();
-        console.log('Button deleted:', data);
+        // Make an HTTP DELETE request to the server
+        const response = await fetch(`/api/socialMedia/${buttonId}`, { method: 'DELETE' });
+        console.log(response); // Add this line
 
-        // Call a function to dynamically remove the button from the UI
-        deleteSocialMediaButtonUI(buttonId);
+        if (response.ok) {
+
+            deleteSocialMediaButtonUI();
+
+            // Button deleted successfully
+            console.log('Button deleted from the server.');
+            showMessage('Button deleted successfully!', 'success');
+            closeCustomizeElementModal();
+        } else if (response.status === 500) {
+            console.log('Deletion unsuccessful.');
+            showMessage('Failed to delete the button due to a server error', 'warning');
+        } else {
+            console.error('Failed to delete the button.');
+            showMessage('Failed to delete.', 'error');
+        }
     } catch (error) {
-        console.error('Error deleting social media button:', error.message);
+        console.error('Error:', error);
+        showMessage('An error occurred while deleting the button', 'error');
     }
 }
+
+
 
 
 // Helper functions
@@ -989,14 +1099,22 @@ function isValidUrl(string) {
 
 // Function to create a social media button and render it
 function createAndRenderSocialMediaButton(platform, url, direction, color1, color2, button_id) {
-    const newSocialMediaButton = createSocialMediaButtonUI(platform, url, direction, color1, color2);
+    const newSocialMediaButton = createSocialMediaButtonUI(platform, url, direction, color1, color2, button_id);
 
-    // Set the dataset on the button upon creation
-    newSocialMediaButton.dataset.button_id = button_id;
-
-    // Add the button to your page or container
-    document.getElementById('social-links-dynamic').appendChild(newSocialMediaButton);
+    // Check if newSocialMediaButton is a valid node
+    if (newSocialMediaButton && newSocialMediaButton instanceof Node) {
+        // Check if the button is not already a child node
+        const socialLinksDynamic = document.getElementById('social-links-dynamic');
+        if (!socialLinksDynamic.contains(newSocialMediaButton)) {
+            // Add the button to your page or container
+            socialLinksDynamic.appendChild(newSocialMediaButton);
+        }
+    } else {
+        console.error('Failed to create and render social media button. createSocialMediaButtonUI returned:', newSocialMediaButton);
+    }
 }
+
+
 
 // Function to display user's social media buttons
 async function displayUserSocialMediaButtons() {
@@ -1006,15 +1124,42 @@ async function displayUserSocialMediaButtons() {
         const response = await fetch(`/api/socialMedia/${userId}`);
         if (response.ok) {
             const socialMediaButtons = await response.json();
+            const socialLinksDynamic = document.getElementById('social-links-dynamic');
+
             socialMediaButtons.forEach(button => {
-                // Render each social media button
-                createAndRenderSocialMediaButton(button.platform, button.url, button.direction, button.color1, button.color2, button.button_id);
+                // Create a social media button with the specific button_id from the database
+                const newSocialMediaButton = createSocialMediaButtonUI(
+                    button.platform,
+                    button.url,
+                    button.direction,
+                    button.color1,
+                    button.color2,
+                    button.button_id
+                );
+
+                if (newSocialMediaButton) {
+                    // Add the button to your page or container
+                    socialLinksDynamic.appendChild(newSocialMediaButton);
+                } else {
+                    console.error('Failed to create social media button for buttonId:', button.button_id);
+                }
             });
         } else {
             console.error('Failed to fetch user social media buttons.');
         }
     }
 }
+
+// Helper functions
+
+function clearEditingClass() {
+    const socialButtons = document.querySelectorAll()
+
+    socialButtons.forEach(button => {
+        button.classList.remove('editing');
+    })
+}
+
 
 // Event listener for page load
 window.addEventListener('load', (event) => {

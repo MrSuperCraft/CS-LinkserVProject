@@ -1020,37 +1020,179 @@ app.get('/api/socialMedia/:user_id', (req, res) => {
 });
 
 // PUT endpoint to update a social media button
-app.put('/api/socialMedia/:user_id/:button_id', (req, res) => {
+app.put('/api/socialMedia/:userId/:buttonId', (req, res) => {
+    const { userId, buttonId } = req.params;
     const { platform, url, color1, color2, direction } = req.body;
-    const button_id = req.params.button_id;
 
-    const updateQuery = 'UPDATE social_media_buttons SET platform = ?, url = ?, color1 = ?, color2 = ?, direction = ? WHERE button_id = ?';
-
-    db.run(updateQuery, [platform, url, color1, color2, direction, button_id], function (err) {
-        if (err) {
-            return res.status(500).json({ error: err.message });
+    // Use a transaction to perform both DELETE and INSERT atomically
+    db.run('BEGIN TRANSACTION', (beginErr) => {
+        if (beginErr) {
+            console.error('Error beginning transaction:', beginErr);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
         }
 
-        if (this.changes === 0) {
-            // No rows were affected, indicating that the button with the specified ID doesn't exist
-            return res.status(404).json({ error: 'Button not found' });
-        }
+        // DELETE the old button's data
+        db.run(
+            'DELETE FROM social_media_buttons WHERE user_id = ? AND button_id = ?',
+            [userId, buttonId],
+            (deleteErr) => {
+                if (deleteErr) {
+                    console.error('Error deleting old button data:', deleteErr);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                    return;
+                }
 
-        // Button updated successfully
-        res.json({ success: true });
+                // INSERT the new button's data
+                db.run(
+                    'INSERT INTO social_media_buttons (user_id, button_id, platform, url, color1, color2, direction) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                    [userId, buttonId, platform, url, color1, color2, direction],
+                    (insertErr) => {
+                        if (insertErr) {
+                            console.error('Error inserting new button data:', insertErr);
+                            res.status(500).json({ error: 'Internal Server Error' });
+                            return;
+                        }
+
+                        // Commit the transaction
+                        db.run('COMMIT', (commitErr) => {
+                            if (commitErr) {
+                                console.error('Error committing transaction:', commitErr);
+                                res.status(500).json({ error: 'Internal Server Error' });
+                                return;
+                            }
+
+                            res.json({ message: 'Button updated successfully' });
+                        });
+                    }
+                );
+            }
+        );
     });
 });
+
+
+
 
 
 // DELETE endpoint to delete a social media button
-app.delete('/api/socialMedia/:button_id', (req, res) => {
+app.delete('/api/socialMedia/:button_id', async (req, res) => {
     const button_id = req.params.button_id;
 
+    console.log('Attempting to delete button with ID:', button_id);
+
+    const checkQuery = 'SELECT * FROM social_media_buttons WHERE button_id = ?';
     const deleteQuery = 'DELETE FROM social_media_buttons WHERE button_id = ?';
 
-    db.run(deleteQuery, [button_id], function (err) {
+    try {
+        // Check if the button with the given ID exists
+        const existingButton = await new Promise((resolve, reject) => {
+            db.get(checkQuery, [button_id], (err, row) => {
+                if (err) {
+                    console.error('Error checking button existence:', err.message);
+                    return reject(err);
+                }
+
+                resolve(row);
+            });
+        });
+
+        if (!existingButton) {
+            // If the button doesn't exist, respond with a bad request status
+            return res.status(400).json({ error: 'Button not found' });
+        }
+
+        // Delete the button from the database
+        await new Promise((resolve, reject) => {
+            db.run(deleteQuery, [button_id], function (err) {
+                if (err) {
+                    console.error('Error deleting from the database:', err.message);
+                    return reject(err);
+                }
+
+                console.log('Button deleted from the database.');
+                resolve();
+            });
+        });
+
+        // If deletion is successful, respond with a success status
+        res.status(200).json({ message: 'Button deleted successfully' });
+    } catch (error) {
+        console.error('Error during deletion:', error);
+        res.status(500).json({ error: 'Failed to delete the button' });
+    }
+});
+
+
+
+
+/*
+*
+*
+*
+* 
+*
+*
+*
+*
+*/
+
+
+
+// User info modal management
+
+// Endpoint to save or update user information
+app.post('/api/UserInfo/Change', (req, res) => {
+    const { userId, pageInfo } = req.body;
+
+    // Check if the user already has an info section
+    const checkQuery = 'SELECT COUNT(*) as count FROM user_text_info WHERE user_id = ?';
+    db.get(checkQuery, [userId], (err, row) => {
         if (err) {
-            return res.status(500).json({ error: err.message });
+            console.error('Error checking data:', err);
+            res.status(500).json({ message: 'Internal Server Error' });
+        } else {
+            const count = row ? row.count : 0;
+
+            if (count > 0) {
+                // User already has an info section, update it
+                const updateQuery = 'UPDATE user_text_info SET page_info = ? WHERE user_id = ?';
+                db.run(updateQuery, [pageInfo, userId], (updateErr) => {
+                    if (updateErr) {
+                        console.error('Error updating data:', updateErr);
+                        res.status(500).json({ message: 'Internal Server Error' });
+                    } else {
+                        res.status(200).json({ message: 'Data updated successfully!' });
+                    }
+                });
+            } else {
+                // User doesn't have an info section, insert new data
+                const insertQuery = 'INSERT INTO user_text_info (user_id, page_info) VALUES (?, ?)';
+                db.run(insertQuery, [userId, pageInfo], (insertErr) => {
+                    if (insertErr) {
+                        console.error('Error inserting data:', insertErr);
+                        res.status(500).json({ message: 'Internal Server Error' });
+                    } else {
+                        res.status(200).json({ message: 'Data saved successfully!' });
+                    }
+                });
+            }
+        }
+    });
+});
+
+// Endpoint to retrieve user information
+app.get('/api/UserInfo/:userId', (req, res) => {
+    const userId = req.params.userId;
+
+    const query = 'SELECT page_info FROM user_text_info WHERE user_id = ?';
+    db.get(query, [userId], (err, row) => {
+        if (err) {
+            console.error('Error fetching data:', err);
+            res.status(500).json({ message: 'Internal Server Error' });
+        } else {
+            const pageInfo = row ? row.page_info : null;
+            res.status(200).json({ pageInfo });
         }
     });
 });
@@ -1058,25 +1200,88 @@ app.delete('/api/socialMedia/:button_id', (req, res) => {
 
 
 
+/*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*/
+
+
+// Management for profile pictures
+
+
+// Create 'pfp' table if not exists
+db.run(`
+    CREATE TABLE IF NOT EXISTS pfp (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        imageData BLOB,
+        FOREIGN KEY (user_id) REFERENCES Users(ID)
+    );
+`);
+
+// Set up the route for file upload
+app.post('/api/pfp/upload', upload.single('profileImage'), async (req, res) => {
+    // Handle the file upload and update the database here
+    const fileData = req.file.buffer;
+    const userId = req.body.user_id; // Assuming you have the userID in the request body
+    console.log('Received file data:', fileData); // Log the received file data
+
+
+    try {
+        // Check if the user already has an image in the database
+        const existingImageRow = db.get('SELECT id FROM pfp WHERE user_id = ?', [userId]);
+
+        if (existingImageRow) {
+            // If the user already has an image, update the existing record
+            db.run('UPDATE pfp SET imageData = ? WHERE user_id = ?', [fileData, userId]);
+        } else {
+            // If the user doesn't have an image, insert a new record
+            db.run('INSERT INTO pfp (user_id, imageData) VALUES (?, ?)', [userId, fileData]);
+        }
+
+        res.send({ success: true });
+    } catch (error) {
+        console.error('Error uploading or updating file:', error);
+        res.status(500).send({ error: 'Internal Server Error' });
+    }
+});
 
 
 
 
+app.get('/api/pfp/:userId', async (req, res) => {
+    const userId = req.params.userId;
 
+    try {
+        console.log('Fetching profile picture for userId:', userId);
 
+        const query = 'SELECT imageData FROM pfp WHERE user_id = ?';
+        const row = await db.get(query, [userId]);
 
-
-
-
-
-
-
-
-
-
-
-
-
+        if (row && row.imageData) {
+            const base64Image = row.imageData.toString('base64');
+            res.send({ imageData: base64Image });
+        } else {
+            console.log('Profile picture not found for userId:', userId);
+            res.status(404).send({ error: 'Profile picture not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching profile picture:', error);
+        res.status(500).send({ error: 'Internal Server Error', details: error.message });
+    }
+});
 
 
 

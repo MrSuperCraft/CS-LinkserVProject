@@ -1,36 +1,89 @@
-document.addEventListener('DOMContentLoaded', function () {
-    // Function to handle file input change
-    function handleFileInputChange(event) {
-        const fileInput = event.target;
-        const profileImage = document.getElementById('profileImage');
+document.addEventListener('DOMContentLoaded', async function () {
+    const profilePictureContainer = document.querySelector('.profile-picture-container');
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.style.display = 'none';
 
-        // Check if a file is selected
-        if (fileInput.files.length > 0) {
-            const newImageSrc = URL.createObjectURL(fileInput.files[0]);
-            profileImage.src = newImageSrc;
+    // Fetch and render user's profile picture on page load
+    const userId = await getUserId();  // Use your own getUserId function
+    if (userId) {
+        const imageUrl = await fetchProfilePicture(userId);
+        if (imageUrl) {
+            const profileImage = document.getElementById('profileImage');
+            profileImage.src = imageUrl;
         }
     }
 
-    // Find the profile picture container
-    const profilePictureContainer = document.querySelector('.profile-picture-container');
+    fileInput.addEventListener('change', async function (event) {
+        const fileInput = event.target;
+        const profileImage = document.getElementById('profileImage');
 
-    // Create a file input
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = 'image/*'; // Restrict to image files
-    fileInput.style.display = 'none'; // Hide the file input
+        if (fileInput.files.length > 0) {
+            const newImageSrc = URL.createObjectURL(fileInput.files[0]);
+            profileImage.src = newImageSrc;
 
-    // Attach the function to the file input change event
-    fileInput.addEventListener('change', handleFileInputChange);
+            // Send the file to the server using AJAX
+            await sendFileToServer(fileInput.files[0]);
+        }
+    });
 
-    // Function to trigger file input when the image or overlay is clicked
-    function handleImageClick() {
-        fileInput.click(); // Trigger the file input
+    async function sendFileToServer(file) {
+        const formData = new FormData();
+        formData.append('profileImage', file);
+        formData.append('user_id', await getUserId());  // Use your own getUserId function
+
+        try {
+            const response = await fetch('/api/pfp/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                console.log('File uploaded successfully');
+                // Optionally, you can update the UI or show a success message
+            } else {
+                console.error('Error uploading file:', data.error);
+                // Handle the error accordingly
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
 
-    // Attach the function to the image and overlay click events
-    profilePictureContainer.addEventListener('click', handleImageClick);
+    async function fetchProfilePicture(userId) {
+        try {
+            const response = await fetch(`/api/pfp/${userId}`);
+            console.log('Response:', response);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
 
-    // Append the file input to the profile picture container
+            const blob = await response.blob();
+
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    resolve(reader.result);
+                };
+                reader.onerror = reject;
+
+                reader.readAsDataURL(blob);
+            });
+        } catch (error) {
+            console.error('Error fetching profile picture:', error);
+            return null;
+        }
+    }
+
+
+
+
+    profilePictureContainer.addEventListener('click', function () {
+        fileInput.click();
+    });
+
     profilePictureContainer.appendChild(fileInput);
 });

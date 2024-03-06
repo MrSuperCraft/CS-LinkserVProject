@@ -767,15 +767,39 @@ body {
     border-radius: 5px;
 }
 
+#socialDelete {
+    display: flex;
+    background-color: rgb(196, 40, 40);
+    margin-inline: auto;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#socialDelete:hover {
+    background-color: rgb(117, 12, 12);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+
 
 
 
 /* Style for the submit button */
 #customize-element-content #applyChangesButton,
 #addSocialMediaButton,
-#saveChangesButton,
 #addTextField,
 .dz-button {
+    display: flex;
+    margin-inline: auto;
     background-color: #3498db;
     color: white;
     padding: 10px;
@@ -789,10 +813,10 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+
 #customize-element-content #applyChangesButton:hover,
 #addSocialMediaButton:hover,
 #saveChangesButton:hover,
-#addTextField:hover,
 .dz-button:hover {
     background-color: #2980b9;
     color: #ecf0f1;
@@ -801,10 +825,43 @@ body {
 }
 
 
+#saveChangesButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-inline: auto;
+    background-color: #2ecc71;
+
+
+    color: white;
+    padding: 10px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+
+    width: 40%;
+
+    cursor: pointer;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#saveChangesButton:hover {
+
+    background-color: #21862a;
+    color: #ecf0f1;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+
+
+
 #elementImage {
     margin-bottom: 0;
 }
-
 
 
 .dropzone {
@@ -1085,10 +1142,11 @@ body {
     width: 500px;
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .social-button-container {
+    margin-inline: auto;
     position: relative;
     width: 80px;
     /* Adjust the width as needed */

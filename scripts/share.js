@@ -1,6 +1,24 @@
 // Extract username from the URL
 const username = window.location.pathname.split('/').pop();
 
+
+// Get the user ID from the route
+async function getUserId() {
+    try {
+        const response = await fetch('/get-user-id');
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch user ID. Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.userId;
+    } catch (error) {
+        console.error('Error fetching user ID:', error.message);
+        return null;
+    }
+}
+
 // Add a flag to track whether buttons are loaded
 let buttonsLoaded = false;
 
@@ -9,17 +27,59 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 
-function openInfoModal() {
+async function openInfoModal() {
     const infoModal = document.getElementById('infoModal');
     infoModal.style.display = 'block';
 
-    // Add dynamic data to the modal content
+    // Fetch user information when opening the modal
+    const userId = await getUserId();
+    fetch(`/api/UserInfo/${userId}`)
+        .then(response => response.json())
+        .then(data => {
+            const pageInfoTextarea = document.getElementById('pageInfo');
+            pageInfoTextarea.value = data.pageInfo || '';
+            updateInfo();
+        })
+        .catch(error => {
+            console.error('Error fetching user information:', error);
+        });
+
 }
 
 function closeInfoModal() {
     const infoModal = document.getElementById('infoModal');
     infoModal.style.display = 'none';
 }
+
+async function saveInfoChanges() {
+    const userId = await getUserId();
+    const pageInfoTextarea = document.getElementById('pageInfo');
+    const pageInfo = pageInfoTextarea.value;
+
+    // Make a Fetch API request to save data to the server
+    fetch('/api/UserInfo/Change', {  // Update the URL to match your server route
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            userId: userId,
+            pageInfo: pageInfo
+        })
+    })
+        .then(response => response.json())
+        .then((data) => {
+            showMessage('Page info saved successfully!', 'success')
+            console.log('Data saved successfully:', data);
+            closeInfoModal(); // Optionally, close the modal after saving
+        })
+        .catch(error => {
+            showMessage('An error has occured when trying to save the info. Please try again.', 'error')
+            console.error('Error saving data:', error);
+        });
+}
+
+
 
 function openShareModal() {
     const shareModal = document.getElementById('shareModal');
@@ -66,7 +126,7 @@ function loadDynamicShareButtons(username) {
         button.appendChild(document.createTextNode('Share on ' + platform.charAt(0).toUpperCase() + platform.slice(1)));
 
         // Dynamically set the href attribute based on the user's page address
-        const userPageAddress = 'https://localhost:3000/' + username; // Adjust the URL structure as needed
+        const userPageAddress = 'http://localhost:3000/' + username; // Adjust the URL structure as needed
         button.setAttribute('data-href', getShareLink(userPageAddress, platform));
 
         button.onclick = function () {
@@ -114,16 +174,16 @@ function getFontAwesomeClass(platform) {
 function getPlatformURL(platform, username) {
     switch (platform) {
         case 'facebook':
-            return `https://www.facebook.com/sharer/sharer.php?u=https://localhost:3000/${username}`;
+            return `https://www.facebook.com/sharer/sharer.php?u=http://localhost:3000/${username}`;
         case 'twitter':
-            return `https://twitter.com/intent/tweet?url=https://localhost:3000/${username}&text=Check out this page on LinkserV!`;
+            return `https://twitter.com/intent/tweet?url=http://localhost:3000/${username}&text=Check out this page on LinkserV!`;
         case 'whatsapp':
-            return `https://api.whatsapp.com/send?text=Check out this page on LinkserV: https://localhost:3000/${username}`;
+            return `https://api.whatsapp.com/send?text=Check out this page on LinkserV: http://localhost:3000/${username}`;
         case 'linkedin':
-            return `https://www.linkedin.com/shareArticle?url=https://localhost:3000/${username}`;
+            return `https://www.linkedin.com/shareArticle?url=http://localhost:3000/${username}`;
         case 'email':
             const emailSubject = `${username}'s LinkserV`;
-            const emailBody = `Check out this LinkserV: https://localhost:3000/${username}`;
+            const emailBody = `Check out this LinkserV: http://localhost:3000/${username}`;
             return `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
         default:
             return '';
