@@ -751,7 +751,6 @@ body {
 /* image modal */
 
 #customize-element-content {
-    max-width: 600px;
     margin: 0 auto;
 }
 
@@ -2006,4 +2005,281 @@ body {
 .message-feed,
 .message {
     transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Profile section design */
+
+
+
+
+#profileSection {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background: hsla(0, 0%, 41%, 1);
+    background: linear-gradient(135deg, hsl(0, 0%, 57%) 0%, hsla(0, 1%, 66%, 1) 100%);
+    background: -moz-linear-gradient(135deg, hsl(0, 0%, 57%) 0%, hsla(0, 1%, 66%, 1) 100%);
+    background: -webkit-linear-gradient(135deg, hsl(0, 0%, 57%) 0%, hsla(0, 1%, 66%, 1) 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#696969", endColorstr="#A9A7A7", GradientType=1);
+
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    /* Ensure relative positioning for overlay effect */
+}
+
+
+#profileBanner {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    max-height: 300px;
+    margin: 0 auto;
+    border: 2px solid white;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    background-position: center -300px;
+    /* Move the background image down by 50 pixels */
+    background-size: cover;
+    height: 300px;
+}
+
+#bannerImage {
+    display: none;
+    /* Hide the original img tag */
+}
+
+.pfp-stats {
+    margin-top: -75px;
+}
+
+
+
+
+
+#profileSection .profile-picture-container {
+    position: relative;
+    margin-inline: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    /* Align the profile picture to the bottom */
+    margin-top: 0;
+    margin-bottom: 30px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.7);
+    outline: 2px solid white;
+}
+
+#profileSection .profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+    /* Add a white border for a cleaner look */
+}
+
+#profileSection .profile-stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* Add some spacing between stat cards */
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+#profileSection .stat-card {
+    background-color: #f8f8f8;
+    /* Lighter background color */
+    border-radius: 12px;
+    /* Slightly rounder corners */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    /* More padding for a cleaner look */
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
+    width: 200px;
+    /* Set a fixed width for consistent card sizes */
+}
+
+#profileSection .stat-card:hover {
+    transform: scale(1.05);
+}
+
+#profileSection .stat-label {
+    font-size: 18px;
+    /* Slightly smaller font size */
+    font-weight: bold;
+    color: #555;
+    /* Darker label color */
+    display: block;
+    margin-bottom: 8px;
+}
+
+#profileSection .stat-value {
+    font-size: 22px;
+    /* Slightly larger font size */
+    color: #777;
+    /* Darker value color */
+    display: block;
+}
+
+#profileSection .stat-card svg {
+    font-size: 32px;
+    /* Larger icon size */
+    margin-bottom: 12px;
+    /* More space between icon and label */
+    color: #3498db;
+    /* Blue color for icons */
+}
+
+
+
+.btn__log-out {
+    margin-top: 20px;
+    border-radius: 10px;
+    background-color: rgb(194, 34, 34);
+    color: white;
+    text-decoration: none;
+    width: 200px;
+    height: 50px;
+    border: none;
+    outline: none;
+    font-weight: bold;
+    font-size: 20px;
+    transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in;
+}
+
+.btn__log-out:hover {
+    background-color: rgb(145, 31, 31);
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* text editor */
+
+
+
+.editor__container {
+    background-color: #ffffff;
+    width: 90vmin;
+    padding: 50px 30px;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    border-radius: 10px;
+    box-shadow: 0 25px 50px rgba(7, 20, 35, 0.2);
+}
+
+.options {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+}
+
+.editor__container button {
+    height: 28px;
+    width: 28px;
+    display: grid;
+    place-items: center;
+    border-radius: 3px;
+    border: none;
+    background-color: #ffffff;
+    outline: none;
+    color: #020929;
+}
+
+.editor__container select {
+    padding: 7px;
+    border: 1px solid #020929;
+    border-radius: 3px;
+}
+
+.editor__container .options label,
+.editor__container .options select {
+    font-family: "Poppins", sans-serif;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.editor__container input[type="color"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    width: 40px;
+    height: 28px;
+    border: none;
+    cursor: pointer;
+}
+
+.editor__container input[type="color"]::-webkit-color-swatch {
+    border-radius: 15px;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 3px #020929;
+}
+
+input[type="color"]::-moz-color-swatch {
+    border-radius: 15px;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 3px #020929;
+}
+
+.editor__container #text-input {
+    margin-top: 10px;
+    border: 1px solid #dddddd;
+    padding: 20px;
+    height: 50vh;
+}
+
+.editor__container .active {
+    background-color: #e0e9ff;
 }

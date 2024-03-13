@@ -47,24 +47,32 @@ function closeAddElementModal() {
 
 let currentElementType; // Store the type of the currently selected element
 
+function setText(type) {
+    if (type === 'image') { document.getElementById('modalTitle').textContent = 'Add a New Image' };
+    if (type === 'social') { document.getElementById('modalTitle').textContent = 'Add a Social Media Button' };
+    if (type === 'button') { document.getElementById('modalTitle').textContent = 'Add a New Button ' };
+    if (type === 'textfield') { document.getElementById('modalTitle').textContent = 'Add a New Textfield' };
+
+
+};
+
 function addElement(type) {
+
+    const customizeElementContent = document.getElementById('customize-element-content');
+    customizeElementContent.removeAttribute('style')
+
+
     openCustomizeElementModal();
     currentElementType = type;
     closeAddElementModal();
 
-    // Set modal title based on whether it's a new addition or an edit
-    document.getElementById('modalTitle').innerText = (type === 'image') ? 'Add Image' : 'Add Element';
-    document.getElementById('modalTitle').innerText = (type === 'social') ? 'Add a Social Media icon' : 'Add Element';
-    document.getElementById('modalTitle').innerText = (type === 'textfield') ? 'Add a Text Field' : 'Add Element';
-    document.getElementById('modalTitle').innerText = (type === 'button') ? 'Add A New Button' : 'Add Element'
+    setText(currentElementType);
 
 
-    if (type === 'image') {
+    if (currentElementType === 'image') {
         showImageSection();
-        document.getElementById('textFieldSection').style.display = 'none';
 
-
-    } else if (type === 'social') {
+    } else if (currentElementType === 'social') {
         // Reset values in the modal
         document.getElementById('platformSearch').value = '';  // Reset platform input
         document.getElementById('href-text').value = '';  // Reset URL input
@@ -75,12 +83,10 @@ function addElement(type) {
 
         showSocialMediaSection();
 
-
-    } else if (type === 'textfield') {
+    } else if (currentElementType === 'textfield') {
+        document.getElementById('customize-element-content').style.width = '100vh';
         showTextFieldSection();
-    }
-
-    if (type === 'button') {
+    } else if (currentElementType === 'button') {
         showButtonSection();
     }
 }
@@ -122,6 +128,8 @@ function closeCustomizeElementModal() {
     const customizeElementModal = document.getElementById('customizeElementModal');
     customizeElementModal.style.display = 'none';
     clearFormInputs();
+
+    customizeElementModal.removeAttribute('style');
 }
 
 // Function to clear the form inputs and dropzone
@@ -402,6 +410,7 @@ function showImageSection() {
     document.getElementById('textEditSection').style.display = 'block';
     document.getElementById('imageEditSection').style.display = 'block';
     document.getElementById('textFieldSection').style.display = 'none';
+    document.getElementById('buttonSection').style.display = 'none';
 
 
 }
@@ -413,13 +422,7 @@ function EditSocialMedia() {
     document.getElementById('saveChangesButton').style.display = 'block';
     document.getElementById('addSocialMediaButton').style.display = 'none';
     document.getElementById('textFieldSection').style.display = 'none';
+    document.getElementById('buttonSection').style.display = 'none';
 
 }
 
-function showTextFieldSection() {
-    document.getElementById('image-modal').style.display = 'none';
-    document.getElementById('socialMediaEditSection').style.display = 'none';
-    document.getElementById('textColorSection').style.display = 'none';
-    document.getElementById('textFieldSection').style.display = 'block';
-
-}

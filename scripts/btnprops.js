@@ -8,7 +8,6 @@ function openCustomizeElementModal() {
 function showButtonSection() {
     document.getElementById('image-modal').style.display = 'none';
     document.getElementById('socialMediaEditSection').style.display = 'none';
-    document.getElementById('textColorSection').style.display = 'none';
     document.getElementById('textFieldSection').style.display = 'none';
     document.getElementById('buttonSection').style.display = 'block';
 }

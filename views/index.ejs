@@ -41,6 +41,7 @@
                     <a href="#Home" id="homebtn">Home</a>
                     <a href="#About">About</a>
                     <a href="#FAQ" id="faqbtn">FAQ</a>
+                    <a href="/pages">Pages</a>
                     <a href="/login" class="logbtn">
                         <% if (req.session.username) { %>
                             Start
@@ -226,7 +227,9 @@
                     aria-label="Go to the FAQ section to see commonly asked questions about the LinkserV project.">
                     <li><i class="fas fa-question"></i></li>
                 </a>
-                <!-- Add more list items as needed -->
+                <a href="/pages" aria-label="Go to the pages list on LinkserV to visit user sites.">
+                    <li><i class="fa-solid fa-file"></i></li>
+                </a>
             </ul>
             <p class="copyright">Created by MrSuperCraft. All rights reserved.</p>
         </div>

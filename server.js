@@ -15,6 +15,7 @@ app.use('/scripts', express.static('scripts'));
 
 app.use(express.json());
 
+
 // SQLite database connection
 const db = new sqlite3.Database('mydb.db');
 
@@ -66,7 +67,9 @@ app.get('/logout', (req, res) => {
     });
 });
 
-
+app.get('/pages', (req, res) => {
+    res.render("page-list");
+})
 
 app.get('/signup', (req, res) => {
     res.render("signup");
@@ -79,6 +82,8 @@ app.get('/credits', (req, res) => {
 app.get('/design', isAuthenticated, (req, res) => {
     const username = req.session.username;
     const userId = req.session.userId;
+
+
     // Render the page with the retrieved username
     res.render('dropup', { username, userId });
 });
@@ -103,7 +108,6 @@ app.get('/design/:identifier', async (req, res) => {
                 }
 
                 // Use the retrieved username and social media buttons for rendering the page
-                console.log('User found:', user);
                 res.render('dropup', { username: user.username, socialMediaButtons, userId: user.ID });
             });
         } else {
@@ -200,7 +204,6 @@ app.post('/authenticate', async (req, res) => {
                         }
 
                         console.log('Session saved successfully.');
-                        console.log('Session after save:', req.session);
 
                         // Redirect after the session is saved
                         const redirectRoute = user.isAdmin ? '/admin-panel' : `/design/${encodeURIComponent(user.username)}`;
@@ -239,10 +242,22 @@ app.post('/signup', async (req, res) => {
             // Hash the password
             const hashedPassword = await bcrypt.hash(password, 10);
 
-            // Insert data into the 'Users' table for a regular user
-            await db.run('INSERT INTO Users (Email, Username, Password) VALUES (?, ?, ?)', [email, username, hashedPassword]);
+            // Get the current date in mm/dd/yyyy format
+            const membershipDate = new Date().toLocaleDateString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric',
+            });
 
-            console.log(`User registered successfully`);
+            // Insert data into the 'Users' table for a regular user with Membership date
+            db.run('INSERT INTO Users (Email, Username, Password, Membership) VALUES (?, ?, ?, ?)', [
+                email,
+                username,
+                hashedPassword,
+                membershipDate,
+            ]);
+
+            console.log('User registered successfully');
 
             // Save user information in the session
             req.session.username = username;
@@ -255,8 +270,8 @@ app.post('/signup', async (req, res) => {
         // Send a JSON response with an error message
         res.status(500).json({ success: false, message: 'Internal Server Error. Please try again later.' });
     }
-    setTimeout(3000);
 });
+
 
 
 // Add this route to handle fetching the user ID
@@ -480,10 +495,15 @@ async function getUserData(username) {
 
 app.get('/api/users', async (req, res) => {
     try {
-        const usersCount = req.query.count || 10; // Use 10 as the default value if count is not provided
-        const users = await getUsersLimited(usersCount);
+        const usersPerPage = req.query.count || 10; // Default number of users per page
+        const page = req.query.page || 1; // Default page number is 1
 
-        res.status(200).json(users);
+        const offset = (page - 1) * usersPerPage;
+
+        const users = await getUsersLimited(usersPerPage, offset);
+        const totalCount = await getTotalUserCount(); // Implement this function to get the total number of users
+
+        res.status(200).json({ users, totalCount });
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -491,15 +511,21 @@ app.get('/api/users', async (req, res) => {
 });
 
 // Function to get limited users from the database with admin priority
-async function getUsersLimited(usersCount) {
+async function getUsersLimited(usersPerPage, offset) {
     return new Promise((resolve, reject) => {
-        const count = parseInt(usersCount, 10); // Ensure usersCount is a valid number
+        const count = parseInt(usersPerPage, 10); // Ensure usersPerPage is a valid number
         if (isNaN(count) || count <= 0) {
-            reject(new Error('Invalid usersCount value'));
+            reject(new Error('Invalid usersPerPage value'));
             return;
         }
 
-        db.all(`SELECT ID, Email, Username, isAdmin FROM Users ORDER BY isAdmin DESC, ID LIMIT ${count}`, (err, rows) => {
+        const start = parseInt(offset, 10) || 0; // Default offset to 0 if not provided
+        if (isNaN(start) || start < 0) {
+            reject(new Error('Invalid offset value'));
+            return;
+        }
+
+        db.all(`SELECT ID, Email, Username, isAdmin FROM Users ORDER BY isAdmin DESC, ID LIMIT ?, ?`, [start, count], (err, rows) => {
             if (err) {
                 reject(err);
             } else {
@@ -515,6 +541,20 @@ async function getUsersLimited(usersCount) {
         });
     });
 }
+
+async function getTotalUserCount() {
+    return new Promise((resolve, reject) => {
+        // Execute a query to count the total number of users
+        db.get('SELECT COUNT(*) AS total FROM Users', (err, row) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(row.total);
+            }
+        });
+    });
+}
+
 // Assuming you have a route for the contact submissions section
 app.get('/api/contact-submissions', isAdminAuthenticated, async (req, res) => {
     try {
@@ -1226,62 +1266,176 @@ db.run(`
     CREATE TABLE IF NOT EXISTS pfp (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
-        imageData BLOB,
+        imageData BLOB NOT NULL,
         FOREIGN KEY (user_id) REFERENCES Users(ID)
     );
 `);
 
-// Set up the route for file upload
-app.post('/api/pfp/upload', upload.single('profileImage'), async (req, res) => {
-    // Handle the file upload and update the database here
-    const fileData = req.file.buffer;
-    const userId = req.body.user_id; // Assuming you have the userID in the request body
-    console.log('Received file data:', fileData); // Log the received file data
 
+// Set up the route for file upload
+app.post('/api/pfp/upload', upload.single('imageData'), async (req, res) => {
+    const userId = req.body.userId;
+    const imageDataBuffer = req.file.buffer;
 
     try {
-        // Check if the user already has an image in the database
-        const existingImageRow = db.get('SELECT id FROM pfp WHERE user_id = ?', [userId]);
+        // Check if the user already has a profile picture
+        const existingUser = await getProfilePicture(userId);
 
-        if (existingImageRow) {
-            // If the user already has an image, update the existing record
-            db.run('UPDATE pfp SET imageData = ? WHERE user_id = ?', [fileData, userId]);
+        if (existingUser) {
+            // User already exists, update the imageData
+            db.run(
+                'UPDATE pfp SET imageData = ? WHERE user_id = ?',
+                [imageDataBuffer, userId],
+                function (error) {
+                    if (error) {
+                        console.error('Error updating profile picture:', error);
+                        res.status(500).json({ error: 'Internal Server Error', details: error.message });
+                    } else {
+                        console.log('Update successful');
+                        res.json({ success: true });
+                    }
+                }
+            );
         } else {
-            // If the user doesn't have an image, insert a new record
-            db.run('INSERT INTO pfp (user_id, imageData) VALUES (?, ?)', [userId, fileData]);
+            // User doesn't exist, insert new profile picture
+            db.run(
+                'INSERT INTO pfp (user_id, imageData) VALUES (?, ?)',
+                [userId, imageDataBuffer],
+                function (error) {
+                    if (error) {
+                        console.error('Error uploading profile picture:', error);
+                        res.status(500).json({ error: 'Internal Server Error', details: error.message });
+                    } else {
+                        console.log('Upload successful');
+                        res.json({ success: true });
+                    }
+                }
+            );
         }
-
-        res.send({ success: true });
     } catch (error) {
-        console.error('Error uploading or updating file:', error);
-        res.status(500).send({ error: 'Internal Server Error' });
+        console.error('Unexpected error during file upload:', error);
+        res.status(500).json({ error: 'Internal Server Error', details: error.message });
     }
 });
 
 
 
-
+// In your server code
 app.get('/api/pfp/:userId', async (req, res) => {
     const userId = req.params.userId;
 
     try {
-        console.log('Fetching profile picture for userId:', userId);
+        const result = await getProfilePicture(userId);
 
-        const query = 'SELECT imageData FROM pfp WHERE user_id = ?';
-        const row = await db.get(query, [userId]);
+        if (result) {
+            // Set the content type to image/jpeg (adjust based on your image type)
+            res.contentType('image/jpeg');
 
-        if (row && row.imageData) {
-            const base64Image = row.imageData.toString('base64');
-            res.send({ imageData: base64Image });
+            // Send the binary data as a response
+            res.send(result.imageData);
         } else {
-            console.log('Profile picture not found for userId:', userId);
-            res.status(404).send({ error: 'Profile picture not found' });
+            res.status(404).json({ error: 'Profile picture not found' });
         }
     } catch (error) {
         console.error('Error fetching profile picture:', error);
-        res.status(500).send({ error: 'Internal Server Error', details: error.message });
+
+        // Log the error details
+        console.error(error);
+
+        res.status(500).json({ error: 'Internal Server Error', details: error.message });
     }
 });
+
+// Function to get profile picture data from the database
+async function getProfilePicture(userId) {
+    return new Promise((resolve, reject) => {
+        db.get('SELECT imageData FROM pfp WHERE user_id = ?', [userId], (err, row) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(row);
+            }
+        });
+    });
+}
+
+
+
+
+// Profile stats
+
+app.get('/api/user/:userId', (req, res) => {
+    const userId = req.params.userId;
+
+    db.get('SELECT Email, Username, Membership FROM Users WHERE id = ?', [userId], (err, row) => {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        if (!row) {
+            res.status(404).json({ error: 'User not found' });
+            return;
+        }
+
+        res.json(row);
+    });
+});
+
+
+
+
+// API Route to get user data for dynamic rendering of cards
+
+
+// Define route to fetch user data
+// API Route to get user data for dynamic rendering of cards
+
+
+// In your server code
+app.get('/api/pfp/all', async (req, res) => {
+    try {
+        const results = await getAllProfilePictures();
+
+        if (results.length > 0) {
+            // Set the content type to image/jpeg (adjust based on your image type)
+            res.contentType('image/jpeg');
+
+            // Send the binary data as a response
+            res.send(results);
+        } else {
+            res.status(404).json({ error: 'Profile pictures not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching profile pictures:', error);
+
+        // Log the error details
+        console.error(error);
+
+        res.status(500).json({ error: 'Internal Server Error', details: error.message });
+    }
+});
+
+// Function to get all profile pictures data from the database
+async function getAllProfilePictures() {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT Users.ID as userId, Users.Username, pfp.imageData 
+            FROM Users 
+            LEFT JOIN pfp ON Users.ID = pfp.user_id
+        `;
+
+        db.all(query, [], (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(rows);
+            }
+        });
+    });
+}
+
 
 
 

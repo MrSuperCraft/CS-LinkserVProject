@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to show the appropriate section based on the hash in the URL
     const showSection = () => {
         const hash = window.location.hash.substring(1);
-        const sections = ['view', 'design', 'presets', 'background'];
+        const sections = ['view', 'design', 'presets', 'background', 'profile'];
         const defaultSection = 'view';  // Set the default section here
 
         sections.forEach(section => {
@@ -247,7 +247,25 @@ function displayGradientPreview() {
 
 
 
-// Lines 250 - ? : 
+// Lines 250 - ? : Profile API
+
+document.addEventListener('DOMContentLoaded', async function () {
+    const userId = await getUserId();
+
+    try {
+        const response = await fetch(`/api/user/${userId}`);
+        const userData = await response.json();
+
+        // Now you have the user details in the 'userData' object
+        document.getElementById('stat__username').innerText = userData.Username;
+        document.getElementById('stat__email').innerText = userData.Email;
+        document.getElementById('stat__membership').innerText = userData.Membership;
+
+    } catch (error) {
+        console.error('Error fetching user details:', error.message);
+    }
+});
+
 
 
 

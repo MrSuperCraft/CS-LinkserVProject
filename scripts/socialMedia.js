@@ -92,6 +92,7 @@ function showSocialMediaSection() {
     // document.getElementById('textColorSection').style.display = 'none';
     document.getElementById('socialDelete').style.display = 'none';
     document.getElementById('textFieldSection').style.display = 'none';
+    document.getElementById('buttonSecton').style.display = 'none';
 
 }
 

@@ -102,6 +102,9 @@ CREATE TABLE IF NOT EXISTS user_text_info (
 -- DELETE FROM social_media_buttons WHERE user_id="3";
 
 
+-- Set the 'Membership' date for all users to the current date
+-- UPDATE Users
+-- SET Membership = strftime('%m/%d/%Y', 'now');
 
 -- View the table data
 SELECT * FROM Users;
