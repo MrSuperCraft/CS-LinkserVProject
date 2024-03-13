@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function highlightActiveSection() {
         const scrollPosition = window.scrollY;
-        console.log(`Scroll Position: ${scrollPosition}`);
+        // console.log(`Scroll Position: ${scrollPosition}`);
 
         let activeSectionId = null;
         navLinks.forEach(link => {
@@ -113,12 +113,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        console.log(`Active Section ID: ${activeSectionId}`);
+        // console.log(`Active Section ID: ${activeSectionId}`);
 
         // Add 'active' class to the link corresponding to the active section
         navLinks.forEach(link => {
             const sectionId = link.getAttribute('href').substring(1);
-            console.log(`Link: ${link.getAttribute('href')}, Section ID: ${sectionId}, Active Section: ${sectionId === activeSectionId}`);
             link.classList.toggle('active', sectionId === activeSectionId);
             if (sectionId === activeSectionId) {
                 link.style.color = '#9CD89E';
