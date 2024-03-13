@@ -32,6 +32,7 @@ body {
 .card {
     width: calc(33.33% - 20px);
     /* 33.33% width for each card with a 20px gap between cards */
+    height: 200px;
     max-width: 400px;
     /* Set a maximum width for each card */
     background: #fff;
@@ -74,6 +75,7 @@ body {
     display: block;
     margin: 20px auto;
     /* Center the image */
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
 }
 
 .card h2 {
@@ -271,10 +273,11 @@ a {
     margin: 0 5px;
     cursor: pointer;
     font-size: 16px;
+    transition: background-color 0.3s ease-in-out;
 }
 
 .pagination-button:hover {
-    background-color: #28921e;
+    background-color: #175311;
 }
 
 .pagination-bullets-container {
