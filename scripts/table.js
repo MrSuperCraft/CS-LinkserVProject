@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 async function fetchUsers(usersCount) {
     try {
-        const response = await fetch(`/api/users?count=${usersCount}&orderBy=isAdmin`);
+        const response = await fetch(`/api/table/users?count=${usersCount}`);
         if (!response.ok) {
             throw new Error(`Error fetching users: ${response.statusText}`);
         }
@@ -296,7 +296,7 @@ async function refreshTable() {
 
     try {
         // Fetch updated user data
-        const response = await fetch('/api/users');
+        const response = await fetch('/api/table/users');
         const users = await response.json();
 
         // Call the function to update the table with the retrieved user data

@@ -495,7 +495,7 @@ async function getUserData(username) {
 
 app.get('/api/users', async (req, res) => {
     try {
-        const usersPerPage = req.query.count || 10; // Default number of users per page
+        const usersPerPage = req.query.count || 6; // Default number of users per page
         const page = req.query.page || 1; // Default page number is 1
 
         const offset = (page - 1) * usersPerPage;
@@ -509,6 +509,18 @@ app.get('/api/users', async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+
+app.get('/api/table/users', async (req, res) => {
+    try {
+        const usersCount = req.query.count || 10; // Default number of users to fetch
+        const users = await getUsersLimited(usersCount);
+        res.status(200).json(users);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
 
 // Function to get limited users from the database with admin priority
 async function getUsersLimited(usersPerPage, offset) {
@@ -525,7 +537,8 @@ async function getUsersLimited(usersPerPage, offset) {
             return;
         }
 
-        db.all(`SELECT ID, Email, Username, isAdmin FROM Users ORDER BY isAdmin DESC, ID LIMIT ?, ?`, [start, count], (err, rows) => {
+        // Modify the SQL query to exclude admin users
+        db.all(`SELECT ID, Email, Username, isAdmin FROM Users WHERE isAdmin = 0 ORDER BY ID LIMIT ?, ?`, [start, count], (err, rows) => {
             if (err) {
                 reject(err);
             } else {
@@ -541,6 +554,7 @@ async function getUsersLimited(usersPerPage, offset) {
         });
     });
 }
+
 
 async function getTotalUserCount() {
     return new Promise((resolve, reject) => {
@@ -1435,6 +1449,94 @@ async function getAllProfilePictures() {
         });
     });
 }
+
+
+
+
+
+
+
+
+// Save background settings
+app.post('/api/background', (req, res) => {
+    const { user_id, method, staticColor, gradientStart, gradientEnd, gradientDirection, imageUrl, imageData } = req.body;
+
+    // Clear existing background settings for the user
+    db.run(`DELETE FROM background WHERE user_id = ?;`, [user_id], (err) => {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Failed to save background settings.' });
+        } else {
+            // Insert new background settings into the database
+            db.run(`
+                INSERT INTO background (user_id, method, static_color, gradient_start, gradient_end, gradient_direction, image_url, imageData)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+            `, [user_id, method, staticColor, gradientStart, gradientEnd, gradientDirection, imageUrl, imageData], (err) => {
+                if (err) {
+                    console.error(err);
+                    res.status(500).json({ error: 'Failed to save background settings.' });
+                } else {
+                    res.status(200).json({ message: 'Background settings saved successfully.' });
+                }
+            });
+        }
+    });
+});
+
+// POST request to handle image uploads and URL submissions
+app.post('/api/background/upload', upload.single('image'), (req, res) => {
+    if (req.file) {
+        // If an image file is uploaded
+        const imageData = req.file.buffer;
+        // Store the image data as a BLOB in the database
+        db.run(`
+            INSERT INTO background (user_id, method, imageData)
+            VALUES (?, 'image', ?);
+        `, [req.body.user_id, imageData], (err) => {
+            if (err) {
+                console.error(err);
+                res.status(500).json({ error: 'Failed to upload image.' });
+            } else {
+                res.status(200).json({ success: true, message: 'Image uploaded successfully.' });
+            }
+        });
+    } else if (req.body.imageUrl) {
+        // If an image URL is provided
+        // Display the image directly
+        // Apply image to background
+        applyImage(req.body.imageUrl);
+        // Save imageURL to the backend along with imageData set to null
+        saveBackgroundSettings('image', null, null, null, null, req.body.imageUrl, null);
+        res.status(200).json({ success: true, message: 'Image URL saved successfully.' });
+    } else {
+        res.status(400).json({ error: 'No image uploaded or URL provided.' });
+    }
+});
+
+
+
+
+
+
+
+// Load background settings
+app.get('/api/background/:userId', (req, res) => {
+    const userId = req.params.userId;
+
+    db.get('SELECT * FROM background WHERE user_id = ?;', [userId], (err, row) => {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Failed to load background settings.' });
+        } else {
+            res.status(200).json(row || {});
+        }
+    });
+});
+
+
+
+
+
 
 
 
