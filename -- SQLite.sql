@@ -106,10 +106,25 @@ CREATE TABLE IF NOT EXISTS user_text_info (
 -- UPDATE Users
 -- SET Membership = strftime('%m/%d/%Y', 'now');
 
+
+CREATE TABLE IF NOT EXISTS background (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER,
+    method TEXT,
+    static_color TEXT,
+    gradient_start TEXT,
+    gradient_end TEXT,
+    gradient_direction TEXT,
+    image_url TEXT,
+    imageData BLOB,
+    FOREIGN KEY (user_id) REFERENCES Users(ID)
+);
+
 -- View the table data
 SELECT * FROM Users;
 SELECT * FROM contact_submissions;
 SELECT * FROM settings;
 SELECT * FROM files;
 SELECT * FROM social_media_buttons;
-select * FROM user_text_info;
+SELECT * FROM user_text_info;
+SELECT * FROM background;
