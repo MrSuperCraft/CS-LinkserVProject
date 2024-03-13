@@ -47,30 +47,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Function to apply gradient
 function applyGradient() {
-    // Get selected colors
     const gradientStartColor = document.getElementById('gradientStart').value;
     const gradientEndColor = document.getElementById('gradientEnd').value;
-
-    // Get selected gradient direction
     const gradientDirection = document.getElementById('gradientDirection').value;
 
-    // Apply gradient to the background section
-    const backgroundSection = document.getElementById('backgroundSection');
-    backgroundSection.style.backgroundImage = `linear-gradient(${gradientDirection}, ${gradientStartColor}, ${gradientEndColor})`;
-
-    // Apply gradient to the view section
-    const viewSection = document.getElementById('viewSection');
-    viewSection.style.backgroundImage = `linear-gradient(${gradientDirection}, ${gradientStartColor}, ${gradientEndColor})`;
-
-    updateGradientPreview();
-
+    // Call the saveBackgroundSettings function to save the gradient settings to the backend
+    saveBackgroundSettings('gradient', null, gradientStartColor, gradientEndColor, gradientDirection, null);
 }
 
 
 // Function to apply static color
 function applyStaticColor() {
     const staticColor = document.getElementById('staticColor').value;
-    applyColor(staticColor);
+
+    // Call the saveBackgroundSettings function to save the static color settings to the backend
+    saveBackgroundSettings('static_color', staticColor, null, null, null, null);
 }
 
 const backgroundImageInput = document.getElementById('backgroundImage');
@@ -96,14 +87,22 @@ function applyCustomImage() {
     const customImage = backgroundImageInput.files[0];
 
     if (imageUrl !== "") {
+        // Display image preview
         displayImagePreview(imageUrl);
-        applyImage(imageUrl);  // Apply image to background
+        // Apply image to background
+        applyImage(imageUrl);
     } else if (customImage) {
         const imageUrl = URL.createObjectURL(customImage);
+        // Display image preview
         displayImagePreview(imageUrl);
-        applyImage(imageUrl);  // Apply image to background
+        // Apply image to background
+        applyImage(imageUrl);
     }
+
+    // Call the saveBackgroundSettings function to save the image settings to the backend
+    saveBackgroundSettings('image', null, null, null, null, imageUrl);
 }
+
 
 // Helper function to apply color to background sections
 function applyColor(color) {
@@ -124,21 +123,7 @@ function applyColor(color) {
     viewSection.style.backgroundColor = color;
 }
 
-// Function to apply custom image
-function applyCustomImage() {
-    const imageUrl = document.getElementById('imageUrl').value;
-    const backgroundImageInput = document.getElementById('backgroundImage');
-    const customImage = backgroundImageInput.files[0];
 
-    if (imageUrl !== "") {
-        displayImagePreview(imageUrl);
-        applyImage(imageUrl);  // Apply image to background
-    } else if (customImage) {
-        const imageUrl = URL.createObjectURL(customImage);
-        displayImagePreview(imageUrl);
-        applyImage(imageUrl);  // Apply image to background
-    }
-}
 
 
 function displayImagePreview(imageUrl) {
@@ -187,6 +172,9 @@ function removeImage() {
     // Remove the background image from both sections
     clearBackgroundImage('viewSection');
     clearBackgroundImage('backgroundSection');
+
+    saveBackgroundSettings('static_color', null, null, null, null, null);
+
 }
 
 function clearImagePreview() {
@@ -210,7 +198,6 @@ gradientDirectionSelect.addEventListener('change', updateGradientPreview);
 
 
 // Function to update gradient preview
-// Function to update gradient preview
 function updateGradientPreview() {
     const gradientStartColor = document.getElementById('gradientStart').value;
     const gradientEndColor = document.getElementById('gradientEnd').value;
@@ -230,6 +217,95 @@ function displayGradientPreview() {
     const gradientPreview = document.getElementById('gradientPreview');
     gradientPreview.style.display = 'flex';  // Adjust the display style as needed
 }
+
+
+// Function to save background settings to the backend
+async function saveBackgroundSettings(method, staticColor, gradientStart, gradientEnd, gradientDirection, imageUrl) {
+    const userId = await getUserId();
+    fetch('/api/background', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            user_id: userId,
+            method,
+            staticColor,
+            gradientStart,
+            gradientEnd,
+            gradientDirection,
+            imageUrl
+        })
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to save background settings.');
+            }
+            console.log('Background settings saved successfully.');
+            window.location.reload();
+
+        })
+        .catch(error => {
+            console.error(error);
+        });
+}
+
+// Function to load background settings from the backend
+async function loadBackgroundSettings() {
+    const userId = await getUserId();
+    try {
+        const response = await fetch(`/api/background/${userId}`);
+        const data = await response.json();
+
+        // Update background based on loaded settings
+        if (data.method === 'static_color') {
+            applyStaticColorBackground(data.static_color);
+        } else if (data.method === 'gradient') {
+            applyGradientBackground(data.gradient_start, data.gradient_end, data.gradient_direction);
+        } else if (data.method === 'image' && data.image_url) {
+            applyImageBackground(data.image_url);
+        }
+    } catch (error) {
+        console.error('Error loading background settings:', error);
+    }
+}
+
+// Call loadBackgroundSettings when the page loads to set initial background
+window.addEventListener('load', loadBackgroundSettings);
+
+// Function to load static color background
+function applyStaticColorBackground(color) {
+    const backgroundSection = document.getElementById('backgroundSection');
+    backgroundSection.style.backgroundColor = color;
+
+    const viewSection = document.getElementById('viewSection');
+    viewSection.style.backgroundColor = color;
+}
+
+// Function to load gradient background
+function applyGradientBackground(startColor, endColor, direction) {
+    const backgroundSection = document.getElementById('backgroundSection');
+    backgroundSection.style.backgroundImage = `linear-gradient(${direction}, ${startColor}, ${endColor})`;
+
+    const viewSection = document.getElementById('viewSection');
+    viewSection.style.backgroundImage = `linear-gradient(${direction}, ${startColor}, ${endColor})`;
+}
+
+// Function to load image background
+function applyImageBackground(imageUrl) {
+    const backgroundSection = document.getElementById('backgroundSection');
+    backgroundSection.style.backgroundImage = `url('${imageUrl}')`;
+    backgroundSection.style.backgroundSize = 'cover';
+
+    const viewSection = document.getElementById('viewSection');
+    viewSection.style.backgroundImage = `url('${imageUrl}')`;
+    viewSection.style.backgroundSize = 'cover';
+}
+
+
+
+
+
 
 
 
