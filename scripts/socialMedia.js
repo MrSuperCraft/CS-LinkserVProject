@@ -79,11 +79,13 @@ function EditSocialMedia() {
     document.getElementById('addSocialMediaButton').style.display = 'none';
     document.getElementById('socialDelete').style.display = 'block';
     document.getElementById('textFieldSection').style.display = 'none';
+    document.getElementById('buttonSection').style.display = 'none';
 
 
 }
 
 function showSocialMediaSection() {
+    document.getElementById('buttonSection').style.display = 'none';
     document.getElementById('image-modal').style.display = 'none';
     document.getElementById('imageEditSection').style.display = 'none';
     document.getElementById('socialMediaEditSection').style.display = 'block';
@@ -92,7 +94,6 @@ function showSocialMediaSection() {
     // document.getElementById('textColorSection').style.display = 'none';
     document.getElementById('socialDelete').style.display = 'none';
     document.getElementById('textFieldSection').style.display = 'none';
-    document.getElementById('buttonSecton').style.display = 'none';
 
 }
 

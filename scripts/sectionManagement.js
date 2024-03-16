@@ -323,7 +323,7 @@ function applyImageBackground(imageUrl) {
 
 
 
-// Lines 250 - ? : Profile API
+// Lines 326 - 350 : Profile API
 
 document.addEventListener('DOMContentLoaded', async function () {
     const userId = await getUserId();
@@ -346,3 +346,41 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 
 
+
+/////////////////////////////////
+
+
+
+// Lines 354 - ? : Design for buttons - general
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const colorSelectorButton = document.getElementById('ColorSelectorButton');
+    const buttonColorInput = document.getElementById('ButtonColor');
+    const colorPickerInput = document.getElementById('ColorPickerInput');
+
+    colorSelectorButton.addEventListener('click', function (event) {
+        const rect = colorSelectorButton.getBoundingClientRect();
+
+        // Calculate the position relative to the button
+        const offsetX = event.clientX - rect.left + colorSelectorButton.offsetLeft;
+        const offsetY = event.clientY - rect.top + colorSelectorButton.offsetTop;
+
+        // Position the color picker at the click location
+        colorPickerInput.style.position = 'absolute';
+        colorPickerInput.style.left = `${offsetX}px`;
+        colorPickerInput.style.top = `${offsetY}px`;
+
+        colorPickerInput.click(); // Open the color picker
+    });
+
+    colorPickerInput.addEventListener('input', function () {
+        const selectedColor = colorPickerInput.value;
+        colorSelectorButton.style.backgroundColor = selectedColor;
+        buttonColorInput.value = selectedColor;
+    });
+});

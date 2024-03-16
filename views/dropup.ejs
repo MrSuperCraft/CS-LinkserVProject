@@ -19,8 +19,8 @@
   <!-- Include Spectrum script -->
   <script src="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.js"></script>
 
-  <!-- marked.js for markdown-->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- Link the ChromaColorPicker library from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chroma-js@2.2.0/chroma.min.js"></script>
 
 
 
@@ -95,36 +95,84 @@
 
   <div class="content" id="designSection" style="display: none;">
     <div id="designModification">
-      <h1>Design Your Page</h1>
 
-      <div class="design-cards-container">
-        <div class="design-card" data-animation="neon">
-          Neon
-          <button class="design-button a-neon">Neon animation</button>
+      <h1>Design Your Buttons</h1>
+
+      <h3>Fill</h3>
+      <section class="design__section fill-container">
+
+        <button class="design__button"></button>
+
+        <button class="design__button" style="border-radius: 10px;"></button>
+
+        <button class="design__button" style="border-radius: 50px;"></button>
+
+      </section>
+
+      <h3>Soft Shadow</h3>
+      <section class="design__section">
+        <div>
+          <button class="design__button soft-shadow" style="background-color: white;"></button>
         </div>
-        <div class="design-card" data-animation="angleBg">
-          Angle Background
-          <button class="design-button a-angle-bg">Angle Background animation</button>
+
+        <div>
+          <button class="design__button soft-shadow" style="background-color: white; border-radius: 10px;"></button>
         </div>
-        <div class="design-card" data-animation="shadow">
-          Shadow
-          <button class="design-button a-shadow">Shadow animation</button>
+
+        <div>
+          <button class="design__button soft-shadow" style="background-color: white; border-radius: 50px;"></button>
         </div>
-        <div class="design-card" data-animation="pulse">
-          Pulse
-          <button class="design-button a-pulse">Pulse animation</button>
+
+
+      </section>
+
+      <h3>Hard Shadow</h3>
+      <section class="design__section">
+
+        <div>
+          <button class="design__button hard-shadow" style="background-color: white;"></button>
         </div>
-        <div class="design-card" data-animation="gradient">
-          Gradient
-          <button class="design-button a-gradient">Gradient animation</button>
+
+        <div>
+          <button class="design__button hard-shadow" style="background-color: white; border-radius: 10px;"></button>
         </div>
+
+        <div>
+          <button class="design__button hard-shadow" style="background-color: white; border-radius: 50px;"></button>
+        </div>
+
+
+      </section>
+
+      <h3>Outline</h3>
+      <section class="design__section">
+
+        <button class="design__button outline" style="background-color: white;"></button>
+
+        <button class="design__button outline" style="background-color: white; border-radius: 10px;"></button>
+
+        <button class="design__button outline" style="background-color: white; border-radius: 50px;"></button>
+
+      </section>
+
+      <div class="design__color-card">
+
+        <div class="ThemeColorPickerButton">
+          <h4 class="ThemeColorPickerTitle">Button color</h4>
+          <div class="ColorPickerContainer">
+            <div class="ColorSelectorButton" id="ColorSelectorButton"></div>
+            <input id="ButtonColor" name="ButtonColor" type="text" placeholder="Button color" class="ButtonColorInput"
+              value="#ffffff">
+          </div>
+          <label for="ButtonColor" class="ButtonColorInputLabel">Button Color</label>
+          <!-- Pre-existing color picker input -->
+          <input id="ColorPickerInput" type="color" style="visibility: hidden; position: absolute;">
+        </div>
+
       </div>
 
-      <div class="preview-button" id="customButton">Click me!</div>
     </div>
   </div>
-
-
 
   <div class="content" id="backgroundSection" style="display: none;">
     <!-- Inside  #backgroundSection -->
@@ -482,8 +530,6 @@
     </div>
 
     <div id="textFieldSection" class="editor-section">
-
-
       <div class="editor__container">
         <div class="options">
           <!-- Text Format -->
@@ -572,6 +618,9 @@
       <button id="addTextField" class="editor-button" type="button" onclick="handleEditor()">Create Text Field</button>
     </div>
 
+
+
+
     <div id="buttonSection" style="display: none;">
       <label for="buttonText">Button text:</label>
       <input type="text" name="buttonText" id="buttonText" />
@@ -625,6 +674,10 @@
 
       <button onclick="addCustomButton()">Add Button</button>
     </div>
+
+
+
+
   </div>
 
 
