@@ -95,83 +95,101 @@
 
   <div class="content" id="designSection" style="display: none;">
     <div id="designModification">
-
       <h1>Design Your Buttons</h1>
 
-      <h3>Fill</h3>
-      <section class="design__section fill-container">
+      <div class="button__wrapper">
+        <div class="design__selections">
+          <h3>Fill</h3>
+          <section class="design__section fill-container">
+            <button class="design__button"></button>
+            <button class="design__button" style="border-radius: 10px;"></button>
+            <button class="design__button" style="border-radius: 50px;"></button>
+          </section>
 
-        <button class="design__button"></button>
+          <h3>Soft Shadow</h3>
+          <section class="design__section shadow-container">
+            <div>
+              <button class="design__button soft-shadow" style="background-color: white;"></button>
+            </div>
+            <div>
+              <button class="design__button soft-shadow" style="background-color: white; border-radius: 10px;"></button>
+            </div>
+            <div>
+              <button class="design__button soft-shadow" style="background-color: white; border-radius: 50px;"></button>
+            </div>
+          </section>
 
-        <button class="design__button" style="border-radius: 10px;"></button>
+          <h3>Hard Shadow</h3>
+          <section class="design__section hard-shadow-container">
 
-        <button class="design__button" style="border-radius: 50px;"></button>
+            <div>
+              <button class="design__button hard-shadow" style="background-color: white;"></button>
+            </div>
+            <div>
+              <button class="design__button hard-shadow" style="background-color: white; border-radius: 10px;"></button>
+            </div>
+            <div>
+              <button class="design__button hard-shadow" style="background-color: white; border-radius: 50px;"></button>
+            </div>
+          </section>
 
-      </section>
-
-      <h3>Soft Shadow</h3>
-      <section class="design__section">
-        <div>
-          <button class="design__button soft-shadow" style="background-color: white;"></button>
+          <h3>Outline</h3>
+          <section class="design__section outline-container">
+            <button class="design__button outline" style="background-color: white;"></button>
+            <button class="design__button outline" style="background-color: white; border-radius: 10px;"></button>
+            <button class="design__button outline" style="background-color: white; border-radius: 50px;"></button>
+          </section>
         </div>
 
-        <div>
-          <button class="design__button soft-shadow" style="background-color: white; border-radius: 10px;"></button>
-        </div>
-
-        <div>
-          <button class="design__button soft-shadow" style="background-color: white; border-radius: 50px;"></button>
-        </div>
-
-
-      </section>
-
-      <h3>Hard Shadow</h3>
-      <section class="design__section">
-
-        <div>
-          <button class="design__button hard-shadow" style="background-color: white;"></button>
-        </div>
-
-        <div>
-          <button class="design__button hard-shadow" style="background-color: white; border-radius: 10px;"></button>
-        </div>
-
-        <div>
-          <button class="design__button hard-shadow" style="background-color: white; border-radius: 50px;"></button>
-        </div>
-
-
-      </section>
-
-      <h3>Outline</h3>
-      <section class="design__section">
-
-        <button class="design__button outline" style="background-color: white;"></button>
-
-        <button class="design__button outline" style="background-color: white; border-radius: 10px;"></button>
-
-        <button class="design__button outline" style="background-color: white; border-radius: 50px;"></button>
-
-      </section>
-
-      <div class="design__color-card">
-
-        <div class="ThemeColorPickerButton">
-          <h4 class="ThemeColorPickerTitle">Button color</h4>
-          <div class="ColorPickerContainer">
-            <div class="ColorSelectorButton" id="ColorSelectorButton"></div>
-            <input id="ButtonColor" name="ButtonColor" type="text" placeholder="Button color" class="ButtonColorInput"
-              value="#ffffff">
+        <div class="design__color-card">
+          <div class="ThemeColorPickerButton">
+            <h4 class="ThemeColorPickerTitle">Button color</h4>
+            <div class="ColorPickerContainer">
+              <div class="ColorSelectorButton" id="ColorSelectorButton1"></div>
+              <input id="ButtonColor1" name="ButtonColor1" type="text" placeholder="Button color"
+                class="ButtonColorInput" value="#ffffff">
+            </div>
+            <!-- Color picker input -->
+            <input id="ColorPickerInput1" type="color" style="visibility: hidden; position: absolute;">
           </div>
-          <label for="ButtonColor" class="ButtonColorInputLabel">Button Color</label>
-          <!-- Pre-existing color picker input -->
-          <input id="ColorPickerInput" type="color" style="visibility: hidden; position: absolute;">
+
+          <div class="ThemeColorPickerButton">
+            <h4 class="ThemeColorPickerTitle">Button Font color</h4>
+            <div class="ColorPickerContainer">
+              <div class="ColorSelectorButton" id="ColorSelectorButton2"></div>
+              <input id="ButtonColor2" name="ButtonColor2" type="text" placeholder="Button color"
+                class="ButtonColorInput" value="#ffffff">
+            </div>
+            <!-- Color picker input -->
+            <input id="ColorPickerInput2" type="color" style="visibility: hidden; position: absolute;">
+          </div>
+
+          <div class="ThemeColorPickerButton">
+            <h4 class="ThemeColorPickerTitle">Button Shadow color</h4>
+            <div class="ColorPickerContainer">
+              <div class="ColorSelectorButton" id="ColorSelectorButton3"></div>
+              <input id="ButtonColor3" name="ButtonColor3" type="text" placeholder="Button color"
+                class="ButtonColorInput" value="#ffffff">
+            </div>
+            <!-- Color picker input -->
+            <input id="ColorPickerInput3" type="color" style="visibility: hidden; position: absolute;">
+          </div>
+
+
+          <!-- Font selector -->
+          <h4 class="ThemeColorPickerTitle" style="margin-left: 50px;"> Font </h4>
+          <div class="button-card">
+            <div class="font-demo">
+              <span class="font-demo-text">Aa</span>
+            </div>
+            <div class="font-name">Poppins</div>
+          </div>
+
+
         </div>
-
       </div>
-
     </div>
+
   </div>
 
   <div class="content" id="backgroundSection" style="display: none;">
@@ -226,7 +244,7 @@
           <div class="preview-container">
             <div id="imagePreview" class="image-preview" style="display: none;"></div>
           </div>
-          <label for="imageUrl">Or Enter Image URL:</label>
+          <label for="imageUrl"> Enter Image URL:</label>
           <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg">
 
           <button id="apply" onclick="applyCustomImage()">Apply Image</button>
@@ -622,57 +640,42 @@
 
 
     <div id="buttonSection" style="display: none;">
-      <label for="buttonText">Button text:</label>
-      <input type="text" name="buttonText" id="buttonText" />
+      <div id="buttonCreationForm">
+        <label for="buttonText">Button Text:</label>
+        <input type="text" id="buttonText">
 
-      <div for="buttonStyle">Button style:</div>
+        <label for="buttonLink">Button Link:</label>
+        <input type="url" id="buttonLink">
 
-      <!-- Button Styles Preview Cards -->
-      <div id="buttonStyleCards">
-        <!-- Style 1 -->
-        <div class="button-style-card" onclick="selectButtonStyle('button1')">
-          <button class="button1" style="margin-bottom: 20px;"> Learn More </button>
-          <p>Hard Press</p>
+        <label for="buttonPreset">Button Preset:</label>
+        <select id="buttonPreset">
+          <option value="soft-shadow">Soft Shadow</option>
+          <option value="hard-shadow">Hard Shadow</option>
+          <option value="outline">Outline</option>
+          <option value="fill">Fill</option>
+          <!-- Add more preset options as needed -->
+        </select>
+
+        <div class="style-strength">
+          <label for="strength">Style Strength:</label>
+          <select id="style-strength">
+            <option value="1"> 1</option>
+            <option value="2"> 2</option>
+            <option value="3"> 3</option>
+          </select>
+        </div>
+        <!-- Fill Style Section -->
+        <div id="fillStyleSection" style="display: none;">
+          <label for="fillColor">Fill Color:</label>
+          <input type="color" id="fillColor">
+
+          <label for="textColor">Text Color:</label>
+          <input type="color" id="textColor">
         </div>
 
-        <!-- Style 2 -->
-        <div class="button-style-card" onclick="selectButtonStyle('button2')">
-          <div class="button2">Hover Me</div>
-          <p>Rise Up</p>
-        </div>
-
-        <!-- Style 3 -->
-        <div class="button-style-card" onclick="selectButtonStyle('button3')">
-          <button class="button3" style="margin-bottom: 10px;">
-            <span class="text">Hello!</span>
-          </button>
-          <p>Fade</p>
-        </div>
-
-        <!-- Style 4 -->
-        <div class="button-style-card" onclick="selectButtonStyle('button4')">
-          <button class="button4">Lookin' Neat!</button>
-          <p>Swiper</p>
-        </div>
-
-        <!-- Style 5 -->
-        <div class="button-style-card" onclick="selectButtonStyle('button5')">
-          <button class="button5" style="width: 175px; font-size: 15px;">
-            <span class="button-content">Watch Me Go</span>
-          </button>
-          <p style="margin-left: 20px;">Fill In</p>
-        </div>
-
-        <!-- Add more styles as needed -->
+        <button id="addButton">Create Button</button>
       </div>
-
-      <label for="buttonLink">Button link:</label>
-      <input type="url" name="buttonLink" id="buttonLink" />
-
-      <label for="buttonTransition">Transition:</label>
-      <input type="text" name="buttonTransition" id="buttonTransition" />
-
-      <button onclick="addCustomButton()">Add Button</button>
+      <span id="errorButton"></span>
     </div>
 
 
@@ -681,6 +684,52 @@
   </div>
 
 
+</div>
+
+<div id="fontModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeModal">&times;</span>
+    <div class="modalTitle" style="margin-top: 30px;">Select A font</div>
+    <div class="font-groups">
+      <div class="font-group">
+        <h3>Classic</h3>
+        <hr>
+        <button class="font-btn" data-font="Arial" style="font-family: Arial, sans-serif;">Arial</button>
+        <button class="font-btn" data-font="Times New Roman" style="font-family: 'Times New Roman', serif;">Times New
+          Roman</button>
+        <button class="font-btn" data-font="Roboto" style="font-family: 'Roboto', sans-serif;">Roboto</button>
+        <button class="font-btn" data-font="Open Sans" style="font-family: 'Open Sans', sans-serif;">Open Sans</button>
+        <button class="font-btn" data-font="Pacifico" style="font-family: 'Pacifico', cursive;">Pacifico</button>
+        <!-- Add more classic fonts here -->
+      </div>
+      <div class="font-group">
+        <h3>Modern</h3>
+        <hr>
+        <button class="font-btn" data-font="Montserrat"
+          style="font-family: 'Montserrat', sans-serif;">Montserrat</button>
+        <button class="font-btn" data-font="Lato" style="font-family: 'Lato', sans-serif;">Lato</button>
+        <button class="font-btn" data-font="Nunito" style="font-family: 'Nunito', sans-serif;">Nunito</button>
+        <button class="font-btn" data-font="Quicksand" style="font-family: 'Quicksand', sans-serif;">Quicksand</button>
+        <button class="font-btn" data-font="Ubuntu" style="font-family: 'Ubuntu', sans-serif;">Ubuntu</button>
+        <button class="font-btn" data-font="Poppins" style="font-family: 'Poppins', sans-serif;">Poppins</button>
+        <!-- Add more modern fonts here -->
+      </div>
+      <div class="font-group">
+        <h3>Special</h3>
+        <hr>
+        <button class="font-btn" data-font="Pacifico" style="font-family: 'Pacifico', cursive;">Pacifico</button>
+        <button class="font-btn" data-font="Dancing Script" style="font-family: 'Dancing Script', cursive;">Dancing
+          Script</button>
+        <button class="font-btn" data-font="Crimson Text" style="font-family: 'Crimson Text', serif;">Crimson
+          Text</button>
+        <button class="font-btn" data-font="Lobster" style="font-family: 'Lobster', cursive;">Lobster</button>
+        <button class="font-btn" data-font="Patua One" style="font-family: 'Patua One', cursive;">Patua One</button>
+        <button class="font-btn" data-font="Dosis" style="font-family: 'Dosis', sans-serif;">Dosis</button>
+        <!-- Add more special fonts here -->
+      </div>
+    </div>
+    <button id="saveBtn" class="save-btn" disabled>Save</button>
+  </div>
 </div>
 
 

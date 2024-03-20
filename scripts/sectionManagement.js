@@ -359,28 +359,107 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    const colorSelectorButton = document.getElementById('ColorSelectorButton');
-    const buttonColorInput = document.getElementById('ButtonColor');
-    const colorPickerInput = document.getElementById('ColorPickerInput');
+    function initializeColorPicker(colorSelectorId, colorInputId, colorPickerInputId) {
+        const colorSelectorButton = document.getElementById(colorSelectorId);
+        const buttonColorInput = document.getElementById(colorInputId);
+        const colorPickerInput = document.getElementById(colorPickerInputId);
 
-    colorSelectorButton.addEventListener('click', function (event) {
-        const rect = colorSelectorButton.getBoundingClientRect();
+        colorSelectorButton.addEventListener('click', function (event) {
+            const rect = colorSelectorButton.getBoundingClientRect();
+            const offsetX = event.clientX - rect.left + colorSelectorButton.offsetLeft;
+            const offsetY = event.clientY - rect.top + colorSelectorButton.offsetTop;
 
-        // Calculate the position relative to the button
-        const offsetX = event.clientX - rect.left + colorSelectorButton.offsetLeft;
-        const offsetY = event.clientY - rect.top + colorSelectorButton.offsetTop;
+            colorPickerInput.style.position = 'absolute';
+            colorPickerInput.style.left = `${offsetX}px`;
+            colorPickerInput.style.top = `${offsetY}px`;
 
-        // Position the color picker at the click location
-        colorPickerInput.style.position = 'absolute';
-        colorPickerInput.style.left = `${offsetX}px`;
-        colorPickerInput.style.top = `${offsetY}px`;
+            colorPickerInput.click(); // Open the color picker
+        });
 
-        colorPickerInput.click(); // Open the color picker
+        colorPickerInput.addEventListener('input', function () {
+            const selectedColor = colorPickerInput.value;
+            colorSelectorButton.style.backgroundColor = selectedColor;
+            buttonColorInput.value = selectedColor;
+        });
+    }
+
+    // Initialize color pickers
+    initializeColorPicker('ColorSelectorButton1', 'ButtonColor1', 'ColorPickerInput1');
+    initializeColorPicker('ColorSelectorButton2', 'ButtonColor2', 'ColorPickerInput2');
+    initializeColorPicker('ColorSelectorButton3', 'ButtonColor3', 'ColorPickerInput3');
+});
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const fontModal = document.getElementById("fontModal");
+
+    const saveBtn = document.getElementById("saveBtn");
+    const closeBtn = document.querySelector("#fontModal .close");
+    const fontButtons = document.querySelectorAll(".font-btn");
+    const fontDemo = document.querySelector(".button-card");
+
+    closeBtn.addEventListener('click', () => {
+        fontModal.style.display = 'none';
     });
 
-    colorPickerInput.addEventListener('input', function () {
-        const selectedColor = colorPickerInput.value;
-        colorSelectorButton.style.backgroundColor = selectedColor;
-        buttonColorInput.value = selectedColor;
+    fontButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            saveBtn.disabled = false;
+        });
     });
+
+    saveBtn.addEventListener("click", function () {
+        fontModal.style.display = "none";
+    });
+
+    fontDemo.addEventListener("click", function () {
+        fontModal.style.display = "block";
+    })
+
+
+});
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const fontButtons = document.querySelectorAll('.font-btn');
+
+    fontButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Remove the .selected class from all buttons
+            fontButtons.forEach(btn => btn.classList.remove('selected'));
+
+            // Add the .selected class to the clicked button
+            button.classList.add('selected');
+
+            // Enable the Save button
+            const saveBtn = document.getElementById('saveBtn');
+            saveBtn.disabled = false;
+        });
+    });
+
+    // Save button click event
+    const saveBtn = document.getElementById('saveBtn');
+    saveBtn.addEventListener('click', () => {
+        const selectedFont = document.querySelector('.font-btn.selected');
+        if (selectedFont) {
+            const selectedFontName = selectedFont.dataset.font;
+            console.log(`Selected font: ${selectedFontName}`);
+
+            // Update the font demo with the selected font
+            const fontDemoText = document.getElementsByClassName('font-demo-text')[0]; // Get the first element with the class
+            const fontName = document.getElementsByClassName('font-name')[0]; // Get the first element with the class
+
+            fontDemoText.style.fontFamily = selectedFontName;
+            fontName.textContent = selectedFontName;
+            fontName.style.fontFamily = selectedFontName;
+
+            // Reset the selection and disable the Save button after saving
+            selectedFont.classList.remove('selected');
+            saveBtn.disabled = true;
+        }
+    });
+
 });

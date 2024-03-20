@@ -1287,7 +1287,11 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-top: 3%;
     height: auto;
-    margin-bottom: 20px;
+}
+
+#designModification {
+    margin-bottom: 100px;
+
 }
 
 #backgroundModification h1 {
@@ -1628,6 +1632,8 @@ body {
 #buttonSection {
     display: flex;
     flex-direction: column;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 #customButtonsContainer {
@@ -2266,13 +2272,14 @@ input[type="color"]::-moz-color-swatch {
 }
 
 
-
 .design__section {
     display: flex;
-    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    /* Align items to the center horizontally */
+    gap: 10px;
+    /* Add some gap between buttons */
 }
-
-
 
 /* Base Style for Button Previews */
 .button-style-card {
@@ -2280,7 +2287,7 @@ input[type="color"]::-moz-color-swatch {
     text-align: center;
     margin: 10px;
     display: inline-block;
-    background-color: white;
+    background-color: rgb(0, 0, 0);
     box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
     border-radius: 20px;
     height: 100px;
@@ -2290,26 +2297,31 @@ input[type="color"]::-moz-color-swatch {
     margin: 0;
 }
 
-
-
 .design__button {
     width: 140px;
     height: 60px;
-    background-color: black;
+    background-color: rgb(255, 255, 255);
     border-radius: 0%;
     outline: none;
     border: none;
     margin: 10px;
 }
 
-.fill-container {
+.fill-container,
+.shadow-container,
+.hard-shadow-container,
+.outline-container {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+.hard-shadow-container {
+    margin-inline: auto;
+}
+
 .soft-shadow {
-    box-shadow: 0px -2px 20px rgba(0, 0, 0, 0.4);
+    box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .hard-shadow {
@@ -2323,26 +2335,26 @@ input[type="color"]::-moz-color-swatch {
 
 .design__color-card {
     width: 30%;
+    /* Set the width of the color card */
     height: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
     background-color: white;
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
-    margin-top: 30px;
-    margin-inline: auto;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+    margin-top: 100px;
+    margin-right: 30px;
+    /* Add margin to separate from the design selections */
     border-radius: 20px;
 }
-
-
 
 /* Container for the color picker */
 .ThemeColorPickerButton {
     margin-inline: auto;
     width: 80%;
-    margin-top: 1.4rem;
     display: flex;
     flex-direction: column;
+    margin-bottom: 30px;
 }
 
 /* Title for the color picker */
@@ -2393,4 +2405,251 @@ input[type="color"]::-moz-color-swatch {
 #ColorPickerInput {
     visibility: hidden;
     position: absolute;
+}
+
+.button__wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    /* Align items to the top */
+}
+
+.design__selections {
+    width: 70%;
+}
+
+.var-1 {
+    border-radius: 0%;
+}
+
+.var-2 {
+    border-radius: 10px;
+}
+
+.var-3 {
+    border-radius: 50px;
+}
+
+
+
+
+
+/* Button Card Container */
+.button-card {
+    margin-inline: 40px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    /* Default background color */
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    /* Soft drop shadow */
+    border: 1px solid #d1d1d1;
+    /* Grayish outline */
+    transition: background-color 0.3s ease-in-out;
+    /* Smooth background color transition */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+/* Font Demo Container */
+.font-demo {
+    width: 60px;
+    height: 60px;
+    border-radius: 20px;
+    background-color: rgb(243, 243, 241);
+    /* Default darker tone of gray */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+/* Font Demo Text */
+.font-demo-text {
+    color: #000;
+    /* Black text color */
+    font-family: 'Poppins', sans-serif;
+    /* Default font family */
+    font-size: 24px;
+}
+
+/* Font Name */
+.font-name {
+    font-family: 'Poppins', sans-serif;
+    /* Font family of the name */
+    font-size: 24px;
+    margin-left: 5px;
+}
+
+/* Hover Effect for Button Card */
+.button-card:hover {
+    background-color: #c8c8c8;
+    /* Darker hue of gray on hover */
+}
+
+/* Hover Effect for Font Demo on Full Card Hover */
+.button-card:hover .font-demo {
+    background-color: #ffffff;
+    /* Bright white on hover */
+    transition-delay: 0.05s;
+    /* Adding delay to the transition for a smooth effect */
+}
+
+
+
+
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Font Buttons Styling */
+.font-btn {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+    text-align: left;
+    border: none;
+    border-radius: 20px;
+    background-color: #fff;
+    /* Default background color */
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+    font-size: large;
+}
+
+.font-btn:hover {
+    background-color: #ccc;
+}
+
+.save-btn {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 20px;
+    background-color: #238b19;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.save-btn:disabled {
+    background-color: #ddd;
+    color: #080808;
+    cursor: not-allowed;
+}
+
+.font-groups {
+    max-height: 75vh;
+    overflow-y: auto;
+}
+
+/* Selected style for font buttons */
+.font-groups .font-btn.selected {
+    background-color: #238b19;
+    /* Selected background color */
+    color: white;
+}
+
+
+
+
+
+#buttonCreationForm {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 70px auto;
+    /* Adjust the margin-top to move the form down */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+#buttonCreationForm label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+#buttonCreationForm input[type="text"],
+#buttonCreationForm input[type="url"],
+#buttonCreationForm select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    /* Ensures padding is included in the width */
+}
+
+#buttonCreationForm button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#buttonCreationForm button:hover {
+    background-color: #45a049;
+}
+
+
+
+
+.invalid-input {
+    border-color: #a71616 !important;
+    /* Red border for invalid inputs */
+    box-shadow: 0 0 5px rgba(167, 22, 22, 0.623) !important;
+    /* Red box shadow for emphasis */
+}
+
+#errorButton {
+    color: rgb(187, 41, 41);
+    /* Red color for error message */
+}
+
+#fillColor,
+#textColor {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: auto;
+    height: auto;
+    border: none;
+    cursor: pointer;
+    width: 100px;
+    height: 100px;
+}
+
+#fillColor::-webkit-color-swatch,
+#textColor::-webkit-color-swatch {
+    border-radius: 15px;
+    border: none;
+}
+
+#fillColor::-moz-color-swatch,
+#textColor::-moz-color-swatch {
+    border-radius: 15px;
+    border: none;
 }
