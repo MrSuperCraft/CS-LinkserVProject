@@ -97,6 +97,7 @@ async function fetchProfilePicture(userId) {
 
         const blob = await response.blob();
 
+        handleFetchCompletion(); // Increment fetch completion for profile picture\
         return blob;
     } catch (error) {
         console.error('Error fetching profile picture:', error);

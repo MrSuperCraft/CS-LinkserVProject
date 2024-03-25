@@ -24,30 +24,56 @@ function showButtonSection() {
 
 document.addEventListener('DOMContentLoaded', () => {
 
-
-    // Get references to the input fields and fill style section
+    // Get references to the input fields and sections
     const fillStyleSection = document.getElementById('fillStyleSection');
+    const softShadowSection = document.getElementById('softShadowSection');
+    const hardShadowSection = document.getElementById('hardShadowSection');
+    const outlineSection = document.getElementById('outlineSection');
     const fillColorInput = document.getElementById('fillColor');
     const textColorInput = document.getElementById('textColor');
+    const softShadowXInput = document.getElementById('soft-shadow-x');
+    const softShadowYInput = document.getElementById('soft-shadow-y');
+    const softShadowSpreadInput = document.getElementById('soft-shadow-spread');
+    const hardShadowXInput = document.getElementById('hard-shadow-x');
+    const hardShadowYInput = document.getElementById('hard-shadow-y');
+    const outlineWidthInput = document.getElementById('outline-width');
+    const outlineColorInput = document.getElementById('outline-color');
 
     // Function to show or hide the fill style section based on the selected preset
-    function toggleFillStyleSection() {
+    function toggleSections() {
         const preset = document.getElementById('buttonPreset').value;
         if (preset === 'fill') {
             fillStyleSection.style.display = 'block';
-        } else {
+            softShadowSection.style.display = 'none';
+            hardShadowSection.style.display = 'none';
+            outlineSection.style.display = 'none';
+        } else if (preset === 'soft-shadow') {
             fillStyleSection.style.display = 'none';
+            softShadowSection.style.display = 'block';
+            hardShadowSection.style.display = 'none';
+            outlineSection.style.display = 'none';
+        } else if (preset === 'hard-shadow') {
+            fillStyleSection.style.display = 'none';
+            softShadowSection.style.display = 'none';
+            hardShadowSection.style.display = 'block';
+            outlineSection.style.display = 'none';
+        } else if (preset === 'outline') {
+            fillStyleSection.style.display = 'none';
+            softShadowSection.style.display = 'none';
+            hardShadowSection.style.display = 'none';
+            outlineSection.style.display = 'block';
         }
     }
 
     // Event listener to toggle fill style section visibility
     const buttonPreset = document.getElementById('buttonPreset');
-    buttonPreset.addEventListener('change', toggleFillStyleSection);
+    buttonPreset.addEventListener('change', toggleSections);
     // Get references to the input fields, error message element, and button container
     const buttonTextInput = document.getElementById('buttonText');
     const buttonLinkInput = document.getElementById('buttonLink');
     const errorButton = document.getElementById('errorButton');
     const buttonContainer = document.getElementById('customButtonsContainer');
+
 
     // Function to add a custom button
     function addCustomButton() {
@@ -79,12 +105,61 @@ document.addEventListener('DOMContentLoaded', () => {
             // Set data properties for button text and link
             newButton.dataset.buttonText = buttonText;
             newButton.dataset.buttonLink = buttonLink;
-            newButton.dataset.fillColor = fillColorInput.value;
-            newButton.dataset.textColor = textColorInput.value;
+
+            // Set additional data properties based on the selected preset
+            switch (preset) {
+                case 'fill':
+                    newButton.dataset.fillColor = fillColorInput.value;
+                    newButton.dataset.textColor = textColorInput.value;
+                    break;
+                case 'soft-shadow':
+                    newButton.dataset.softShadowX = softShadowXInput.value;
+                    newButton.dataset.softShadowY = softShadowYInput.value;
+                    newButton.dataset.softShadowSpread = softShadowSpreadInput.value;
+                    break;
+                case 'hard-shadow':
+                    newButton.dataset.hardShadowX = hardShadowXInput.value;
+                    newButton.dataset.hardShadowY = hardShadowYInput.value;
+                    break;
+                case 'outline':
+                    newButton.dataset.outlineWidth = outlineWidthInput.value;
+                    newButton.dataset.outlineColor = outlineColorInput.value;
+                    break;
+                default:
+                    break;
+            }
+
+            // Function to add styles to the button element based on the selected preset and style
+            function applyButtonStyles(button, preset) {
+                switch (preset) {
+                    case 'fill':
+                        button.style.backgroundColor = fillColorInput.value;
+                        button.style.color = textColorInput.value;
+                        break;
+                    case 'soft-shadow':
+                        button.style.boxShadow = `${softShadowXInput.value}px ${softShadowYInput.value}px ${softShadowSpreadInput.value}px ${fillColorInput.value}`;
+                        break;
+                    case 'hard-shadow':
+                        button.style.boxShadow = `${hardShadowXInput.value}px ${hardShadowYInput.value}px 0px ${fillColorInput.value}`;
+                        break;
+                    case 'outline':
+                        button.style.borderWidth = `${outlineWidthInput.value}px`;
+                        button.style.borderStyle = 'solid';
+                        button.style.borderColor = outlineColorInput.value;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            // Apply styles to the button based on the selected preset
+            applyButtonStyles(newButton, preset);
+
 
             // Create an anchor element
             const newAnchor = document.createElement('a');
             newAnchor.href = buttonLink;
+            newAnchor.target = "_blank";
 
             // Append the button to the anchor element
             newAnchor.appendChild(newButton);

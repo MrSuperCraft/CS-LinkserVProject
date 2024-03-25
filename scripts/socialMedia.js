@@ -1123,9 +1123,9 @@ async function displayUserSocialMediaButtons() {
     const userId = await getUserId(); // Assuming you have a function to get the user ID
 
     if (userId) {
-        const response = await fetch(`/api/socialMedia/${userId}`);
-        if (response.ok) {
-            const socialMediaButtons = await response.json();
+        try {
+            const socialMediaButtons = await fetchData(`/api/socialMedia/${userId}`);
+
             const socialLinksDynamic = document.getElementById('social-links-dynamic');
 
             socialMediaButtons.forEach(button => {
@@ -1146,11 +1146,12 @@ async function displayUserSocialMediaButtons() {
                     console.error('Failed to create social media button for buttonId:', button.button_id);
                 }
             });
-        } else {
-            console.error('Failed to fetch user social media buttons.');
+        } catch (error) {
+            console.error('Failed to fetch user social media buttons:', error.message);
         }
     }
 }
+
 
 // Helper functions
 

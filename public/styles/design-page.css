@@ -13,6 +13,93 @@ body {
     overflow: hidden;
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(180deg, #67bd75, #3d7046);
+    transition: opacity 0.5s ease-in-out;
+}
+
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #87b893, #54c971, #247224);
+    animation: gradientAnimation 5s ease infinite alternate;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.3s;
+}
+
+@keyframes gradientAnimation {
+    from {
+        background-position: 0% 50%;
+    }
+
+    to {
+        background-position: 100% 50%;
+    }
+}
+
+.loading-screen.fade-out {
+    opacity: 0;
+}
+
+.loading-screen .spinner-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 4px solid green;
+    border-top: 4px solid #53cc57;
+    position: relative;
+    animation: spin 1s linear infinite;
+    /* Spin animation */
+
+}
+
+.spinner-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.spinner-content svg {
+    font-size: 48px;
+    color: rgb(0, 0, 0);
+}
+
+.spinner-content .brand-text {
+    text-align: center;
+    font-size: 2em;
+    color: green;
+    font-weight: 600;
+    margin: 0;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .sidebar {
@@ -2298,13 +2385,14 @@ input[type="color"]::-moz-color-swatch {
 }
 
 .design__button {
-    width: 140px;
+    width: 300px;
     height: 60px;
     background-color: rgb(255, 255, 255);
     border-radius: 0%;
     outline: none;
     border: none;
     margin: 10px;
+    font-size: 24px;
 }
 
 .fill-container,
@@ -2380,6 +2468,11 @@ input[type="color"]::-moz-color-swatch {
     /* Soft edges */
     border: 1px solid #ccc;
     cursor: pointer;
+    transition: border-radius 0.3s ease-in-out;
+}
+
+.ColorSelectorButton:hover {
+    border-radius: 6px;
 }
 
 /* Input for the button color */
@@ -2630,7 +2723,8 @@ input[type="color"]::-moz-color-swatch {
 }
 
 #fillColor,
-#textColor {
+#textColor,
+#outline-color {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -2643,13 +2737,15 @@ input[type="color"]::-moz-color-swatch {
 }
 
 #fillColor::-webkit-color-swatch,
-#textColor::-webkit-color-swatch {
+#textColor::-webkit-color-swatch,
+#outline-color::-webkit-color-swatch {
     border-radius: 15px;
     border: none;
 }
 
 #fillColor::-moz-color-swatch,
-#textColor::-moz-color-swatch {
+#textColor::-moz-color-swatch,
+#outline-color::-moz-color-swatch {
     border-radius: 15px;
     border: none;
 }

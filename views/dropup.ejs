@@ -29,6 +29,17 @@
 </head>
 
 <body>
+
+  <div class="loading-screen">
+    <div class="spinner-container">
+      <div class="spinner"></div>
+    </div>
+    <div class="spinner-content">
+      <i class="fa-solid fa-paperclip"></i>
+      <h1 class="brand-text">LinkserV</h1>
+    </div>
+  </div>
+
   <div class="sidebar">
     <h2>Welcome Back!</h2>
     <div class="icontext"><a href="/" class="reftext"><i class="fa-solid fa-backward"></i> Back To LinkserV</a></div>
@@ -101,9 +112,9 @@
         <div class="design__selections">
           <h3>Fill</h3>
           <section class="design__section fill-container">
-            <button class="design__button"></button>
-            <button class="design__button" style="border-radius: 10px;"></button>
-            <button class="design__button" style="border-radius: 50px;"></button>
+            <button class="design__button" style="background-color: gray;"></button>
+            <button class="design__button" style="border-radius: 10px; background-color: gray;"></button>
+            <button class="design__button" style="border-radius: 50px; background-color: gray;"></button>
           </section>
 
           <h3>Soft Shadow</h3>
@@ -336,6 +347,10 @@
   <!-- Section Menus for design -->
   <script src="/scripts/sectionManagement.js"></script>
   <script src="/scripts/designSection.js"></script>
+
+  <!-- Track Fetching for loading spinner -->
+  <script src="/scripts/fetchTrack.js"></script>
+
 
 
 
@@ -673,6 +688,35 @@
           <input type="color" id="textColor">
         </div>
 
+        <div id="softShadowSection" style="display: block;">
+          <label for="soft-shadow-x">Shadow X axis offset</label>
+          <input type="number" max="10" min="1" name="soft-shadow-x" id="soft-shadow-x">
+
+          <label for="soft-shadow-y">Shadow Y axis offset</label>
+          <input type="number" max="10" min="1" id="soft-shadow-y">
+
+          <label for="soft-shadow-spread">Shadow Spread / Blur</label>
+          <input type="number" max="20" min="0" name="shadow-spread" style="margin-bottom: 20px;"
+            id="soft-shadow-spread">
+        </div>
+
+        <div id="hardShadowSection" style="display: none;">
+          <label for="hard-shadow-x">Shadow X axis offset</label>
+          <input type="number" max="10" min="1" name="hard-shadow-x" id="hard-shadow-x">
+
+          <label for="hard-shadow-y">Shadow Y axis offset</label>
+          <input type="number" max="10" min="1" name="hard-shadow-y" id="hard-shadow-y">
+        </div>
+
+        <div id="outlineSection" style="display: none;">
+          <label for="outline-width">Outline Width</label>
+          <input type="number" max="5" min="1" name="outline-width" id="outline-width">
+
+          <label for="outline-color">Outline Color</label>
+          <input type="color" id="outline-color" name="outline-color" id="outline-color">
+        </div>
+
+
         <button id="addButton">Create Button</button>
       </div>
       <span id="errorButton"></span>
@@ -699,7 +743,6 @@
           Roman</button>
         <button class="font-btn" data-font="Roboto" style="font-family: 'Roboto', sans-serif;">Roboto</button>
         <button class="font-btn" data-font="Open Sans" style="font-family: 'Open Sans', sans-serif;">Open Sans</button>
-        <button class="font-btn" data-font="Pacifico" style="font-family: 'Pacifico', cursive;">Pacifico</button>
         <!-- Add more classic fonts here -->
       </div>
       <div class="font-group">

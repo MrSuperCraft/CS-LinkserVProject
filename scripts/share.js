@@ -31,20 +31,20 @@ async function openInfoModal() {
     const infoModal = document.getElementById('infoModal');
     infoModal.style.display = 'block';
 
-    // Fetch user information when opening the modal
-    const userId = await getUserId();
-    fetch(`/api/UserInfo/${userId}`)
-        .then(response => response.json())
-        .then(data => {
-            const pageInfoTextarea = document.getElementById('pageInfo');
-            pageInfoTextarea.value = data.pageInfo || '';
-            updateInfo();
-        })
-        .catch(error => {
-            console.error('Error fetching user information:', error);
-        });
+    try {
+        // Fetch user information when opening the modal
+        const userId = await getUserId();
+        const data = await fetchData(`/api/UserInfo/${userId}`);
 
+        const pageInfoTextarea = document.getElementById('pageInfo');
+        pageInfoTextarea.value = data.pageInfo || '';
+        updateInfo();
+    } catch (error) {
+        console.error('Error fetching user information:', error);
+    }
 }
+
+
 
 function closeInfoModal() {
     const infoModal = document.getElementById('infoModal');

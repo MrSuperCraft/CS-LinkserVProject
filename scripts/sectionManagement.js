@@ -254,11 +254,10 @@ async function saveBackgroundSettings(method, staticColor, gradientStart, gradie
 async function loadBackgroundSettings() {
     const userId = await getUserId();
     try {
-        const response = await fetch(`/api/background/${userId}`);
-        const data = await response.json();
-
+        const response = await fetchData(`/api/background/${userId}`);
+        const data = response;
         // Update background based on loaded settings
-        if (data.method === 'static_color') {
+        if (response.method === 'static_color') {
             applyStaticColorBackground(data.static_color);
         } else if (data.method === 'gradient') {
             applyGradientBackground(data.gradient_start, data.gradient_end, data.gradient_direction);
@@ -325,24 +324,30 @@ function applyImageBackground(imageUrl) {
 
 // Lines 326 - 350 : Profile API
 
-document.addEventListener('DOMContentLoaded', async function () {
+document.addEventListener('DOMContentLoaded', getProfileStats);
+
+async function getProfileStats() {
     const userId = await getUserId();
 
     try {
-        const response = await fetch(`/api/user/${userId}`);
-        const userData = await response.json();
+        const response = await fetchData(`/api/user/${userId}`);
 
-        // Now you have the user details in the 'userData' object
-        document.getElementById('stat__username').innerText = userData.Username;
-        document.getElementById('stat__email').innerText = userData.Email;
-        document.getElementById('stat__membership').innerText = userData.Membership;
+        // Check if the response is a valid JSON object
+        if (response && typeof response === 'object') {
+            const userData = response; // Assuming response is already JSON
+
+            // Now you have the user details in the 'userData' object
+            document.getElementById('stat__username').innerText = userData.Username;
+            document.getElementById('stat__email').innerText = userData.Email;
+            document.getElementById('stat__membership').innerText = userData.Membership;
+        } else {
+            throw new Error('Invalid response format');
+        }
 
     } catch (error) {
         console.error('Error fetching user details:', error.message);
     }
-});
-
-
+}
 
 
 
