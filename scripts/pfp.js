@@ -87,10 +87,10 @@ async function fetchProfilePicture(userId) {
 
         if (!response.ok) {
             if (response.status === 404) {
-                return null;
+                console.warn(`Profile picture not found for user ${userId}`);
+                return null; // Return null for 404 responses
             } else {
                 showMessage('Failed to load the profile image. Reload the page.', 'error');
-
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
         }

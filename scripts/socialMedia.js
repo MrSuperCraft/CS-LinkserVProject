@@ -107,6 +107,7 @@ function enableSocialEdit() {
     document.getElementById('saveChangesButton').style.display = 'block';
     document.getElementById('socialDelete').style.display = 'block';
     document.getElementById('textFieldSection').style.display = 'none';
+    document.getElementById('buttonSection').style.display = 'none';
 }
 
 

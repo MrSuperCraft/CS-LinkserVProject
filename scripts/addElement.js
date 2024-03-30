@@ -70,6 +70,7 @@ function addElement(type) {
 
 
     if (currentElementType === 'image') {
+        document.getElementById('buttonSection').style.display = 'none';
         showImageSection();
 
     } else if (currentElementType === 'social') {
@@ -410,6 +411,7 @@ function showImageSection() {
     document.getElementById('textEditSection').style.display = 'block';
     document.getElementById('imageEditSection').style.display = 'block';
     document.getElementById('textFieldSection').style.display = 'none';
+    document.getElementById('buttonCreationForm').style.display = 'none';
     document.getElementById('buttonSection').style.display = 'none';
 
 
@@ -423,6 +425,6 @@ function EditSocialMedia() {
     document.getElementById('addSocialMediaButton').style.display = 'none';
     document.getElementById('textFieldSection').style.display = 'none';
     document.getElementById('buttonSection').style.display = 'none';
-
+    document.getElementById('buttonCreationForm').style.display = 'none';
 }
 
