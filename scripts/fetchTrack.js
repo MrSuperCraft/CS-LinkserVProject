@@ -2,11 +2,13 @@
 const fetchCompletedEvent = new Event('fetchCompleted');
 
 // Flag for the amount of fetch completions
-let totalFetches = 5;
+let totalFetches = 4; // Adjusted total fetch count to 4
+
+// Flag to track if all fetches are completed
+let allFetchesCompleted = false;
 
 // Fetches a URL and returns a promise that resolves with the response. If an error occurs while making the request, it rejects
 let completedFetches = 0;
-
 
 // Function to fetch data and dispatch fetchCompletedEvent when done
 async function fetchData(url) {
@@ -25,44 +27,48 @@ async function fetchData(url) {
         } else {
             handleFetchCompletion();
             return await response.blob();
-
         }
-
-
     } catch (error) {
         console.error('Error fetching data:', error.message);
         throw error;
     }
 }
 
-
-// Function to fade out the loading screen when all fetches are complete
+// Function to handle fetch completion
 function handleFetchCompletion() {
     completedFetches++;
+    console.log('Current amount of completed fetches:', completedFetches);
+
+    // Check if all fetches are completed
     if (completedFetches === totalFetches) {
+        allFetchesCompleted = true;
+        checkLoadingState();
+    }
+}
+
+// Function to check loading state and remove loading screen if all conditions are met
+function checkLoadingState() {
+    if (allFetchesCompleted && document.readyState === 'complete') {
         fadeOutLoadingScreen();
     }
-
-    console.log('current amount of completed fetchings:', completedFetches);
 }
 
 // Function to fade out the loading screen
 function fadeOutLoadingScreen() {
     const loadingScreen = document.querySelector('.loading-screen');
-
-    // After a delay, remove the loading screen from the DOM
-    setTimeout(() => {
-        // Add a class to trigger the fade-out animation
-        loadingScreen.classList.add('fade-out');
-
-    }, 1500); // Adjust the duration as needed
+    loadingScreen.classList.add('fade-out');
 
     setTimeout(() => {
         loadingScreen.style.display = 'none';
-    }, 2000);
+    }, 1000);
 }
-
 
 
 // Event listener to handle fetchCompletedEvent
 document.addEventListener('fetchCompleted', handleFetchCompletion);
+
+// Event listener for window.onload event to ensure all content is loaded before fading out the loading screen
+window.addEventListener('load', function () {
+    console.log('Window loaded completely');
+    checkLoadingState();
+});
