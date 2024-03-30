@@ -663,6 +663,7 @@ body {
     /* Cursor on hover */
     font-family: 'Poppins', sans-serif;
     margin-top: 20px;
+    margin-bottom: 50px;
 
 }
 
@@ -683,6 +684,11 @@ body {
 }
 
 #element-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* Center content horizontally */
     font-size: 25px;
     position: absolute;
     top: 50%;
@@ -697,24 +703,46 @@ body {
 }
 
 .buttons-container {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Two columns with equal width */
+    grid-template-rows: repeat(2, 1fr);
+    /* Two rows with equal height */
+    grid-column-gap: 8px;
+    /* Gap between columns */
+    grid-row-gap: 8px;
+    /* Gap between rows */
+    width: 100%;
+    /* Make buttons container full width */
+    justify-items: center;
+    /* Center items horizontally in the grid */
+    align-items: center;
+    /* Center items vertically in the grid */
+    margin-top: 20px;
+    /* Add some space above the buttons */
 }
+
+
 
 #element-content .buttons-container button {
     background-color: #3498db;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Center items vertically */
+    align-items: center;
+    /* Center items horizontally */
     color: white;
     padding: 10px;
-    font-size: 20px;
+    height: 200px;
+    width: 200px;
+    font-size: 30px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     margin-bottom: 10px;
     transition: background-color 0.3s, color 0.3s, transform 0.3s, box-shadow 0.3s;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    /* Align both icon and text vertically */
 }
 
 #element-content .buttons-container button i {
@@ -727,14 +755,15 @@ body {
 #element-content .buttons-container button span {
     margin-left: 5px;
     /* Add margin to the left of the text */
-    text-align: left;
-    /* Align text to the left */
+    text-align: center;
+    /* Center text horizontally */
     flex-grow: 1;
     /* Allow text to take remaining space */
 }
 
+
 #element-content button:hover {
-    background-color: #2980b9;
+    background-color: #476f8a;
     /* Darker blue color on hover */
     color: #ecf0f1;
     /* Light text color on hover */
@@ -882,7 +911,6 @@ body {
 /* Style for the submit button */
 #customize-element-content #applyChangesButton,
 #addSocialMediaButton,
-#addTextField,
 .dz-button {
     display: flex;
     margin-inline: auto;
@@ -1557,49 +1585,16 @@ body {
 
 
 
-/* EditorJS styling */
-#editorjs {
-    max-height: 500px;
-    margin-top: 50px;
-    text-align: left;
-    border: 1px solid #ccc;
-    padding: 20px;
-    font-family: 'Poppins', sans-serif;
-    background-color: #f8f8f8;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
-    /* Add the following styles for scrolling */
-    overflow-y: auto;
-    /* Enable vertical scrolling */
-    overflow-x: hidden;
-    /* Hide horizontal scrollbar */
+
+
+#deleteCustomButton {
+    transition: background-color 0.3s ease-in-out;
 }
 
-
-#editorjs p {
-    margin: 0;
-    /* Remove default paragraph margins */
+#deleteCustomButton:hover {
+    background: #a71616;
 }
-
-#editorjs h1,
-#editorjs h2,
-#editorjs h3,
-#editorjs h4,
-#editorjs h5,
-#editorjs h6 {
-    margin-top: 0;
-    /* Remove top margin for headings */
-}
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1611,15 +1606,14 @@ body {
 .textfield-card {
     position: relative;
     align-self: center;
-    width: 60%;
+    width: 90%;
+    height: auto;
     border: 1px solid #ccc;
     padding: 10px;
     margin: 10px auto;
     border-radius: 8px;
     background-color: #fff;
-    text-align: left;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
     /* Ensure menu button doesn't overflow */
     display: flex;
     flex-direction: column;
@@ -1634,47 +1628,6 @@ body {
     color: #333;
 }
 
-.menu-button {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    padding: 5px;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-}
-
-.menu-section {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    padding: 5px;
-    cursor: pointer;
-    color: #333;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    width: 120px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-}
-
-.menu-section:not(:last-child) {
-    margin-bottom: 5px;
-    /* Adjust the margin as needed for spacing between menu items */
-}
-
-.menu-section.edit-section {
-    top: 100%;
-    /* Adjust the positioning for the edit section */
-    margin-top: 20px;
-    /* Adjust the margin as needed for spacing */
-}
-
-.menu-button:hover .menu-section {
-    display: flex;
-}
 
 /* Add animation for a smoother appearance */
 @keyframes fadeIn {
@@ -1685,10 +1638,6 @@ body {
     to {
         opacity: 1;
     }
-}
-
-.menu-section {
-    animation: fadeIn 0.3s ease-in-out;
 }
 
 
@@ -1724,10 +1673,13 @@ body {
 }
 
 #customButtonsContainer {
-    width: 60%;
+    width: 500px;
     align-self: center;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 50px;
 }
 
 
@@ -2393,6 +2345,9 @@ input[type="color"]::-moz-color-swatch {
     border: none;
     margin: 10px;
     font-size: 24px;
+    position: relative;
+    /* Set position to relative */
+
 }
 
 .fill-container,
@@ -2748,4 +2703,122 @@ input[type="color"]::-moz-color-swatch {
 #outline-color::-moz-color-swatch {
     border-radius: 15px;
     border: none;
+}
+
+#textFieldSection {
+    height: auto;
+}
+
+.text__button-group {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.editor-button {
+    width: 200px;
+    height: 50px;
+    margin-inline: 8px;
+    border-radius: 20px;
+    background-color: #4caf50;
+    outline: none;
+    border: none;
+    color: white;
+
+    font-size: 18px;
+    text-align: center;
+    cursor: pointer;
+    transition: .3s ease all;
+}
+
+.editor-button:hover {
+    background-color: #116129;
+}
+
+#text-field-container {
+    width: 400px;
+}
+
+.text-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    /* Adjust the overlay color and transparency */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    color: white;
+    /* Hidden by default */
+    transition: opacity 0.3s ease;
+    border-radius: inherit;
+}
+
+.text-overlay:hover {
+    opacity: 1;
+}
+
+.text-content {
+    max-width: 100%;
+    word-wrap: break-word;
+}
+
+.red {
+    background-color: #c91d1d;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.red:hover {
+    background: #a71616;
+}
+
+.btn__container {
+    width: 300px;
+    height: 60px;
+    position: relative;
+    display: inline-block;
+    /* Ensure the container only takes up the necessary space */
+    margin-bottom: 40px;
+}
+
+
+.btn__overlay {
+    position: absolute;
+    top: 10px;
+    /* Adjust top position to align with button */
+    left: 10px;
+    /* Adjust left position to align with button */
+    width: 300px;
+    /* Subtract padding from width to fit within container */
+    height: 60px;
+    /* Subtract padding from height to fit within container */
+    /* Adjust the height as needed */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Adjust the opacity and color as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: white;
+    font-size: 20px;
+}
+
+.btn__container:hover .btn__overlay {
+    opacity: 1;
+}
+
+.btn__container a {
+    width: 100%;
+    height: 100%;
+
 }

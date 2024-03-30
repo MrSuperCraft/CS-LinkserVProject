@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="/styles/design-page.css">
   <link rel="stylesheet" href="/styles/fonts.css">
   <link rel="stylesheet" href="/styles/scroll.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" async href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="/styles/designSection.css">
   <link rel="stylesheet" type="text/css"
@@ -16,11 +16,7 @@
   <!-- Include jQuery before Spectrum -->
   <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
     integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
-  <!-- Include Spectrum script -->
-  <script src="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.js"></script>
 
-  <!-- Link the ChromaColorPicker library from CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chroma-js@2.2.0/chroma.min.js"></script>
 
 
 
@@ -269,8 +265,7 @@
 
   <div class="content" id="profileSection" style="display: none; flex-direction: column; align-items: center;">
 
-    <div id="profileBanner" style="background-image: url('/sakura-banner.jpg');">
-      <img src="/sakura-banner.jpg" id="bannerImage" alt="banner-image">
+    <div id="profileBanner" style="background-image: url('/sakura-banner.webp');">
     </div>
 
     <div class="pfp-stats">
@@ -352,6 +347,10 @@
   <script src="/scripts/fetchTrack.js"></script>
 
 
+  <!-- Lordicon -->
+  <script src="https://cdn.lordicon.com/lordicon.js"></script>
+
+
 
 
 
@@ -389,14 +388,29 @@
     <span class="close" onclick="closeAddElementModal()">&times;</span>
     <h2>Which element do you want to add?</h2>
 
-    <!-- Example elements to add -->
+    <!-- elements to add -->
     <div class="buttons-container">
-      <button onclick="addElement('button')"><i class="fas fa-square"></i> <span>Add Button</span></button>
-      <button onclick="addElement('textfield')"><i class="fas fa-font"></i><span>Add Text Field</span> </button>
-      <button onclick="addElement('image')"><i class="fas fa-image"></i><span>Add image</span></button>
-      <button onclick="addElement('social')"><i class="fas fa-share-alt"></i><span>Add Social Media
+      <button onclick="addElement('button')">
+
+        <lord-icon src="https://cdn.lordicon.com/ezjqphcn.json" trigger="hover"
+          colors="primary:#104891,secondary:#f24c00" style="width:250px;height:250px">
+        </lord-icon> <span>Add
+          Button</span>
+      </button>
+      <button onclick="addElement('textfield')"><lord-icon src="https://cdn.lordicon.com/ylvuooxd.json" trigger="hover"
+          state="hover-line" style="width:250px;height:250px">
+        </lord-icon><span>Add Text
+          Field</span></button>
+      <button onclick="addElement('image')"><lord-icon src="https://cdn.lordicon.com/bzqvamqv.json" trigger="hover"
+          style="width:250px;height:250px">
+        </lord-icon><span>Add
+          Image</span></button>
+      <button onclick="addElement('social')"><lord-icon src="https://cdn.lordicon.com/sskjoohc.json" trigger="hover"
+          style="width:250px;height:250px">
+        </lord-icon><span>Add Social Media
           Icon</span></button>
     </div>
+
   </div>
 </div>
 
@@ -634,7 +648,6 @@
             <option value="H6">H6</option>
           </select>
           <!-- Font -->
-          <select id="fontName" class="adv-option-button"></select>
           <select id="fontSize" class="adv-option-button"></select>
           <!-- Color -->
           <div class="input-wrapper">
@@ -647,8 +660,18 @@
           </div>
         </div>
         <div id="text-input" contenteditable="true"></div>
+
       </div>
-      <button id="addTextField" class="editor-button" type="button" onclick="handleEditor()">Create Text Field</button>
+
+      <div class="text__button-group">
+        <button id="addTextField" class="editor-button" type="button">Create Text
+          Field</button>
+
+        <button id="save-text" class="editor-button" type="button" style="display: none;">Edit Card</button>
+        <button id="delete-text" class="red editor-button" type="button" style="display: none;">Delete Text Field <i
+            class="fas fa-trash"></i></button>
+
+      </div>
     </div>
 
 
@@ -718,6 +741,10 @@
 
 
         <button id="addButton">Create Button</button>
+        <button id="saveEditButton" style="display: none;">Save Changes</button>
+        <button id="deleteCustomButton" type="button"
+          style="display: none; background-color: #c91d1d; margin-top: 20px;">Delete Text Field
+          <i class="fas fa-trash"></i></button>
       </div>
       <span id="errorButton"></span>
     </div>
