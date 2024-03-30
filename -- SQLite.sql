@@ -120,6 +120,19 @@ CREATE TABLE IF NOT EXISTS background (
     FOREIGN KEY (user_id) REFERENCES Users(ID)
 );
 
+
+
+
+CREATE TABLE IF NOT EXISTS TextFields (
+    ID INTEGER PRIMARY KEY,
+    TextField_id  INTEGER, -- This is used as a unique identifier for each text field.
+    user_id INTEGER REFERENCES Users(ID),
+    content TEXT
+);
+
+
+
+
 -- View the table data
 SELECT * FROM Users;
 SELECT * FROM contact_submissions;
@@ -128,3 +141,4 @@ SELECT * FROM files;
 SELECT * FROM social_media_buttons;
 SELECT * FROM user_text_info;
 SELECT * FROM background;
+SELECT * FROM TextFields;
