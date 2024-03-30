@@ -1536,6 +1536,66 @@ app.get('/api/background/:userId', (req, res) => {
 
 
 
+// Text Field CRUD
+
+
+
+// Route to create a new text field card
+app.post('/api/textfield/create', (req, res) => {
+    const { user_id, TextField_id, content } = req.body;
+
+    db.run(`INSERT INTO TextFields (user_id, TextField_id, content) VALUES (?, ?, ?)`, [user_id, TextField_id, content], function (err) {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+
+        res.status(201).json({ message: 'Text field card created successfully', id: this.lastID });
+    });
+});
+
+// Route to retrieve all text field cards for a specific user
+app.get('/api/textfields/:user_id', (req, res) => {
+    const user_id = req.params.user_id;
+
+    db.all(`SELECT * FROM TextFields WHERE user_id = ?`, [user_id], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+
+        res.status(200).json(rows);
+    });
+});
+
+// Route to update a text field card
+app.put('/api/textfields/update/:id', (req, res) => {
+    const { content, cardId } = req.body;
+
+    db.run(`UPDATE TextFields SET content = ? WHERE TextField_id = ?`, [content, cardId], function (err) {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+
+        res.status(200).json({ message: 'Text field card updated successfully' });
+    });
+});
+
+
+
+// Route to delete a text field card
+app.delete('/api/textfields/delete/:id', (req, res) => {
+    const TextField_id = req.params.id; // Access TextField_id from the URL parameter
+
+    db.run(`DELETE FROM TextFields WHERE TextField_id = ?`, [TextField_id], function (err) {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+
+        res.status(200).json({ message: 'Text field card deleted successfully' });
+    });
+});
+
+
+
 
 
 
