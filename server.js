@@ -1598,12 +1598,110 @@ app.delete('/api/textfields/delete/:id', (req, res) => {
 
 
 
+// Route for creating a new button
+app.post('/api/button/create', async (req, res) => {
+    try {
+        const { userId, button_id, buttonText, buttonLink, preset, styleStrength, fillColor, textColor, softShadowX, softShadowY, softShadowSpread, hardShadowX, hardShadowY, outlineWidth, outlineColor } = req.body;
+
+
+
+        // Insert the new button into the database
+        db.run(`
+            INSERT INTO Buttons (user_id, button_id, buttonText, buttonLink, preset, styleStrength, fillColor, textColor, softShadowX, softShadowY, softShadowSpread, hardShadowX, hardShadowY, outlineWidth, outlineColor)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `, [userId, button_id, buttonText, buttonLink, preset, styleStrength, fillColor, textColor, softShadowX, softShadowY, softShadowSpread, hardShadowX, hardShadowY, outlineWidth, outlineColor], function (err) {
+            if (err) {
+                console.error('Error creating button:', err);
+                res.status(500).send('Error creating button.');
+            } else {
+                res.status(200).send('Button created successfully.');
+            }
+        });
+    } catch (error) {
+        console.error('Error creating button:', error);
+        res.status(500).send('An error occurred. Please try again later.');
+    }
+});
+
+
+// GET route for  getting all buttons in the database
+app.get('/api/buttons/:user_id', async (req, res) => {
+    const { user_id } = req.params; // Access user_id from request parameters
+    try {
+        // Fetch all buttons from the database for the specified user_id
+        db.all('SELECT * FROM Buttons WHERE user_id = ?', [user_id], (err, rows) => {
+            if (err) {
+                console.error('Error fetching buttons:', err);
+                res.status(500).send('Error fetching buttons.');
+            } else {
+                // Send the fetched buttons data as a JSON response
+                res.status(200).json(rows);
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching buttons:', error);
+        res.status(500).send('An error occurred. Please try again later.');
+    }
+});
 
 
 
 
+// Update button data route
+app.put('/api/button/update/:button_id', (req, res) => {
+    const button_id = req.params.button_id;
+    const {
+        buttonText,
+        buttonLink,
+        preset,
+        styleStrength,
+        fillColor,
+        textColor,
+        softShadowX,
+        softShadowY,
+        softShadowSpread,
+        hardShadowX,
+        hardShadowY,
+        outlineWidth,
+        outlineColor
+    } = req.body;
+
+    // Update the button data in the database
+    db.run(`UPDATE Buttons
+            SET buttonText = ?, buttonLink = ?, preset = ?, styleStrength = ?,
+                fillColor = ?, textColor = ?, softShadowX = ?, softShadowY = ?,
+                softShadowSpread = ?, hardShadowX = ?, hardShadowY = ?,
+                outlineWidth = ?, outlineColor = ?
+            WHERE button_id = ?`,
+        [buttonText, buttonLink, preset, styleStrength, fillColor, textColor,
+            softShadowX, softShadowY, softShadowSpread, hardShadowX, hardShadowY,
+            outlineWidth, outlineColor, button_id],
+        (err) => {
+            if (err) {
+                console.error('Error updating button:', err);
+                res.status(500).json({ error: 'Failed to update button.' });
+            } else {
+                res.status(200).json({ message: 'Button updated successfully.' });
+            }
+        });
+});
 
 
+
+// Delete button route
+app.delete('/api/button/delete/:button_id', (req, res) => {
+    const button_id = req.params.button_id;
+
+    // Delete the button from the database
+    db.run(`DELETE FROM Buttons WHERE button_id = ?`, [button_id], (err) => {
+        if (err) {
+            console.error('Error deleting button:', err);
+            res.status(500).json({ error: 'Failed to delete button.' });
+        } else {
+            res.status(200).json({ message: 'Button deleted successfully.' });
+        }
+    });
+});
 
 
 
