@@ -130,6 +130,29 @@ CREATE TABLE IF NOT EXISTS TextFields (
     content TEXT
 );
 
+DROP TABLE Buttons;
+
+CREATE TABLE IF NOT EXISTS Buttons (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES Users(ID),
+    button_id INTEGER, -- This is used as a unique identifier for each button.
+    buttonText TEXT NOT NULL,
+    buttonLink TEXT NOT NULL,
+    preset TEXT NOT NULL,
+    styleStrength INTEGER NOT NULL,
+    fillColor TEXT,
+    textColor TEXT,
+    softShadowX INTEGER,
+    softShadowY INTEGER,
+    softShadowSpread INTEGER,
+    hardShadowX INTEGER,
+    hardShadowY INTEGER,
+    outlineWidth INTEGER,
+    outlineColor TEXT
+);
+
+
+
 
 
 
@@ -142,3 +165,4 @@ SELECT * FROM social_media_buttons;
 SELECT * FROM user_text_info;
 SELECT * FROM background;
 SELECT * FROM TextFields;
+SELECT * FROM Buttons;
