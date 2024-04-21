@@ -103,6 +103,10 @@ document.addEventListener('DOMContentLoaded', () => {
         newAnchor.appendChild(newButton);
         newButton.classList.add('design__button');
 
+        const shadowColor = hexToRgba(document.getElementById('ButtonColor3').value, 0.5) || 'rgba(0, 0, 0, 0.5)';
+        newButton.dataset.shadowColor = shadowColor;
+
+
         // Apply additional styles based on the selected preset
         switch (preset) {
             case 'fill':
@@ -121,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             case 'soft-shadow':
                 newButton.classList.add('soft-shadow');
-                newButton.style.boxShadow = `${softShadowX || softShadowXInput.value}px ${softShadowY || softShadowYInput.value}px ${softShadowSpread || softShadowSpreadInput.value}px rgba(0, 0, 0, 0.5)`;
+                newButton.style.boxShadow = `${softShadowX || softShadowXInput.value}px ${softShadowY || softShadowYInput.value}px ${softShadowSpread || softShadowSpreadInput.value}px ${shadowColor}`;
                 newButton.dataset.softShadowX = softShadowX || softShadowXInput.value;
                 newButton.dataset.softShadowY = softShadowY || softShadowYInput.value;
                 newButton.dataset.softShadowSpread = softShadowSpread || softShadowSpreadInput.value;
@@ -134,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             case 'hard-shadow':
                 newButton.classList.add('hard-shadow');
-                newButton.style.boxShadow = `${hardShadowX || hardShadowXInput.value}px ${hardShadowY || hardShadowYInput.value}px 10px rgba(0, 0, 0, 0.5)`;
+                newButton.style.boxShadow = `${hardShadowX || hardShadowXInput.value}px ${hardShadowY || hardShadowYInput.value}px 10px black`;
                 newButton.dataset.hardShadowX = hardShadowX || hardShadowXInput.value;
                 newButton.dataset.hardShadowY = hardShadowY || hardShadowYInput.value;
                 newButton.dataset.fillColor = null;
@@ -162,6 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
             default:
                 break;
         }
+
+
 
         // Apply style strength to the button
         newButton.classList.add(`var-${styleStrength || styleStrengthInput.value}`);
@@ -198,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const styleStrengthValue = styleStrength ? `var-${styleStrength}` : `var-1`; // Check if styleStrength exists
 
+
             overlay.classList.add(styleStrengthValue);
 
             const overlayIcon = document.createElement('i');
@@ -224,6 +231,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Clear the input fields after adding the button
             buttonTextInput.value = '';
             buttonLinkInput.value = '';
+
+            // Applies the styles to match the global style setting
+            applyGlobalStyles();
 
             closeCustomizeElementModal();
         } else {
@@ -253,6 +263,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to open the edit modal with button data
     function openEditModal(buttonOverlay) {
+        document.getElementById('modalTitle').innerText = 'Customize Your Button';
+        document.getElementById('customize-element-content').setAttribute("style", "0vh");
         // Get the button element from the overlay
         const buttonElement = buttonOverlay.previousElementSibling.querySelector('button');
 
@@ -260,8 +272,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const buttonText = buttonElement.dataset.buttonText;
         const buttonLink = buttonElement.dataset.buttonLink;
         const preset = buttonElement.classList[1]; // Assuming the preset class is the second class in the classList
-        const styleStrengthClass = buttonElement.classList[2]; // Assuming the style strength class is the third class in the classList
-        const styleStrength = styleStrengthClass.replace('var-', '');
+        let styleStrengthClass = buttonElement.classList[2]; // Assuming the style strength class is the third class in the classList
+        let styleStrength = '';
+
+        // Check if the style strength class exists and contains 'var-' prefix
+        if (styleStrengthClass && styleStrengthClass.startsWith('var-')) {
+            // Extract the style strength by removing 'var-' prefix
+            styleStrength = styleStrengthClass.replace('var-', '');
+        }
 
         // Set the values in the edit modal form fields
         document.getElementById('buttonText').value = buttonText;
@@ -359,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             case 'hard-shadow':
                 buttonElement.classList.add('hard-shadow');
-                buttonElement.style.boxShadow = `${hardShadowXInput.value}px ${hardShadowYInput.value}px 10px rgba(0, 0, 0, 0.5)`;
+                buttonElement.style.boxShadow = `${hardShadowXInput.value}px ${hardShadowYInput.value}px 10px  ${buttonElement.dataset.shadowColor || black}`;
                 buttonElement.dataset.hardShadowX = hardShadowXInput.value;
                 buttonElement.dataset.hardShadowY = hardShadowYInput.value;
                 buttonElement.dataset.fillColor = null;
@@ -489,7 +507,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const formValues = getFormValues();
 
         const button_id = generateUniqueId(); // Generate a unique ID for the card
-        const user_id = await getUserId();
+        const user_id = await getUserIdWithFallback();
+
+        const buttonData = {
+            button_id: button_id,
+            buttonText: formValues[0],
+            buttonLink: formValues[1],
+            preset: formValues[2],
+            styleStrength: formValues[3],
+            fillColor: formValues[4],
+            textColor: formValues[5],
+            shadowColor: formValues[6], // Add the shadow color from formValues
+            outlineWidth: formValues[7], // Add the outline width from formValues
+            outlineColor: formValues[8] // Add the outline color from formValues
+        };
 
         try {
             const response = await fetch('/api/button/create', {
@@ -512,13 +543,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     hardShadowX: formValues[9],
                     hardShadowY: formValues[10],
                     outlineWidth: formValues[11],
-                    outlineColor: formValues[12]
+                    outlineColor: formValues[12],
                 })
             });
 
             if (response.ok) {
                 showMessage('Button created successfully.', 'success');
-                addCustomButtonUI(button_id);
+                addCustomButtonUI(buttonData);
             } else {
                 showMessage('Failed to create button.', 'error');
             }
@@ -530,7 +561,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to fetch all buttons from the server
     async function fetchButtons() {
-        const user_id = await getUserId();
+        const user_id = await getUserIdWithFallback();
         try {
             const response = await fetch(`/api/buttons/${user_id}`); // Assuming this is your endpoint to fetch buttons
             if (!response.ok) {
@@ -642,4 +673,189 @@ function getFormValues() {
     }
 
     return [buttonText, buttonLink, preset, styleStrength, fillColor, textColor, softShadowX, softShadowY, softShadowSpread, hardShadowX, hardShadowY, outlineWidth, outlineColor];
+}
+
+
+
+
+
+
+function applyGlobalStyles() {
+
+
+
+    const buttons = document.querySelectorAll('.btn__container button');
+
+    buttons.forEach(button => {
+        let buttonFillColor = document.getElementById('ButtonColor1').value;
+        let buttonTextColor = document.getElementById('ButtonColor2').value;
+        let buttonShadowColor = document.getElementById('ButtonColor3').value;
+        let font = document.querySelector('.font-name').textContent;
+        button.dataset.fillColor = buttonFillColor;
+        button.style.backgroundColor = buttonFillColor;
+
+        button.dataset.textColor = buttonTextColor;
+        button.style.color = buttonTextColor;
+
+        button.dataset.font = font;
+        button.style.fontFamily = font;
+
+        // Check if the button has a hard-shadow or soft-shadow class
+        if (button.classList.contains('hard-shadow') || button.classList.contains('soft-shadow')) {
+            // Check if there is an existing box shadow style
+            if (button.style.boxShadow) {
+                // Replace the RGBA color value with HEX value
+                let modifiedBoxShadow = button.style.boxShadow.replace(/rgba\(\d+,\s*\d+,\s*\d+,\s*[\d.]+\)/, buttonShadowColor);
+
+                // Apply the modified box shadow style to the button
+                button.style.boxShadow = modifiedBoxShadow;
+            }
+        } else {
+            // No specific shadow class, do nothing or add other conditions if needed
+        }
+
+    });
+}
+
+
+async function updateStyles() {
+    try {
+        const user_id = await getUserIdWithFallback();
+        const response = await fetch('/api/style/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user_id: user_id,
+                button_color: document.getElementById('ButtonColor1').value,
+                text_color: document.getElementById('ButtonColor2').value,
+                shadow_color: document.getElementById('ButtonColor3').value,
+                button_font: document.querySelector('.font-name').textContent
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        applyGlobalStyles();
+        showMessage('Style data updated successfully.', 'success');
+    } catch (error) {
+        showMessage('Style data update is unsuccessful.', 'error');
+    }
+}
+
+
+async function fetchGlobalStyles() {
+    const user_id = await getUserIdWithFallback();
+    fetch(`/api/style/${user_id}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Global styles fetched successfully:', data);
+            fillInputFields(data);
+        })
+        .catch(error => {
+            console.error('Error fetching global styles:', error);
+        });
+}
+
+function fillInputFields(data) {
+    document.getElementById('ButtonColor1').value = data.button_color;
+    document.getElementById('ColorSelectorButton1').style.backgroundColor = data.button_color;
+
+    document.getElementById('ButtonColor2').value = data.text_color;
+    document.getElementById('ColorSelectorButton2').style.backgroundColor = data.text_color;
+
+
+    document.getElementById('ButtonColor3').value = data.shadow_color;
+    document.getElementById('ColorSelectorButton3').style.backgroundColor = data.shadow_color;
+
+
+    document.querySelector('.font-name').textContent = data.button_font;
+    document.querySelector('.font-name').style.fontFamily = data.button_font;
+
+}
+
+
+document.addEventListener('DOMContentLoaded', fetchGlobalStyles);
+
+
+
+
+function hexToRgba(hex, alpha) {
+    // Remove the '#' from the beginning of the hex color
+    hex = hex.replace('#', '');
+
+    // Convert the hex values to decimal
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+
+    // Return the rgba color with the specified alpha
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+
+
+
+// Function to handle class changes based on design selections
+function handleButttonSelection(preset, styleStrength) {
+
+    // Get all buttons inside the .container
+    const buttons = document.querySelectorAll('.btn__container button');
+
+    // Loop through all buttons
+    buttons.forEach(button => {
+        // Remove existing classes
+        button.classList.remove('fill', 'soft-shadow', 'hard-shadow', 'outline', 'var-1', 'var-2', 'var-3');
+
+        // Add classes based on preset and style strength
+        button.classList.add(preset);
+        button.classList.add(`var-${styleStrength}`);
+
+        // Find the overlay for the current button
+        const overlay = button.closest('.btn__container').querySelector('.btn__overlay');
+        if (overlay) {
+            // Remove existing classes from the overlay
+            overlay.classList.remove('fill', 'soft-shadow', 'hard-shadow', 'outline', 'var-1', 'var-2', 'var-3');
+
+            overlay.classList.add(`var-${styleStrength}`);
+        }
+    });
+    showMessage(`selected: ${preset} , strength: ${styleStrength}`);
+}
+
+
+
+async function updateAllButtonsStyles(preset, styleStrength) {
+    try {
+        const userId = await getUserIdWithFallback(); // Get the user's ID
+        const apiUrl = `/api/buttons/update/${userId}`; // Assuming your API endpoint for updating all user buttons is '/api/buttons/user/:userId'
+
+        const response = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                preset: preset,
+                styleStrength: styleStrength,
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update buttons style');
+        }
+
+        const data = await response.json();
+        console.log('Buttons style updated successfully:', data);
+    } catch (error) {
+        console.error('Error updating buttons style:', error);
+    }
 }
