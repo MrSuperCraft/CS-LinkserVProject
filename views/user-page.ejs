@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/fonts.css">
+    <link rel="stylesheet" href="/styles/scroll.css">
+    <link rel="stylesheet" async href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/styles/user-page.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.css" />
+    <link rel="stylesheet" href="/styles/colors.css">
+    <!-- Include jQuery before Spectrum -->
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+        integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+
+
+
+
+    <title>LinkserV | <%= username %>
+    </title>
+
+
+
+
+</head>
+
+<body>
+
+    <div class="loading-screen">
+        <div class="spinner-container">
+            <div class="spinner"></div>
+        </div>
+        <div class="spinner-content">
+            <i class="fa-solid fa-paperclip"></i>
+            <h1 class="brand-text">LinkserV</h1>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <h2>Welcome Back!</h2>
+        <div class="icontext"><a href="/" class="reftext"><i class="fa-solid fa-backward"></i> Back To LinkserV</a>
+        </div>
+        <ul>
+            <li><a href="#view" class="menu-link"><i class="fas fa-eye"></i> View</a></li>
+            <li><a href="#design" class="menu-link"><i class="fas fa-paint-brush"></i> Design</a></li>
+            <li><a href="#presets" class="menu-link"><i class="fas fa-palette"></i> Presets</a></li>
+            <li><a href="#background" class="menu-link"><i class="fas fa-image"></i> Background</a></li>
+            <li><a href="#profile" class="menu-link"><i class="fas fa-user"></i> Profile</a></li>
+            <!-- <li><a href="/logout" class="menu-link"><i class="fas fa-sign-out-alt"></i> Log Out</a></li> -->
+
+            <!-- Add more menu items as needed -->
+        </ul>
+    </div>
+
+    <!-- Design elements and content go here -->
+
+    <div class="content" id="viewSection">
+
+        <div class="content-navbar">
+            <div class="navbar-content">
+                <button class="navbar-info" onclick="openInfoModal()">
+                    <i class="fas fa-info-circle"></i>&nbsp;Info
+                </button>
+                <div class="navbar-text">
+                    <div id="dynamic-nav-text"></div>
+                </div>
+                <div class="navbar-share" onclick="openShareModal()">
+                    <i class="fas fa-share"></i>&nbsp;Share
+                </div>
+            </div>
+        </div>
+        <div class="profile-content">
+            <!-- pfp handler-->
+            <div class="profile-picture-container">
+                <div class="profile-picture-overlay" id="editOverlay">
+                    <i class="fas fa-pencil-alt" id="editIcon"></i>
+                </div>
+                <img src="https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg"
+                    id="profileImage" class="profile-image" alt="profile-picture">
+            </div>
+
+            <div id="dynamicUsername"></div>
+
+            <div id="social-links-dynamic" style="margin-top: 20px;">
+                <!-- Social media buttons are added here -->
+            </div>
+
+            <div id="customButtonsContainer" class="draggable-container">
+                <!-- Custom buttons will be added here dynamically -->
+            </div>
+
+            <div id="text-field-container">
+                <!-- Text fields will be dynamically added here-->
+            </div>
+            <div id="images-container">
+                <!-- The Gallery will be placed here-->
+
+            </div>
+            <a href="/" style="text-decoration: none;">
+                <footer class="footer">
+                    <div class="footer-content">
+                        <i class="fas fa-paperclip" style="margin-right: 5px;"></i>
+                        <span> Create your LinkserV</span>
+                    </div>
+                </footer>
+
+            </a>
+            <button id="addElementButton" hidden>Add Element</button>
+        </div>
+
+    </div>
+
+    <div class="content" style="display: none;">
+        <div id="designModification">
+            <h1>Design Your Buttons</h1>
+
+            <div class="button__wrapper">
+                <div class="design__selections">
+                    <h3>Fill</h3>
+                    <section class="design__section fill-container">
+                        <button class="design__button" style="background-color: gray;"
+                            onclick="handleButttonSelection('fill', '1') ; updateAllButtonsStyles('fill', '1')"></button>
+                        <button class="design__button" style="border-radius: 10px; background-color: gray;"
+                            onclick="handleButttonSelection('fill', '2') ; updateAllButtonsStyles('fill', '2')"></button>
+                        <button class="design__button" style="border-radius: 50px; background-color: gray;"
+                            onclick="handleButttonSelection('fill', '3') ; updateAllButtonsStyles('fill', '3')"></button>
+                    </section>
+
+                    <h3>Soft Shadow</h3>
+                    <section class="design__section shadow-container">
+                        <div>
+                            <button class="design__button soft-shadow" style="background-color: white;"
+                                onclick="handleButttonSelection('soft-shadow', '1') ; updateAllButtonsStyles('soft-shadow', '1')"></button>
+                        </div>
+                        <div>
+                            <button class="design__button soft-shadow"
+                                style="background-color: white; border-radius: 10px;"
+                                onclick="handleButttonSelection('soft-shadow', '2') ; updateAllButtonsStyles('soft-shadow', '2')"></button>
+                        </div>
+                        <div>
+                            <button class="design__button soft-shadow"
+                                style="background-color: white; border-radius: 50px;"
+                                onclick="handleButttonSelection('soft-shadow', '3') ; updateAllButtonsStyles('soft-shadow', '3')"></button>
+                        </div>
+                    </section>
+
+                    <h3>Hard Shadow</h3>
+                    <section class="design__section hard-shadow-container">
+
+                        <div>
+                            <button class="design__button hard-shadow" style="background-color: white;"
+                                onclick="handleButttonSelection('hard-shadow', '1') ; updateAllButtonsStyles('hard-shadow', '1')"></button>
+                        </div>
+                        <div>
+                            <button class="design__button hard-shadow"
+                                style="background-color: white; border-radius: 10px;"
+                                onclick="handleButttonSelection('hard-shadow', '2') ; updateAllButtonsStyles('hard-shadow', '2')"></button>
+                        </div>
+                        <div>
+                            <button class="design__button hard-shadow"
+                                style="background-color: white; border-radius: 50px;"
+                                onclick="handleButttonSelection('hard-shadow', '3') ; updateAllButtonsStyles('hard-shadow', '3')"></button>
+                        </div>
+                    </section>
+
+                    <h3>Outline</h3>
+                    <section class="design__section outline-container">
+                        <button class="design__button outline" style="background-color: white;"
+                            onclick="handleButttonSelection('outline', '1') ; updateAllButtonsStyles('outline', '1')"></button>
+                        <button class="design__button outline" style="background-color: white; border-radius: 10px;"
+                            onclick="handleButttonSelection('outline', '2') ; updateAllButtonsStyles('outline', '2')"></button>
+                        <button class="design__button outline" style="background-color: white; border-radius: 50px;"
+                            onclick="handleButttonSelection('outline', '3') ; updateAllButtonsStyles('outline', '3')"></button>
+                    </section>
+                </div>
+
+                <div class="design__color-card">
+                    <div class="ThemeColorPickerButton">
+                        <h4 class="ThemeColorPickerTitle">Button color</h4>
+                        <div class="ColorPickerContainer">
+                            <div class="ColorSelectorButton" id="ColorSelectorButton1"></div>
+                            <input id="ButtonColor1" name="ButtonColor1" type="text" placeholder="Button color"
+                                class="ButtonColorInput" value="#ffffff">
+                        </div>
+                        <!-- Color picker input -->
+                        <input id="ColorPickerInput1" type="color" style="visibility: hidden; position: absolute;">
+                    </div>
+
+                    <div class="ThemeColorPickerButton">
+                        <h4 class="ThemeColorPickerTitle">Button Font color</h4>
+                        <div class="ColorPickerContainer">
+                            <div class="ColorSelectorButton" id="ColorSelectorButton2"
+                                style="background-color: #000000;"></div>
+                            <input id="ButtonColor2" name="ButtonColor2" type="text" placeholder="Button color"
+                                class="ButtonColorInput" value="#000000">
+                        </div>
+                        <!-- Color picker input -->
+                        <input id="ColorPickerInput2" type="color" style="visibility: hidden; position: absolute;">
+                    </div>
+
+                    <div class="ThemeColorPickerButton">
+                        <h4 class="ThemeColorPickerTitle">Button Shadow color</h4>
+                        <div class="ColorPickerContainer">
+                            <div class="ColorSelectorButton" id="ColorSelectorButton3"
+                                style="background-color: #000000;"></div>
+                            <input id="ButtonColor3" name="ButtonColor3" type="text" placeholder="Button color"
+                                class="ButtonColorInput" value="#000000">
+                        </div>
+                        <!-- Color picker input -->
+                        <input id="ColorPickerInput3" type="color" style="visibility: hidden; position: absolute;">
+                    </div>
+
+
+                    <!-- Font selector -->
+                    <h4 class="ThemeColorPickerTitle" style="margin-left: 50px;"> Font </h4>
+                    <div class="button-card">
+                        <div class="font-demo">
+                            <span class="font-demo-text">Aa</span>
+                        </div>
+                        <div class="font-name">Poppins</div>
+                    </div>
+
+                    <button id="saveStyles" onclick="updateStyles()">Save Styles</button>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="content" id="backgroundSection" style="display: none;">
+        <!-- Inside  #backgroundSection -->
+        <div id="backgroundModification">
+            <h1>Background Modification</h1>
+
+            <div class="card-container">
+                <div id="colorCard" class="card">
+                    <h2>Static Color</h2>
+                    <label for="staticColor">Select Color:</label>
+                    <input type="color" id="staticColor">
+                    <button id="apply" onclick="applyStaticColor()">Apply Color</button>
+                </div>
+
+                <div id="gradientCard" class="card">
+                    <h2>Gradient</h2>
+                    <label for="gradientStart">Start Color:</label>
+                    <input type="color" id="gradientStart">
+
+                    <label for="gradientEnd">End Color:</label>
+                    <input type="color" id="gradientEnd">
+
+                    <label for="gradientDirection">Gradient Direction:</label>
+                    <select id="gradientDirection">
+                        <option value="to right">Left to Right</option>
+                        <option value="to left">Right to Left</option>
+                        <option value="to bottom">Top to Bottom</option>
+                        <option value="to top">Bottom to Top</option>
+                        <option value="to bottom right">Top Left to Bottom Right</option>
+                        <option value="to bottom left">Top Right to Bottom Left</option>
+                        <option value="to top right">Bottom Left to Top Right</option>
+                        <option value="to top left">Bottom Right to Top Left</option>
+                        <!-- Add more options as needed -->
+                    </select>
+
+                    <div id="gradientPreview" class="preview-container">
+                        <div id="gradientPreviewInner" class="image-preview"></div>
+                    </div>
+
+                    <button id="apply" onclick="applyGradient()">Apply Gradient</button>
+                </div>
+
+                <div id="imageCard" class="card">
+                    <h2>Custom Image</h2>
+                    <div class="file-input-container">
+                        <input type="file" id="backgroundImage" class="custom-file-input" accept="image/*" />
+                        <!-- <label for="backgroundImage" class="custom-file-label">Choose File</label> -->
+                    </div>
+
+                    <!-- Add this preview element -->
+                    <div class="preview-container">
+                        <div id="imagePreview" class="image-preview" style="display: none;"></div>
+                    </div>
+                    <label for="imageUrl"> Enter Image URL:</label>
+                    <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg">
+
+                    <button id="apply" onclick="applyCustomImage()">Apply Image</button>
+                    <button class="remove-image-button" onclick="removeImage()">Remove Image</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="content" style="display: none; flex-direction: column; align-items: center;">
+
+        <div id="profileBanner" style="background-image: url('/sakura-banner.webp');">
+        </div>
+
+        <div class="pfp-stats">
+
+            <h1><u>Profile Statistics</u></h1>
+            <div class="profile-stats">
+                <div class="stat-card">
+                    <i class="fas fa-user"></i>
+                    <span class="stat-label">Username</span>
+                    <span class="stat-value" id="stat__username">user</span>
+                </div>
+                <div class="stat-card">
+                    <i class="far fa-envelope"></i>
+                    <span class="stat-label">Email</span>
+                    <span class="stat-value" id="stat__email">user@example.com</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span class="stat-label">Member Since</span>
+                    <span class="stat-value" id="stat__membership">Calculating...</span>
+                </div>
+            </div>
+
+
+            <a href="/logout" class="menu-link">
+                <button class="btn__log-out">
+                    <i class="fas fa-sign-out-alt"></i> Log Out
+                </button>
+            </a>
+
+        </div>
+    </div>
+
+
+
+    <div id="messageFeed" class="message-feed"></div>
+
+
+
+
+    <!-- Scripts & Utils -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"
+        integrity="sha512-GWzVrcGlo0TxTRvz9ttioyYJ+Wwk9Ck0G81D+eO63BaqHaJ3YZX9wuqjwgfcV/MrB2PhaVX9DkYVhbFpStnqpQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="/scripts/share.js"></script>
+    <script defer src="/scripts/pfp.js"></script>
+
+    <!-- smart system cases -->
+    <script src="/scripts/feed.js"></script>
+
+    <script src="/scripts/addElement.js"></script>
+    <script src="/scripts/dynamicContent.js" defer></script>
+
+    <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+    <script src="/scripts/dropzone.js"></script>
+
+    <!-- Include color picker script -->
+    <script src="/scripts/colorpick.js"></script>
+    <script src="/scripts/socialMedia.js"></script>
+
+
+    <!-- Editor.js library -->
+    <script src="/scripts/textField.js"></script>
+
+
+    <!-- Buttton handlig -->
+    <script src="/scripts/btnprops.js"></script>
+
+    <!-- Section Menus for design -->
+    <script src="/scripts/sectionManagement.js"></script>
+    <script src="/scripts/load.js"></script>
+    <script src="/scripts/userLoad.js" defer></script>
+
+    <!-- Track Fetching for loading spinner -->
+    <script src="/scripts/fetchTrack.js"></script>
+
+
+    <!-- Lordicon -->
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+
+
+
+
+
+    <div class="modal" id="shareModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeShareModal()">&times;</span>
+            <h2 id="share-dynamic-text"></h2>
+            <div id="shareModalContent">
+
+                <!-- Add more share buttons as needed -->
+            </div>
+            <div id="copyLinkContainer">
+                <button id="copyLinkInput" onclick="copyLinkToClipboard()">
+                    <i class="fa-solid fa-link"></i>
+                    <span id="url-address"></span>
+                    <span id="copyStatus">Copy</span>
+            </div>
+            <hr class="modal-divider">
+
+            <div class="additional-section">
+                <h3>Create Your Own LinkserV page</h3>
+                <p>Design & Customize with ease</p>
+                <a href="/Signup" class="black-button">Sign Up</a>
+                <a href="/" class="find-out-more-button">Find Out More</a>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+
+<div class="modal" id="addElementModal">
+    <div class="modal-content" id="element-content">
+        <span class="close" onclick="closeAddElementModal()">&times;</span>
+        <h2>Which element do you want to add?</h2>
+
+        <!-- elements to add -->
+        <div class="buttons-container">
+            <button onclick="addElement('button')">
+
+                <lord-icon src="https://cdn.lordicon.com/ezjqphcn.json" trigger="hover"
+                    colors="primary:#104891,secondary:#f24c00" style="width:250px;height:250px">
+                </lord-icon> <span>Add
+                    Button</span>
+            </button>
+            <button onclick="addElement('textfield')"><lord-icon src="https://cdn.lordicon.com/ylvuooxd.json"
+                    trigger="hover" state="hover-line" style="width:250px;height:250px">
+                </lord-icon><span>Add Text
+                    Field</span></button>
+            <button onclick="addElement('image')"><lord-icon src="https://cdn.lordicon.com/bzqvamqv.json"
+                    trigger="hover" style="width:250px;height:250px">
+                </lord-icon><span>Add
+                    Image</span></button>
+            <button onclick="addElement('social')"><lord-icon src="https://cdn.lordicon.com/sskjoohc.json"
+                    trigger="hover" style="width:250px;height:250px">
+                </lord-icon><span>Add Social Media
+                    Icon</span></button>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<div class="modal" id="infoModal">
+    <div id="infoModalContent" class="modal-content">
+        <label for="pageInfo" id="info-label">
+            <%= username %>'s Page Info:
+        </label>
+        <h5 style="display: none;">Tell a bit about yourself or share some useful info. It's all up to you! <br> Feel
+            free to use HTML like
+            &lt; b
+            &gt;
+            or &lt; i &gt; tags to customize your text as well!
+            well!</h5>
+        <div class="textarea-container" style="display: none;">
+            <textarea id="pageInfo" rows="4" placeholder="Write something about your page or yourself..."
+                maxlength="200" oninput="updateInfo() ; charCount();"></textarea>
+
+            <!-- Character count span -->
+            <span class="char-count">0/200</span>
+        </div>
+
+        <div id="previewSection">
+            <h3 style="display: none;">Here's what people will see on your page:</h3>
+            <div id="previewInfo" style="margin-top: 90px;"></div>
+        </div>
+
+        <button onclick="saveInfoChanges()" style="display: none;">Save Changes</button>
+        <button class="close-btn" onclick="closeInfoModal()" style="display: none;">Close</button>
+    </div>
+</div>
+
+
+
+<div class="modal" id="shareModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeShareModal()">&times;</span>
+        <h2 id="share-dynamic-text"></h2>
+        <div id="shareModalContent">
+
+            <!-- Add more share buttons as needed -->
+        </div>
+        <div id="copyLinkContainer">
+            <button id="copyLinkInput" onclick="copyLinkToClipboard()">
+                <i class="fa-solid fa-link"></i>
+                <span id="url-address"></span>
+                <span id="copyStatus">Copy</span>
+        </div>
+        <hr class="modal-divider">
+
+        <div class="additional-section">
+            <h3>Create Your Own LinkserV page</h3>
+            <p>Design & Customize with ease</p>
+            <a href="/Signup" class="black-button">Sign Up</a>
+            <a href="/" class="find-out-more-button">Find Out More</a>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="customizeElementModal">
+    <div class="modal-content" id="customize-element-content">
+        <span class="close" onclick="closeCustomizeElementModal()">&times;</span>
+        <h2 id="modalTitle" style="margin: 3px;">Customize Element</h2>
+
+        <div id="image-modal">
+            <!-- Text customization section -->
+            <div id="textEditSection">
+                <label for="elementText">Text:</label>
+                <input type="text" id="elementDescription" placeholder="Tip: keep it short!">
+            </div>
+
+            <!-- Image customization section -->
+            <div id="imageEditSection">
+                <label for="elementImage">Image URL:</label>
+                <input type="text" id="imageUrlAddress" placeholder="Or enter a URL...">
+                <form action="/file-upload" id="dropzone" class="dropzone"></form> <!-- Dropzone container -->
+            </div>
+
+            <button id="applyChangesButton">Apply Changes</button>
+            <button id="delete-image" class="delete-image" onclick="deleteImage()" style="display: none;"><i
+                    class="fas fa-trash"></i> Delete
+                Image</button>
+        </div>
+
+        <!-- Social Media Icon customization section -->
+        <div id="socialMediaEditSection" style="display: none;">
+            <div class="form-group">
+                <input type="text" name="btn_id" id="btn_id" aria-hidden="true" hidden />
+
+                <label for="socialMediaPlatform">Social Media Platform:</label>
+                <div id="socialMediaSearchContainer"></div>
+                <select id="socialMediaPlatform" class="platform-select">
+                    <!-- Social Media -->
+                    <option value="Facebook">Facebook</option>
+                    <option value="Twitter">Twitter</option>
+                    <option value="Instagram">Instagram</option>
+                    <option value="Linkedin">LinkedIn</option>
+                    <option value="Youtube">YouTube</option>
+                    <option value="Pinterest">Pinterest</option>
+                    <option value="Snapchat">Snapchat</option>
+                    <option value="Tiktok">TikTok</option>
+                    <option value="Reddit">Reddit</option>
+                    <option value="WhatsApp">WhatsApp</option>
+                    <option value="Behance">Behance</option>
+                    <option value="Dribbble">Dribbble</option>
+
+                    <!-- Music Platforms -->
+                    <option value="Spotify">Spotify</option>
+                    <option value="Soundcloud">SoundCloud</option>
+                    <option value="Apple Music">Apple Music</option>
+                    <option value="Bandcamp">Bandcamp</option>
+                    <option value="Amazon Music">Amazon Music</option>
+
+                    <!-- Forums and Others -->
+                    <option value="GitHub">GitHub</option>
+                    <option value="Discord">Discord</option>
+                    <option value="Slack">Slack</option>
+                    <option value="Tumblr">Tumblr</option>
+                    <option value="Quora">Quora</option>
+                    <option value="Stack Overflow">Stack Overflow</option>
+                    <option value="Steam">Steam</option>
+                    <option value="Etsy">Etsy</option>
+                    <option value="PayPal">PayPal</option>
+                    <option value="Twitch">Twitch</option>
+                    <option value="Telegram">Telegram</option>
+                </select>
+                <div id="optionsDiv"></div>
+            </div>
+
+            <label for="socialUrl">URL:</label>
+            <input type="url" name="socialUrl" id="socialUrl">
+            <div class="form-group">
+                <h3 style="margin: 0;">Button Color:</h3>
+                <div class="wrapper">
+                    <div class="gradient-box"></div>
+                    <div class="row options">
+                        <div class="column direction">
+                            <p>Direction</p>
+                            <div class="select-box" id="directionSelect">
+                                <select>
+                                    <option value="to top">Top</option>
+                                    <option value="to right top">Right top</option>
+                                    <option value="to right">Right</option>
+                                    <option value="to right bottom">Right bottom</option>
+                                    <option value="to bottom">Bottom</option>
+                                    <option value="to left bottom">Left bottom</option>
+                                    <option value="to left">Left</option>
+                                    <option value="to left top" selected>Left top</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="column palette">
+                            <p>Colors</p>
+                            <div class="colors">
+                                <input type="color" value="#5665E9">
+                                <input type="color" value="#A271F8">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button id="addSocialMediaButton" onclick="saveSocialMediaButton()">Add Social Media Icon</button>
+            <button id="saveChangesButton" style="display: none" onclick="updateSocialMediaButton()">Save Changes
+                ✅</button>
+            <button id="socialDelete" style="display: none;" onclick="deleteSocialMediaButton()">Delete <i
+                    class="fa-solid fa-trash"></i></button>
+        </div>
+
+        <div id="textFieldSection" class="editor-section">
+            <div class="editor__container">
+                <div class="options">
+                    <!-- Text Format -->
+                    <button id="bold" class="option-button format">
+                        <i class="fa-solid fa-bold"></i>
+                    </button>
+                    <button id="italic" class="option-button format">
+                        <i class="fa-solid fa-italic"></i>
+                    </button>
+                    <button id="underline" class="option-button format">
+                        <i class="fa-solid fa-underline"></i>
+                    </button>
+                    <button id="strikethrough" class="option-button format">
+                        <i class="fa-solid fa-strikethrough"></i>
+                    </button>
+                    <button id="superscript" class="option-button script">
+                        <i class="fa-solid fa-superscript"></i>
+                    </button>
+                    <button id="subscript" class="option-button script">
+                        <i class="fa-solid fa-subscript"></i>
+                    </button>
+                    <!-- List -->
+                    <button id="insertOrderedList" class="option-button">
+                        <div class="fa-solid fa-list-ol"></div>
+                    </button>
+                    <button id="insertUnorderedList" class="option-button">
+                        <i class="fa-solid fa-list"></i>
+                    </button>
+                    <!-- Undo/Redo -->
+                    <button id="undo" class="option-button">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                    <button id="redo" class="option-button">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                    <!-- Link -->
+                    <button id="createLink" class="adv-option-button">
+                        <i class="fa fa-link"></i>
+                    </button>
+                    <button id="unlink" class="option-button">
+                        <i class="fa fa-unlink"></i>
+                    </button>
+                    <!-- Alignment -->
+                    <button id="justifyLeft" class="option-button align">
+                        <i class="fa-solid fa-align-left"></i>
+                    </button>
+                    <button id="justifyCenter" class="option-button align">
+                        <i class="fa-solid fa-align-center"></i>
+                    </button>
+                    <button id="justifyRight" class="option-button align">
+                        <i class="fa-solid fa-align-right"></i>
+                    </button>
+                    <button id="justifyFull" class="option-button align">
+                        <i class="fa-solid fa-align-justify"></i>
+                    </button>
+                    <button id="indent" class="option-button spacing">
+                        <i class="fa-solid fa-indent"></i>
+                    </button>
+                    <button id="outdent" class="option-button spacing">
+                        <i class="fa-solid fa-outdent"></i>
+                    </button>
+                    <!-- Headings -->
+                    <select id="formatBlock" class="adv-option-button">
+                        <option value="H1">H1</option>
+                        <option value="H2">H2</option>
+                        <option value="H3">H3</option>
+                        <option value="H4">H4</option>
+                        <option value="H5">H5</option>
+                        <option value="H6">H6</option>
+                    </select>
+                    <!-- Font -->
+                    <select id="fontSize" class="adv-option-button"></select>
+                    <!-- Color -->
+                    <div class="input-wrapper">
+                        <input type="color" id="foreColor" class="adv-option-button" />
+                        <label for="foreColor">Font Color</label>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="color" id="backColor" class="adv-option-button" />
+                        <label for="backColor">Highlight Color</label>
+                    </div>
+                </div>
+                <div id="text-input" contenteditable="true"></div>
+
+            </div>
+
+            <div class="text__button-group">
+                <button id="addTextField" class="editor-button" type="button">Create Text
+                    Field</button>
+
+                <button id="save-text" class="editor-button" type="button" style="display: none;">Edit Card</button>
+                <button id="delete-text" class="red editor-button" type="button" style="display: none;">Delete Text
+                    Field <i class="fas fa-trash"></i></button>
+
+            </div>
+        </div>
+
+
+
+
+        <div id="buttonSection" style="display: none;">
+            <div id="buttonCreationForm">
+                <label for="buttonText">Button Text:</label>
+                <input type="text" id="buttonText">
+
+                <label for="buttonLink">Button Link:</label>
+                <input type="url" id="buttonLink">
+
+                <label for="buttonPreset">Button Preset:</label>
+                <select id="buttonPreset">
+                    <option value="soft-shadow">Soft Shadow</option>
+                    <option value="hard-shadow">Hard Shadow</option>
+                    <option value="outline">Outline</option>
+                    <option value="fill">Fill</option>
+                    <!-- Add more preset options as needed -->
+                </select>
+
+                <div class="style-strength">
+                    <label for="strength">Style Strength:</label>
+                    <select id="style-strength">
+                        <option value="1"> 1</option>
+                        <option value="2"> 2</option>
+                        <option value="3"> 3</option>
+                    </select>
+                </div>
+                <!-- Fill Style Section -->
+                <div id="fillStyleSection" style="display: none;">
+                    <label for="fillColor">Fill Color:</label>
+                    <input type="color" id="fillColor">
+
+                    <label for="textColor">Text Color:</label>
+                    <input type="color" id="textColor">
+                </div>
+
+                <div id="softShadowSection" style="display: block;">
+                    <label for="soft-shadow-x">Shadow X axis offset</label>
+                    <input type="number" max="10" min="1" name="soft-shadow-x" id="soft-shadow-x">
+
+                    <label for="soft-shadow-y">Shadow Y axis offset</label>
+                    <input type="number" max="10" min="1" id="soft-shadow-y">
+
+                    <label for="soft-shadow-spread">Shadow Spread / Blur</label>
+                    <input type="number" max="20" min="0" name="shadow-spread" style="margin-bottom: 20px;"
+                        id="soft-shadow-spread">
+                </div>
+
+                <div id="hardShadowSection" style="display: none;">
+                    <label for="hard-shadow-x">Shadow X axis offset</label>
+                    <input type="number" max="10" min="1" name="hard-shadow-x" id="hard-shadow-x">
+
+                    <label for="hard-shadow-y">Shadow Y axis offset</label>
+                    <input type="number" max="10" min="1" name="hard-shadow-y" id="hard-shadow-y">
+                </div>
+
+                <div id="outlineSection" style="display: none;">
+                    <label for="outline-width">Outline Width</label>
+                    <input type="number" max="5" min="1" name="outline-width" id="outline-width">
+
+                    <label for="outline-color">Outline Color</label>
+                    <input type="color" id="outline-color" name="outline-color" id="outline-color">
+                </div>
+
+
+                <button id="addButton">Create Button</button>
+                <button id="saveEditButton" style="display: none;">Save Changes</button>
+                <button id="deleteCustomButton" type="button"
+                    style="display: none; background-color: #c91d1d; margin-top: 20px;">Delete Text Field
+                    <i class="fas fa-trash"></i></button>
+            </div>
+            <span id="errorButton"></span>
+        </div>
+
+
+
+
+    </div>
+
+
+</div>
+
+<div id="fontModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <div class="modalTitle" style="margin-top: 30px;">Select A font</div>
+        <div class="font-groups">
+            <div class="font-group">
+                <h3>Classic</h3>
+                <hr>
+                <button class="font-btn" data-font="Arial" style="font-family: Arial, sans-serif;">Arial</button>
+                <button class="font-btn" data-font="Times New Roman"
+                    style="font-family: 'Times New Roman', serif;">Times New
+                    Roman</button>
+                <button class="font-btn" data-font="Roboto" style="font-family: 'Roboto', sans-serif;">Roboto</button>
+                <button class="font-btn" data-font="Open Sans" style="font-family: 'Open Sans', sans-serif;">Open
+                    Sans</button>
+                <!-- Add more classic fonts here -->
+            </div>
+            <div class="font-group">
+                <h3>Modern</h3>
+                <hr>
+                <button class="font-btn" data-font="Montserrat"
+                    style="font-family: 'Montserrat', sans-serif;">Montserrat</button>
+                <button class="font-btn" data-font="Lato" style="font-family: 'Lato', sans-serif;">Lato</button>
+                <button class="font-btn" data-font="Nunito" style="font-family: 'Nunito', sans-serif;">Nunito</button>
+                <button class="font-btn" data-font="Quicksand"
+                    style="font-family: 'Quicksand', sans-serif;">Quicksand</button>
+                <button class="font-btn" data-font="Ubuntu" style="font-family: 'Ubuntu', sans-serif;">Ubuntu</button>
+                <button class="font-btn" data-font="Poppins"
+                    style="font-family: 'Poppins', sans-serif;">Poppins</button>
+                <!-- Add more modern fonts here -->
+            </div>
+            <div class="font-group">
+                <h3>Special</h3>
+                <hr>
+                <button class="font-btn" data-font="Pacifico"
+                    style="font-family: 'Pacifico', cursive;">Pacifico</button>
+                <button class="font-btn" data-font="Dancing Script"
+                    style="font-family: 'Dancing Script', cursive;">Dancing
+                    Script</button>
+                <button class="font-btn" data-font="Crimson Text" style="font-family: 'Crimson Text', serif;">Crimson
+                    Text</button>
+                <button class="font-btn" data-font="Lobster" style="font-family: 'Lobster', cursive;">Lobster</button>
+                <button class="font-btn" data-font="Patua One" style="font-family: 'Patua One', cursive;">Patua
+                    One</button>
+                <button class="font-btn" data-font="Dosis" style="font-family: 'Dosis', sans-serif;">Dosis</button>
+                <!-- Add more special fonts here -->
+            </div>
+        </div>
+        <button id="saveBtn" class="save-btn" disabled>Select</button>
+    </div>
+</div>
+
+
+
+</html>

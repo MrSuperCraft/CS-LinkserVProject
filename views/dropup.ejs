@@ -108,21 +108,33 @@
         <div class="design__selections">
           <h3>Fill</h3>
           <section class="design__section fill-container">
-            <button class="design__button" style="background-color: gray;"></button>
-            <button class="design__button" style="border-radius: 10px; background-color: gray;"></button>
-            <button class="design__button" style="border-radius: 50px; background-color: gray;"></button>
+            <button class="design__button" style="background-color: gray;"
+              onclick="handleButttonSelection('fill', '1') ; updateAllButtonsStyles('fill', '1')"
+              style="cursor: pointer;"></button>
+            <button class="design__button" style="border-radius: 10px; background-color: gray;"
+              onclick="handleButttonSelection('fill', '2') ; updateAllButtonsStyles('fill', '2')"
+              style="cursor: pointer;"></button>
+            <button class="design__button" style="border-radius: 50px; background-color: gray;"
+              onclick="handleButttonSelection('fill', '3') ; updateAllButtonsStyles('fill', '3')"
+              style="cursor: pointer;"></button>
           </section>
 
           <h3>Soft Shadow</h3>
           <section class="design__section shadow-container">
             <div>
-              <button class="design__button soft-shadow" style="background-color: white;"></button>
+              <button class="design__button soft-shadow" style="background-color: white;"
+                onclick="handleButttonSelection('soft-shadow', '1') ; updateAllButtonsStyles('soft-shadow', '1')"
+                style="cursor: pointer;"></button>
             </div>
             <div>
-              <button class="design__button soft-shadow" style="background-color: white; border-radius: 10px;"></button>
+              <button class="design__button soft-shadow" style="background-color: white; border-radius: 10px;"
+                onclick="handleButttonSelection('soft-shadow', '2') ; updateAllButtonsStyles('soft-shadow', '2')"
+                style="cursor: pointer;"></button>
             </div>
             <div>
-              <button class="design__button soft-shadow" style="background-color: white; border-radius: 50px;"></button>
+              <button class="design__button soft-shadow" style="background-color: white; border-radius: 50px;"
+                onclick="handleButttonSelection('soft-shadow', '3') ; updateAllButtonsStyles('soft-shadow', '3')"
+                style="cursor: pointer;"></button>
             </div>
           </section>
 
@@ -130,21 +142,33 @@
           <section class="design__section hard-shadow-container">
 
             <div>
-              <button class="design__button hard-shadow" style="background-color: white;"></button>
+              <button class="design__button hard-shadow" style="background-color: white;"
+                onclick="handleButttonSelection('hard-shadow', '1') ; updateAllButtonsStyles('hard-shadow', '1')"
+                style="cursor: pointer;"></button>
             </div>
             <div>
-              <button class="design__button hard-shadow" style="background-color: white; border-radius: 10px;"></button>
+              <button class="design__button hard-shadow" style="background-color: white; border-radius: 10px;"
+                onclick="handleButttonSelection('hard-shadow', '2') ; updateAllButtonsStyles('hard-shadow', '2')"
+                style="cursor: pointer;"></button>
             </div>
             <div>
-              <button class="design__button hard-shadow" style="background-color: white; border-radius: 50px;"></button>
+              <button class="design__button hard-shadow" style="background-color: white; border-radius: 50px;"
+                onclick="handleButttonSelection('hard-shadow', '3') ; updateAllButtonsStyles('hard-shadow', '3')"
+                style="cursor: pointer;"></button>
             </div>
           </section>
 
           <h3>Outline</h3>
           <section class="design__section outline-container">
-            <button class="design__button outline" style="background-color: white;"></button>
-            <button class="design__button outline" style="background-color: white; border-radius: 10px;"></button>
-            <button class="design__button outline" style="background-color: white; border-radius: 50px;"></button>
+            <button class="design__button outline" style="background-color: white;"
+              onclick="handleButttonSelection('outline', '1') ; updateAllButtonsStyles('outline', '1')"
+              style="cursor: pointer;"></button>
+            <button class="design__button outline" style="background-color: white; border-radius: 10px;"
+              onclick="handleButttonSelection('outline', '2') ; updateAllButtonsStyles('outline', '2')"
+              style="cursor: pointer;"></button>
+            <button class="design__button outline" style="background-color: white; border-radius: 50px;"
+              onclick="handleButttonSelection('outline', '3') ; updateAllButtonsStyles('outline', '3')"
+              style="cursor: pointer;"></button>
           </section>
         </div>
 
@@ -163,9 +187,9 @@
           <div class="ThemeColorPickerButton">
             <h4 class="ThemeColorPickerTitle">Button Font color</h4>
             <div class="ColorPickerContainer">
-              <div class="ColorSelectorButton" id="ColorSelectorButton2"></div>
+              <div class="ColorSelectorButton" id="ColorSelectorButton2" style="background-color: #000000;"></div>
               <input id="ButtonColor2" name="ButtonColor2" type="text" placeholder="Button color"
-                class="ButtonColorInput" value="#ffffff">
+                class="ButtonColorInput" value="#000000">
             </div>
             <!-- Color picker input -->
             <input id="ColorPickerInput2" type="color" style="visibility: hidden; position: absolute;">
@@ -174,9 +198,9 @@
           <div class="ThemeColorPickerButton">
             <h4 class="ThemeColorPickerTitle">Button Shadow color</h4>
             <div class="ColorPickerContainer">
-              <div class="ColorSelectorButton" id="ColorSelectorButton3"></div>
+              <div class="ColorSelectorButton" id="ColorSelectorButton3" style="background-color: #000000;"></div>
               <input id="ButtonColor3" name="ButtonColor3" type="text" placeholder="Button color"
-                class="ButtonColorInput" value="#ffffff">
+                class="ButtonColorInput" value="#000000">
             </div>
             <!-- Color picker input -->
             <input id="ColorPickerInput3" type="color" style="visibility: hidden; position: absolute;">
@@ -192,6 +216,7 @@
             <div class="font-name">Poppins</div>
           </div>
 
+          <button id="saveStyles" onclick="updateStyles()">Save Styles</button>
 
         </div>
       </div>
@@ -263,6 +288,105 @@
 
   </div>
 
+  <div class="content" id="presetsSection" style="display: none;">
+    <div id="presetsModification">
+      <h1 style="font-size: 40px;">Presets</h1>
+      <h5 style="font-size: 23px">design your page with ease making use of pre - built presets!</h5>
+      <div class="preset__container">
+
+        <div class="preset-card">
+          <div class="card-image-container">
+            <img src="/preset1.png" alt="Nature Preset Preview">
+          </div>
+          <p class="card-title">Nature</p>
+          <p class="card-desc">
+            Dive into the tranquility of nature with this serene theme.
+          </p>
+          <button class="apply-button" onclick="applyPreset(presets.Nature)">Apply</button>
+        </div>
+
+        <div class="preset-card">
+          <div class="card-image-container">
+            <img src="/preset2.png" alt="Bubblegum Preset Preview">
+          </div>
+          <p class="card-title">Bubblegum</p>
+          <p class="card-desc">
+            Add a pop of color and fun to your designs with this vibrant theme.
+          </p>
+          <button class="apply-button" onclick="applyPreset(presets.BubbleGum)">Apply</button>
+        </div>
+
+        <div class="preset-card">
+          <div class="card-image-container">
+            <img src="/preset3.png" alt="Synthwave Preset Preview">
+          </div>
+          <p class="card-title">Synthwave</p>
+          <p class="card-desc">
+            Experience the retro-futuristic vibes of the 80s with this dynamic theme.
+          </p>
+          <button class="apply-button" onclick="applyPreset(presets.SynthWave)">Apply</button>
+        </div>
+
+        <div class="preset-card">
+          <div class="card-image-container">
+            <img src="/preset4.png" alt="Epona Preset Preview">
+          </div>
+          <p class="card-title">Epona</p>
+          <p class="card-desc">
+            Step into the lo-fi world with this theme, inspired by the great artist & producer Epona.
+          </p>
+          <button class="apply-button" onclick="applyPreset(presets.Epona)">Apply</button>
+        </div>
+
+        <div class="preset-card">
+          <div class="card-image-container">
+            <img src="/preset5.png" alt="Sunset Serenity Preset Preview">
+          </div>
+          <p class="card-title">Sunset Serenity</p>
+          <p class="card-desc">
+            Capture the peacefulness of a sunset with this calming theme.
+          </p>
+          <button class="apply-button" onclick="applyPreset(presets.SunsetSerenity)">Apply</button>
+        </div>
+
+        <div class="preset-card">
+          <div class="card-image-container">
+            <img src="/preset6.png" alt="Glider Preset Preview">
+          </div>
+          <p class="card-title">Glider</p>
+          <p class="card-desc">
+            Soar to new creative heights with this sleek and versatile theme.
+          </p>
+          <button class="apply-button" onclick="applyPreset(presets.Glider)">Apply</button>
+        </div>
+
+        <div class="preset-card">
+          <div class="card-image-container">
+            <img src="/preset7.png" alt="Vicious Preset Preview">
+          </div>
+          <p class="card-title">Vicious</p>
+          <p class="card-desc">
+            A sleek and modern look for your page. 5 seconds away from greatness.
+          </p>
+          <button class="apply-button" onclick="applyPreset(presets.Vicious)">Apply</button>
+        </div>
+
+        <div class="preset-card">
+          <div class="card-image-container">
+            <img src="/preset8.png" alt="Aqua Preset Preview">
+          </div>
+          <p class="card-title">Aqua</p>
+          <p class="card-desc">
+            Experience the shallow waters with a beautiful design.
+          </p>
+          <button class="apply-button" onclick="applyPreset(presets.Aqua)">Apply</button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
   <div class="content" id="profileSection" style="display: none; flex-direction: column; align-items: center;">
 
     <div id="profileBanner" style="background-image: url('/sakura-banner.webp');">
@@ -311,6 +435,11 @@
 
 
   <!-- Scripts & Utils -->
+  <script src="/scripts/load.js"></script>
+
+
+
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"
     integrity="sha512-GWzVrcGlo0TxTRvz9ttioyYJ+Wwk9Ck0G81D+eO63BaqHaJ3YZX9wuqjwgfcV/MrB2PhaVX9DkYVhbFpStnqpQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -322,7 +451,6 @@
   <script src="/scripts/feed.js"></script>
 
   <script src="/scripts/addElement.js"></script>
-  <script src="/scripts/dynamicContent.js" defer></script>
 
   <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
   <script src="/scripts/dropzone.js"></script>
@@ -330,6 +458,7 @@
   <!-- Include color picker script -->
   <script src="/scripts/colorpick.js"></script>
   <script src="/scripts/socialMedia.js"></script>
+  <script src="/scripts/load.js"></script>
 
 
   <!-- Editor.js library -->
@@ -341,7 +470,10 @@
 
   <!-- Section Menus for design -->
   <script src="/scripts/sectionManagement.js"></script>
-  <script src="/scripts/designSection.js"></script>
+
+  <!-- Preset Management -->
+  <script src="/scripts/presets.js"></script>
+  <script src="/scripts/presetApply.js"></script>
 
   <!-- Track Fetching for loading spinner -->
   <script src="/scripts/fetchTrack.js"></script>
@@ -478,18 +610,21 @@
     <div id="image-modal">
       <!-- Text customization section -->
       <div id="textEditSection">
-        <label for="elementText">Text:</label>
+        <label for="elementDescription">Text:</label>
         <input type="text" id="elementDescription" placeholder="Tip: keep it short!">
       </div>
 
       <!-- Image customization section -->
       <div id="imageEditSection">
-        <label for="elementImage">Image URL:</label>
-        <input type="text" id="imageUrl" placeholder="Or enter a URL...">
+        <label for="imageUrlAddress">Image URL:</label>
+        <input type="text" id="imageUrlAddress" placeholder="Or enter a URL...">
         <form action="/file-upload" id="dropzone" class="dropzone"></form> <!-- Dropzone container -->
       </div>
 
       <button id="applyChangesButton">Apply Changes</button>
+      <button id="delete-image" class="delete-image" onclick="deleteImage()" style="display: none;"><i
+          class="fas fa-trash"></i> Delete
+        Image</button>
     </div>
 
     <!-- Social Media Icon customization section -->
@@ -537,8 +672,8 @@
         <div id="optionsDiv"></div>
       </div>
 
-      <label for="href-text">URL:</label>
-      <input type="url" name="href-text" id="href-text">
+      <label for="socialUrl">URL:</label>
+      <input type="text" name="socialUrl" id="socialUrl">
       <div class="form-group">
         <h3 style="margin: 0;">Button Color:</h3>
         <div class="wrapper">
@@ -695,7 +830,7 @@
         </select>
 
         <div class="style-strength">
-          <label for="strength">Style Strength:</label>
+          <label for="style-strength">Style Strength:</label>
           <select id="style-strength">
             <option value="1"> 1</option>
             <option value="2"> 2</option>
@@ -798,7 +933,7 @@
         <!-- Add more special fonts here -->
       </div>
     </div>
-    <button id="saveBtn" class="save-btn" disabled>Save</button>
+    <button id="saveBtn" class="save-btn" disabled>Select</button>
   </div>
 </div>
 
