@@ -17,7 +17,6 @@ CREATE TABLE IF NOT EXISTS Users (
 -- DELETE FROM Users WHERE Email="123@gmail.com";
 
 
-
 CREATE TABLE IF NOT EXISTS settings (
     setting_name TEXT,
     setting_value TEXT
@@ -34,12 +33,20 @@ CREATE TABLE IF NOT EXISTS contact_submissions (
 );
 
 
+-- DROP TABLE files;
+
 CREATE TABLE IF NOT EXISTS files (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    image_id INTEGER NOT NULL,
     filename TEXT,
-    mime_type TEXT,
     data BLOB,
-    user_id REFERENCES Users(ID)
+    mimetype TEXT,
+    user_id INTEGER NOT NULL REFERENCES Users(ID),
+    file_url TEXT,
+    image_description TEXT
 );
+
+
 
 
 -- set status: UPDATE contact_submissions SET status = 'Pending';
@@ -130,7 +137,7 @@ CREATE TABLE IF NOT EXISTS TextFields (
     content TEXT
 );
 
-DROP TABLE Buttons;
+
 
 CREATE TABLE IF NOT EXISTS Buttons (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -152,6 +159,15 @@ CREATE TABLE IF NOT EXISTS Buttons (
 );
 
 
+CREATE TABLE IF NOT EXISTS Global_Styles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES Users(ID),
+    button_color TEXT NOT NULL,
+    text_color TEXT NOT NULL,
+    shadow_color TEXT NOT NULL,
+    button_font TEXT NOT NULL
+);
+
 
 
 
@@ -166,3 +182,4 @@ SELECT * FROM user_text_info;
 SELECT * FROM background;
 SELECT * FROM TextFields;
 SELECT * FROM Buttons;
+SELECT * FROM Global_Styles;
