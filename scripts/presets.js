@@ -1,163 +1,262 @@
 const presets = {
-
-    defaultPreset: {
-        presetName: "defaultPreset",
-        fontFamily: "Outfit",
-        color: "black",
-        backgroundColor: "",
-        bgColor: "linear-gradient(0deg, rgba(48,103,24,0.9853992622439601) 0%, rgba(79,200,93,0.6828782538405987) 37%, rgba(188,232,169,0.3999650885744923) 100%)",
-        
-        bioInput: {
-          color: "black",
-          fontFamily: "Outfit",
-
+    Nature: {
+        name: "Nature",
+        buttons: {
+            preset: "soft-shadow",
+            styleStrength: 2,
+            fillColor: "#56AB2F",
+            textColor: "#FFFFFF",
+            softShadowX: 4,
+            softShadowY: 4,
+            softShadowSpread: 6
         },
-
-        charCount: {
-          color: "black"
+        globalStyles: {
+            button_color: "#56AB2F",
+            text_color: "#FFFFFF",
+            shadow_color: "#000000",
+            button_font: "Lato"
         },
-
-        placeHolder: {
-          color: "black"
+        background: {
+            method: "gradient",
+            gradient_start: "#41D879",
+            gradient_end: "#203A0F",
+            gradient_direction: "to bottom"
+        },
+        socialMediaButtons: {
+            color1: "#56AB2F",
+            color2: "#DDFF99",
+            direction: "to top left"
         }
     },
-    preset1: {
-        presetName: "preset1",
-        backgroundColor: "#7E7B7B",
-        color: "white",
-        fontFamily: "Outfit",
-        bgColor: "#c2bdbd",
-
-        bioInput: {
-            color: "white",
-            background: "#656565",
-            fontFamily: "Outfit"
+    BubbleGum: {
+        name: "Bubble Gum",
+        buttons: {
+            preset: "soft-shadow",
+            styleStrength: 2,
+            fillColor: "#FF69B4",
+            textColor: "#FFFFFF",
+            softShadowX: 4,
+            softShadowY: 4,
+            softShadowSpread: 6,
+            hardShadowX: null,
+            hardShadowY: null,
+            outlineWidth: null,
+            outlineColor: null
         },
-
-        charCount: {
-            color: "white"
+        globalStyles: {
+            button_color: "#FFFFFF",
+            text_color: "#000000",
+            shadow_color: "#000000",
+            button_font: "Montserrat, sans-serif"
+        },
+        background: {
+            method: "gradient",
+            gradient_start: "#3BA3A9",
+            gradient_end: "#EB6FEB",
+            gradient_direction: "to bottom right"
+        },
+        socialMediaButtons: {
+            color1: "#3BA3A9",
+            color2: "#6D8FBE",
+            direction: "to bottom right"
         }
     },
-    preset2: {
-        presetName: "preset2",
-        backgroundColor: "#09354E",
-        color: "white",
-        fontFamily: "sans-serif",
-        bgColor: "#7BB3C5",
-        
-        bioInput: {
-            color: "white",
-            background: "#132A37",
-            fontFamily: "sans-serif"
+    SynthWave: {
+        name: "Synthwave",
+        buttons: {
+            preset: "soft-shadow",
+            styleStrength: 2,
+            fillColor: "#FFFFFF",
+            textColor: "#000000",
+            softShadowX: 4,
+            softShadowY: 4,
+            softShadowSpread: 6,
+            hardShadowX: null,
+            hardShadowY: null,
+            outlineWidth: null,
+            outlineColor: null
         },
-
-        charCount: {
-            color: "white"
+        globalStyles: {
+            button_color: "#FFFFFF",
+            text_color: "#000000",
+            shadow_color: "#000000",
+            button_font: "Roboto, sans-serif"
+        },
+        background: {
+            method: "gradient",
+            gradient_start: "#EECE13",
+            gradient_end: "#B210FF",
+            gradient_direction: "to bottom right"
+        },
+        socialMediaButtons: {
+            color1: "#FFFFAD",
+            color2: "#E672E0",
+            direction: "to bottom"
         }
     },
-
-    preset3: {
-        presetName: "preset3",
-        backgroundColor: "#754D30",
-        color: "white",
-        fontFamily: "sans-serif",
-        bgColor: "#CF6F39",
-        
-        bioInput: {
-            color: "black",
-            background: "#F0DFC7",
-            fontFamily: "sans-serif"
+    Epona: {
+        name: "Epona",
+        buttons: {
+            preset: "soft-shadow",
+            styleStrength: 2,
+            fillColor: "#FFFFFF",
+            textColor: "#000000",
+            softShadowX: 4,
+            softShadowY: 4,
+            softShadowSpread: 6,
+            hardShadowX: null,
+            hardShadowY: null,
+            outlineWidth: null,
+            outlineColor: null
         },
-
-        charCount: {
-            color: "black"
+        globalStyles: {
+            button_color: "#FFFFFF",
+            text_color: "#000000",
+            shadow_color: "#000000",
+            button_font: "Open Sans, sans-serif"
+        },
+        background: {
+            method: "gradient",
+            gradient_start: "#FFA6B7",
+            gradient_end: "#1E2AD2",
+            gradient_direction: "to bottom left"
+        },
+        socialMediaButtons: {
+            color1: "#FFA6B7",
+            color2: "#1E2AD2",
+            direction: "to bottom right"
         }
     },
-    preset4: {
-        presetName: "preset4",
-        backgroundColor: "#7B2727",
-        color: "white",
-        fontFamily: "sans-serif",
-        bgColor: "#CF394B",
-        
-        bioInput: {
-            color: "white",
-            background: "#914045",
-            fontFamily: "sans-serif"
+    SunsetSerenity: {
+        name: "Sunset Serenity",
+        buttons: {
+            preset: "soft-shadow",
+            styleStrength: 2,
+            fillColor: "#FFA500",
+            textColor: "#000000",
+            softShadowX: 4,
+            softShadowY: 4,
+            softShadowSpread: 6,
+            hardShadowX: null,
+            hardShadowY: null,
+            outlineWidth: null,
+            outlineColor: null
         },
-
-        charCount: {
-            color: "white"
+        globalStyles: {
+            button_color: "#FFA500",
+            text_color: "#000000",
+            shadow_color: "#000000",
+            button_font: "Roboto, sans-serif"
+        },
+        background: {
+            method: "gradient",
+            gradient_start: "#e8c81e",
+            gradient_end: "#eda13e",
+            gradient_direction: "to bottom"
+        },
+        socialMediaButtons: {
+            color1: "#FFA500",
+            color2: "#FFFF00",
+            direction: "to bottom"
         }
     },
-    preset5: {
-        presetName: "preset5",
-        backgroundColor: "#E1E1E1",
-        color: "black",
-        fontFamily: "sans-serif",
-        bgColor: "#151515",
-        
-        bioInput: {
-            color: "black",
-            background: "#E1E1E1",
-            fontFamily: "sans-serif"
+    Glider: {
+        name: "Glider",
+        buttons: {
+            preset: "soft-shadow",
+            styleStrength: 2,
+            fillColor: "#FFFFFF",
+            textColor: "#000000",
+            softShadowX: 3,
+            softShadowY: 4,
+            softShadowSpread: 2,
+            hardShadowX: null,
+            hardShadowY: null,
+            outlineWidth: null,
+            outlineColor: null
         },
-
-        charCount: {
-            color: "black"
+        globalStyles: {
+            button_color: "#FFFFFF",
+            text_color: "#000000",
+            shadow_color: "#000000",
+            button_font: "Roboto, sans-serif"
+        },
+        background: {
+            method: "gradient",
+            gradient_start: "#88d3ce",
+            gradient_end: "#6e45e2",
+            gradient_direction: "to top"
+        },
+        socialMediaButtons: {
+            color1: "#6e45e2",
+            color2: "#88d3ce",
+            direction: "to bottom right"
         }
     },
-    preset6: {
-        presetName: "preset6",
-        backgroundColor: "#4E5039",
-        color: "black",
-        fontFamily: "sans-serif",
-        bgColor: "#D2AC24",
-        
-        bioInput: {
-            color: "black",
-            background: "#857F44",
-            fontFamily: "sans-serif"
+    Vicious: {
+        name: "Vicious",
+        buttons: {
+            preset: "soft-shadow",
+            styleStrength: 2,
+            fillColor: "#272f38",
+            textColor: "#FFFFFF",
+            softShadowX: 3,
+            softShadowY: 4,
+            softShadowSpread: 2,
+            hardShadowX: null,
+            hardShadowY: null,
+            outlineWidth: null,
+            outlineColor: null
         },
-
-        charCount: {
-            color: "black"
+        globalStyles: {
+            button_color: "#272f38",
+            text_color: "#FFFFFF",
+            shadow_color: "#000000",
+            button_font: "Roboto, sans-serif"
+        },
+        background: {
+            method: "gradient",
+            gradient_start: "#29323c",
+            gradient_end: "#485563",
+            gradient_direction: "to top"
+        },
+        socialMediaButtons: {
+            color1: "#485563",
+            color2: "#29323c",
+            direction: "to bottom right"
         }
     },
-    preset7: {
-        presetName: "preset7",
-        backgroundColor: "#5784A4",
-        color: "black",
-        fontFamily: "sans-serif",
-        bgColor: "#252B61",
-        
-        bioInput: {
-            color: "black",
-            background: "#7FBAC7",
-            fontFamily: "sans-serif"
+    Aqua: {
+        name: "Aqua",
+        buttons: {
+            preset: "soft-shadow",
+            styleStrength: 2,
+            fillColor: "#FFFFFF",
+            textColor: "#000000",
+            softShadowX: 3,
+            softShadowY: 4,
+            softShadowSpread: 2,
+            hardShadowX: null,
+            hardShadowY: null,
+            outlineWidth: null,
+            outlineColor: null
         },
-
-        charCount: {
-            color: "black"
-        }
-    },  
-    preset8: {
-        presetName: "preset8",
-        backgroundColor: "#03764D",
-        color: "black",
-        fontFamily: "sans-serif",
-        bgColor: "#1DC373",
-        
-        bioInput: {
-            color: "white",
-            background: "#20763D",
-            fontFamily: "sans-serif"
+        globalStyles: {
+            button_color: "#FFFFFF",
+            text_color: "#000000",
+            shadow_color: "#000000",
+            button_font: "Roboto"
         },
-
-        charCount: {
-            color: "white"
+        background: {
+            method: "gradient",
+            gradient_start: "#007adf",
+            gradient_end: "#00ecbc",
+            gradient_direction: "to bottom right"
+        },
+        socialMediaButtons: {
+            color1: "#00ecbc",
+            color2: "#007adf",
+            direction: "to top right"
         }
-    },      
+    }
 };
-
-
