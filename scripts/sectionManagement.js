@@ -5,16 +5,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const sections = ['view', 'design', 'presets', 'background', 'profile'];
         const defaultSection = 'view';  // Set the default section here
 
+        const urlPattern = window.location.pathname;
+
+        // Check if the URL pattern includes a username after a slash
+        const hasUsername = urlPattern.startsWith('/') && urlPattern.split('/').length === 2;
+
         sections.forEach(section => {
             const sectionElement = document.getElementById(`${section}Section`);
             if (sectionElement) {
-                sectionElement.style.display = section === (hash || defaultSection) ? 'block' : 'none';
+                if (hasUsername) {
+                    // Restrict section switching for pages with a username
+                    sectionElement.style.display = section === defaultSection ? 'block' : 'none';
+
+                    // Remove hash from the URL for pages with a username
+                    if (window.location.hash) {
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    }
+                } else {
+                    // Allow section switching for other pages
+                    sectionElement.style.display = section === (hash || defaultSection) ? 'block' : 'none';
+                }
             }
         });
     };
 
     // Add event listener for hash changes
     window.addEventListener('hashchange', showSection);
+
 
     // Initial call to show the correct section on page load
     showSection();
@@ -221,7 +238,7 @@ function displayGradientPreview() {
 
 // Function to save background settings to the backend
 async function saveBackgroundSettings(method, staticColor, gradientStart, gradientEnd, gradientDirection, imageUrl) {
-    const userId = await getUserId();
+    const userId = await getUserIdWithFallback();
     fetch('/api/background', {
         method: 'POST',
         headers: {
@@ -252,7 +269,7 @@ async function saveBackgroundSettings(method, staticColor, gradientStart, gradie
 
 // Function to load background settings from the backend
 async function loadBackgroundSettings() {
-    const userId = await getUserId();
+    const userId = await getUserIdWithFallback();
     try {
         const response = await fetchData(`/api/background/${userId}`);
         const data = response;
@@ -279,12 +296,18 @@ function applyStaticColorBackground(color) {
 
     const viewSection = document.getElementById('viewSection');
     viewSection.style.backgroundColor = color;
+
+    const staticColorInput = document.getElementById('staticColor');
+    staticColorInput.value = color;
 }
 
 // Function to load gradient background
 function applyGradientBackground(startColor, endColor, direction) {
     const backgroundSection = document.getElementById('backgroundSection');
     backgroundSection.style.backgroundImage = `linear-gradient(${direction}, ${startColor}, ${endColor})`;
+    document.getElementById('gradientStart').value = startColor;
+    document.getElementById('gradientEnd').value = endColor;
+    document.getElementById('gradientPreviewInner').style.background = `linear-gradient(${direction}, ${startColor}, ${endColor})`;
 
     const viewSection = document.getElementById('viewSection');
     viewSection.style.backgroundImage = `linear-gradient(${direction}, ${startColor}, ${endColor})`;
@@ -327,7 +350,7 @@ function applyImageBackground(imageUrl) {
 document.addEventListener('DOMContentLoaded', getProfileStats);
 
 async function getProfileStats() {
-    const userId = await getUserId();
+    const userId = await getUserIdWithFallback();
 
     try {
         const response = await fetchData(`/api/user/${userId}`);
