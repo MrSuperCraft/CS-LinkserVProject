@@ -88,27 +88,30 @@ app.get('/design', isAuthenticated, (req, res) => {
     res.render('dropup', { username, userId });
 });
 
-
 app.get('/design/:identifier', async (req, res) => {
     try {
         // Properly decode the identifier
         const decodedIdentifier = decodeURIComponent(req.params.identifier);
         console.log('Decoded Identifier:', decodedIdentifier);
 
-        // Query the database to get the user based on the email or username
-        const user = await getUserByEmailOrUsername(decodedIdentifier);
-        const username = user.username;
+        // Check if the authenticated user's username matches the requested username
+        if (req.session.username !== decodedIdentifier) {
+            // Redirect to the authenticated user's own page or a login page if not authenticated
+            return res.redirect(req.session.username ? `/design/${encodeURIComponent(req.session.username)}` : '/login');
+        }
 
-        if (username) {
+        // Query the database to get the user based on the decoded identifier
+        const user = await getUserByUsername(decodedIdentifier);
+        if (user) {
             // Retrieve social media buttons for the user
-            const query = 'SELECT * FROM social_media_buttons WHERE user_id = (SELECT user_id FROM Users WHERE username = ?)';
-            db.all(query, [username], (err, socialMediaButtons) => {
+            const query = 'SELECT * FROM social_media_buttons WHERE user_id = ?';
+            db.all(query, [user.id], (err) => {
                 if (err) {
                     return res.status(500).json({ error: err.message });
                 }
 
-                // Use the retrieved username and social media buttons for rendering the page
-                res.render('dropup', { username: user.username, socialMediaButtons, userId: user.ID });
+                // Use the retrieved username  for rendering the page
+                res.render('dropup', { username: user.username, userId: user.id });
             });
         } else {
             // Handle the case when the user is not found
@@ -120,6 +123,7 @@ app.get('/design/:identifier', async (req, res) => {
         res.status(500).render('500'); // Render an error page for server errors
     }
 });
+
 
 
 function isAuthenticated(req, res, next) {
@@ -216,8 +220,6 @@ app.post('/authenticate', async (req, res) => {
             });
         } else {
             console.log('Invalid credentials');
-            console.log('Entered password:', password);
-            console.log('Stored hashed password:', user.password);
             res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
     } catch (err) {
@@ -344,12 +346,10 @@ app.get('/logout', (req, res) => {
 async function getUserByEmailOrUsername(identifier) {
     return new Promise((resolve, reject) => {
         const query = 'SELECT Email, Username, Password FROM Users WHERE Email = ? OR Username = ?';
-        console.log('SQL Query:', query);
         db.get(query, [identifier, identifier], (err, row) => {
             if (err) {
                 reject(err);
             } else {
-                console.log('Retrieved user row:', row);
 
                 // Ensure the user object has 'email', 'username', and 'password' properties
                 const user = {
@@ -400,8 +400,7 @@ app.post('/admin-authenticate', async (req, res) => {
                 return;
             } else {
                 console.log('Invalid credentials');
-                console.log('Entered password:', password);
-                console.log('Stored hashed password:', user.password);
+
                 res.status(401).json({ success: false, message: 'Invalid credentials' });
             }
         } else {
@@ -420,13 +419,11 @@ async function getUserByUsername(username) {
     return new Promise((resolve, reject) => {
         const query = 'SELECT Email, Username, Password, isAdmin FROM Users WHERE Username = ?';
 
-        console.log('SQL Query:', query);
 
         db.get(query, [username], (err, row) => {
             if (err) {
                 reject(err);
             } else {
-                console.log('Retrieved user row:', row);
 
                 // Ensure the user object has 'email', 'username', 'password', and 'isAdmin' properties
                 const user = {
@@ -967,29 +964,81 @@ function isValidEmail(email) {
 const storage = multer.memoryStorage(); // Store files in memory
 const upload = multer({ storage: storage });
 
-app.post('/file-upload', upload.single('file'), async (req, res) => {
-    try {
-        const { originalname, buffer, mimetype } = req.file;
+// Route to handle both POST and PUT requests for file and URL uploads
+app.route('/file-upload')
+    // POST request for file upload
+    .post(upload.single('file'), async (req, res) => {
+        try {
+            if (req.file) {
+                const { originalname, buffer, mimetype } = req.file;
+                const userId = req.session.userId;
+                const image_id = req.body.image_id; // Get the image ID from the request body
+                const image_description = req.body.image_description;
 
-        // Get user ID from the session or any other method you use for authentication
-        const userId = req.session.userId;
+                const result = await insertFileMetadata(originalname, buffer, mimetype, userId, image_id, image_description);
+                res.json({ message: 'File uploaded successfully', fileId: result.id });
+            } else {
+                res.status(400).json({ error: 'Missing file' });
+            }
+        } catch (err) {
+            console.error('Error uploading file:', err);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    })
+    // PUT request for file update
+    .put(upload.single('file'), async (req, res) => {
+        try {
+            if (req.file) {
+                const { originalname, buffer, mimetype } = req.file;
+                const userId = req.session.userId;
+                const image_id = req.body.image_id; // Get the image ID from the request body
+                const image_description = req.body.image_description;
 
-        // Store file metadata in the database, associating it with the user's ID
-        const result = await insertFileMetadata(originalname, buffer, mimetype, userId);
+                const result = await updateFileMetadata(originalname, buffer, mimetype, userId, image_id, image_description);
+                res.json({ message: 'File updated successfully', fileId: result.id });
+            } else {
+                res.status(400).json({ error: 'Missing file' });
+            }
+        } catch (err) {
+            console.error('Error updating file:', err);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    })
+    // POST request for URL upload
+    .post(async (req, res) => {
+        try {
+            const { url, image_id, image_description } = req.body;
+            const userId = req.session.userId;
 
-        res.json({ message: 'File uploaded successfully', fileId: result.id });
-    } catch (err) {
-        console.error('Error uploading file:', err);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
+            const result = await insertFileUrl(url, userId, image_id, image_description);
+            res.json({ message: 'URL uploaded successfully', fileId: result.id });
+        } catch (err) {
+            console.error('Error uploading URL:', err);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    })
+    // PUT request for URL update
+    .put(async (req, res) => {
+        try {
+            const { url, image_id, image_description } = req.body;
+            const userId = req.session.userId;
+
+            const result = await updateFileUrl(url, userId, image_id, image_description);
+            res.json({ message: 'URL updated successfully', fileId: result.id });
+        } catch (err) {
+            console.error('Error updating URL:', err);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    });
+
+
 
 // Function to insert file metadata into the database
-function insertFileMetadata(filename, buffer, mimetype, userId) {
+function insertFileMetadata(filename, buffer, mimetype, userId, image_id, image_description) {
     return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO files (filename, data, mimetype, user_id) VALUES (?, ?, ?, ?)';
+        const query = 'INSERT INTO files (filename, data, mimetype, user_id, image_id, image_description) VALUES (?, ?, ?, ?, ?, ?)';
 
-        db.run(query, [filename, buffer, mimetype, userId], function (err) {
+        db.run(query, [filename, buffer, mimetype, userId, image_id, image_description], function (err) {
             if (err) {
                 reject(err);
             } else {
@@ -999,29 +1048,94 @@ function insertFileMetadata(filename, buffer, mimetype, userId) {
     });
 }
 
+function insertFileUrl(url, userId, image_id, image_description) {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO files (file_url, user_id, image_id, image_description) VALUES (?, ?, ?, ?)';
+        db.run(query, [url, userId, image_id, image_description], function (err) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve({ id: this.lastID });
+            }
+        });
+    });
+}
+
+// Function to update file URL in the database
+async function updateFileUrl(url, userId, image_id, image_description) {
+    // Your database update logic here
+    const sqlUpdateUrl = `UPDATE files SET file_url = ?, image_description = ? WHERE image_id = ? AND user_id = ?`;
+    const paramsUpdateUrl = [url, image_description, image_id, userId];
+
+    return new Promise((resolve, reject) => {
+        db.run(sqlUpdateUrl, paramsUpdateUrl, function (err) {
+            if (err) {
+                console.error('Error updating image URL:', err);
+                reject(err);
+            } else {
+                console.log(`Image URL updated successfully: ${url}`);
+                resolve({ id: this.lastID });
+            }
+        });
+    });
+}
+
+// Function to update file metadata in the database
+async function updateFileMetadata(originalname, buffer, mimetype, userId, image_id, image_description) {
+    // Your database update logic here
+    const sqlUpdateMetadata = `UPDATE files SET filename = ?, data = ?, mimetype = ?, image_description = ? WHERE image_id = ? AND user_id = ?`;
+    const paramsUpdateMetadata = [originalname, buffer, mimetype, image_description, image_id, userId];
+
+    return new Promise((resolve, reject) => {
+        db.run(sqlUpdateMetadata, paramsUpdateMetadata, function (err) {
+            if (err) {
+                console.error('Error updating file metadata:', err);
+                reject(err);
+            } else {
+                console.log('File metadata updated successfully');
+                resolve({ id: this.lastID });
+            }
+        });
+    });
+}
+
+
+
+
+
+
+
+
+
+
 // Endpoint to handle file requests
 app.get('/file/:filename', async (req, res) => {
     const filename = req.params.filename;
 
     try {
-        // Fetch file data from the database based on the filename
-        db.get('SELECT data, mimetype FROM files WHERE filename = ?', [filename], (err, row) => {
-            if (err) {
-                console.error('Error fetching file data:', err);
-                return res.status(500).send('Internal Server Error');
-            }
+        // Check if the filename is a URL
+        if (filename.startsWith('http')) {
+            res.redirect(filename); // Redirect to the URL
+        } else {
+            // Fetch file data from the database based on the filename
+            db.get('SELECT data, mimetype FROM files WHERE filename = ?', [filename], (err, row) => {
+                if (err) {
+                    console.error('Error fetching file data:', err);
+                    return res.status(500).send('Internal Server Error');
+                }
 
-            if (!row) {
-                console.error('File not found:', filename);
-                return res.status(404).send('File not found');
-            }
+                if (!row) {
+                    console.error('File not found:', filename);
+                    return res.status(404).send('File not found');
+                }
 
-            // Set the appropriate content type based on the mimetype
-            res.setHeader('Content-Type', row.mimetype);
+                // Set the appropriate content type based on the mimetype
+                res.setHeader('Content-Type', row.mimetype);
 
-            // Send the file data
-            res.send(row.data);
-        });
+                // Send the file data
+                res.send(row.data);
+            });
+        }
     } catch (error) {
         console.error('Unexpected error:', error);
         res.status(500).send('Internal Server Error');
@@ -1029,11 +1143,112 @@ app.get('/file/:filename', async (req, res) => {
 });
 
 
+// Route handler for /api/fileUrl
+app.post('/api/fileUrl', (req, res) => {
+    const { user_id, file_url, image_id, image_description } = req.body;
+
+    // Update the files table with the new URL
+    db.run(`INSERT INTO files (user_id, file_url, image_id, image_description) VALUES (?, ?, ?, ?)`,
+        [user_id, file_url, image_id, image_description],
+        (err) => {
+            if (err) {
+                console.error(err.message);
+                res.status(500).json({ error: 'Database update failed' });
+            } else {
+                res.status(200).json({ message: 'URL updated successfully' });
+            }
+        });
+});
+
+// Route handler for /api/fileUrl
+app.put('/api/fileUrl', (req, res) => {
+    const { image_id, image_description } = req.body;
+
+    // Update the files table with the new URL
+    db.run(`UPDATE  files SET image_description = ? WHERE image_id = ?`,
+        [image_description, image_id],
+        (err) => {
+            if (err) {
+                console.error(err.message);
+                res.status(500).json({ error: 'Database update failed' });
+            } else {
+                res.status(200).json({ message: 'URL updated successfully' });
+            }
+        });
+});
 
 
 
 
+// Route handler to fetch all images for a user
+app.get('/api/getAllImages/:user_id', async (req, res) => {
+    const userId = req.params.user_id;
 
+    try {
+        // Query the database to get all images for the user
+        const sqlQuery = `SELECT * FROM files WHERE user_id = ?`;
+        db.all(sqlQuery, [userId], (err, rows) => {
+            if (err) {
+                console.error('Error fetching images from the database:', err);
+                res.status(500).json({ error: 'Failed to fetch images.' });
+            } else {
+                // Send the fetched image data as JSON response
+                res.status(200).json(rows);
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching images:', error);
+        res.status(500).json({ error: 'Failed to fetch images.' });
+    }
+});
+
+
+app.delete('/api/deleteImage/:image_id', async (req, res) => {
+    try {
+        const image_id = req.params.image_id;
+        // Perform deletion operation using image_id
+        await deleteImageFromDatabase(image_id); // Implement this function to delete image from database
+
+        res.json({ message: 'Image deleted successfully' });
+    } catch (err) {
+        console.error('Error deleting image:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Function to delete an image from the database based on its ID
+async function deleteImageFromDatabase(image_id) {
+    return new Promise((resolve, reject) => {
+        // Construct the SQL query to delete the row with the specified image ID
+        const sql = `DELETE FROM files WHERE image_id = ?`;
+
+        // Execute the SQL query with the image ID parameter
+        db.run(sql, [image_id], function (err) {
+            if (err) {
+                console.error('Error deleting image:', err);
+                reject(err);
+            } else {
+                console.log(`Image with ID ${image_id} deleted successfully`);
+                resolve(true);
+            }
+        });
+    });
+}
+
+// Express route to update image description
+app.put('/api/files/description/:id', async (req, res) => {
+    try {
+        const image_id = req.params.id;
+        const { image_description } = req.body;
+
+        console.log(`Attempt for update: ${image_id}, ${image_description} `)
+        db.run(`UPDATE files SET image_description = ? WHERE image_id = ?`, [image_description, image_id])
+
+    } catch (err) {
+        console.error('Error updating image description:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 
 
@@ -1078,7 +1293,7 @@ app.put('/api/socialMedia/:userId/:buttonId', (req, res) => {
     const { userId, buttonId } = req.params;
     const { platform, url, color1, color2, direction } = req.body;
 
-    // Use a transaction to perform both DELETE and INSERT atomically
+    // Use a transaction to perform both DELETE and INSERT automatically
     db.run('BEGIN TRANSACTION', (beginErr) => {
         if (beginErr) {
             console.error('Error beginning transaction:', beginErr);
@@ -1701,6 +1916,224 @@ app.delete('/api/button/delete/:button_id', (req, res) => {
             res.status(200).json({ message: 'Button deleted successfully.' });
         }
     });
+});
+
+// Route to update all the buttons via the selected preset and style strength (on the design section)
+app.put('/api/buttons/update/:userId', (req, res) => {
+    const { userId } = req.params;
+    const { preset, styleStrength } = req.body;
+
+    // Update the Buttons table based on the user ID, preset, and style strength
+    const updateQuery = `UPDATE Buttons SET preset = ?, styleStrength = ? WHERE user_id = ?`;
+
+    db.run(updateQuery, [preset, styleStrength, userId], function (err) {
+        if (err) {
+            console.error('Error updating Buttons:', err.message);
+            res.status(500).json({ error: 'Internal Server Error' });
+        } else {
+            console.log(`Buttons updated for user ID ${userId}`);
+            res.status(200).json({ message: 'Buttons updated successfully' });
+        }
+    });
+});
+
+
+
+
+// Global styles routes
+
+
+// Route to add or update global styles
+app.post('/api/style/add', (req, res) => {
+    const { user_id, button_color, text_color, shadow_color, button_font } = req.body;
+
+    // Check if there are existing values for the given user_id
+    db.get('SELECT * FROM Global_Styles WHERE user_id = ?', [user_id], (err, row) => {
+        if (err) {
+            console.error('Error checking existing values:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        // If there are existing values, update them; otherwise, insert new values
+        if (row) {
+            db.run('UPDATE Global_Styles SET button_color = ?, text_color = ?, shadow_color = ?, button_font = ? WHERE user_id = ?', [button_color, text_color, shadow_color, button_font, user_id], (err) => {
+                if (err) {
+                    console.error('Error updating global styles:', err);
+                    return res.status(500).json({ error: 'Internal server error' });
+                }
+                res.status(200).json({ message: 'Global styles updated successfully' });
+            });
+        } else {
+            db.run('INSERT INTO Global_Styles (user_id, button_color, text_color, shadow_color, button_font) VALUES (?, ?, ?, ?, ?)', [user_id, button_color, text_color, shadow_color, button_font], (err) => {
+                if (err) {
+                    console.error('Error adding global styles:', err);
+                    return res.status(500).json({ error: 'Internal server error' });
+                }
+                res.status(200).json({ message: 'Global styles added successfully' });
+            });
+        }
+    });
+});
+
+
+// Route to get global styles by user_id
+app.get('/api/style/:user_id', (req, res) => {
+    const { user_id } = req.params;
+
+    // Check if there are existing values for the given user_id
+    db.get('SELECT * FROM Global_Styles WHERE user_id = ?', [user_id], (err, row) => {
+        if (err) {
+            console.error('Error fetching global styles:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        if (row) {
+            const { button_color, text_color, shadow_color, button_font } = row;
+            res.status(200).json({ button_color, text_color, shadow_color, button_font });
+        } else {
+            res.status(404).json({ error: 'Global styles not found for the user' });
+        }
+    });
+});
+
+
+
+
+app.get('/:username', (req, res) => {
+    const username = String(req.params.username);
+    res.render('user-page', { username: username });
+})
+
+
+// Define the route to fetch user_id based on username
+app.get('/api/getUserId', (req, res) => {
+    const username = req.query.username; // Get the username from the query parameters
+
+    // Query the database to fetch user_id based on username
+    const query = `SELECT ID FROM Users WHERE username = ?`;
+    db.get(query, [username], (err, row) => {
+        if (err) {
+            console.error('Error fetching user ID:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        } else {
+            if (row && row.ID) {
+                res.json({ user_id: row.ID }); // Send the user_id back to the client
+            } else {
+                res.status(404).json({ error: 'User ID not found for the provided username' });
+            }
+        }
+    });
+});
+
+
+
+// Define the route for batch update
+app.put('/api/apply-preset/:userId', (req, res) => {
+    const userId = req.params.userId; // Get the user ID from the URL parameter
+    const presetData = req.body.presetData; // Get the preset data from the request body
+
+    try {
+        // Start a transaction
+        db.run('BEGIN TRANSACTION;');
+
+        // Update buttons table based on the selected preset and style strength
+        db.run(`
+            UPDATE Buttons
+            SET
+                preset = ?,
+                styleStrength = ?,
+                fillColor = ?,
+                textColor = ?,
+                softShadowX = ?,
+                softShadowY = ?,
+                softShadowSpread = ?,
+                hardShadowX = ?,
+                hardShadowY = ?,
+                outlineWidth = ?,
+                outlineColor = ?
+            WHERE user_id = ?;
+        `, [
+            presetData.buttons.preset,
+            presetData.buttons.styleStrength,
+            presetData.buttons.fillColor,
+            presetData.buttons.textColor,
+            presetData.buttons.softShadowX,
+            presetData.buttons.softShadowY,
+            presetData.buttons.softShadowSpread,
+            presetData.buttons.hardShadowX,
+            presetData.buttons.hardShadowY,
+            presetData.buttons.outlineWidth,
+            presetData.buttons.outlineColor,
+            userId
+        ]);
+
+        // Update globalStyles table based on the selected preset's global styles
+        db.run(`
+            UPDATE Global_Styles
+            SET
+                button_color = ?,
+                text_color = ?,
+                shadow_color = ?,
+                button_font = ?
+            WHERE user_id = ?;
+        `, [
+            presetData.globalStyles.button_color,
+            presetData.globalStyles.text_color,
+            presetData.globalStyles.shadow_color,
+            presetData.globalStyles.button_font,
+            userId
+        ]);
+
+        // Update background table based on the selected preset's background
+        db.run(`
+            UPDATE background
+            SET
+                method = ?,
+                static_color = ?,
+                gradient_start = ?,
+                gradient_end = ?,
+                gradient_direction = ?,
+                image_url = ?
+            WHERE user_id = ?;
+        `, [
+            presetData.background.method,
+            presetData.background.static_color,
+            presetData.background.gradient_start,
+            presetData.background.gradient_end,
+            presetData.background.gradient_direction,
+            presetData.background.imageUrl,
+            userId
+        ]);
+
+        // Update social_media_buttons table based on the selected preset's social media buttons
+        db.run(`
+            UPDATE social_media_buttons
+            SET
+                color1 = ?,
+                color2 = ?,
+                direction = ?
+            WHERE user_id = ?;
+        `, [
+            presetData.socialMediaButtons.color1,
+            presetData.socialMediaButtons.color2,
+            presetData.socialMediaButtons.direction,
+            userId
+        ]);
+
+        // Commit the transaction
+        db.run('COMMIT;');
+
+        // Send a success response
+        res.status(200).send('Preset applied successfully');
+    } catch (error) {
+        console.error('Error applying preset:', error);
+
+        // Rollback the transaction on error
+        db.run('ROLLBACK;');
+
+        // Send an error response
+        res.status(500).send('Error applying preset');
+    }
 });
 
 
