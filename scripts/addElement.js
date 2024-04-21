@@ -2,18 +2,7 @@
 let currentEditedItem = false; // Flag to track edit mode
 let titleAdded = false; // Flag to track if title has been added
 
-function getUsernameFromURL() {
-    const pathSegments = window.location.pathname.split('/');
-    let username = '';
 
-    if (pathSegments.length === 3 && pathSegments[1] === 'design') {
-        username = pathSegments[2];
-    } else if (pathSegments.length === 2 && pathSegments[1] === 'design') {
-        username = 'Guest';
-    }
-
-    return username;
-}
 
 // On load
 document.addEventListener('DOMContentLoaded', function () {
@@ -27,8 +16,6 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('applyChangesButton clicked.');
         if (currentEditedItem) {
             applyChanges();
-        } else {
-            customizeElement();
         }
     });
 });
@@ -70,13 +57,19 @@ function addElement(type) {
 
 
     if (currentElementType === 'image') {
+        document.getElementById('customize-element-content').setAttribute("style", "0vh");
+
+        clearFormInputs();
         document.getElementById('buttonSection').style.display = 'none';
         showImageSection();
+        document.querySelector('.delete-image').style.display = 'none';
 
     } else if (currentElementType === 'social') {
+        document.getElementById('customize-element-content').setAttribute("style", "0vh");
+
         // Reset values in the modal
         document.getElementById('platformSearch').value = '';  // Reset platform input
-        document.getElementById('href-text').value = '';  // Reset URL input
+        document.getElementById('socialUrl').value = '';  // Reset URL input
         document.querySelectorAll('.colors input')[0].value = '#5665E9';  // Reset color1 to default color
         document.querySelectorAll('.colors input')[1].value = '#A271F8';  // Reset color2 to default color
         const directionSelect = document.querySelector('.select-box select');
@@ -88,36 +81,104 @@ function addElement(type) {
         document.getElementById('customize-element-content').style.width = '100vh';
         showTextFieldSection();
     } else if (currentElementType === 'button') {
+        document.getElementById('customize-element-content').setAttribute("style", "0vh");
         showButtonSection();
     }
 }
 
-function customizeElement() {
+async function customizeElement(image_id) {
     const elementDescription = document.getElementById('elementDescription').value;
-    const imageUrlInput = document.getElementById('imageUrl').value.trim();
+    const imageUrlInput = document.getElementById('imageUrlAddress').value;
     const dropzoneFiles = document.querySelectorAll('.dropzone .dz-filename span');
 
-    if (currentEditedItem) {
-        applyChanges();
-    } else {
-        closeCustomizeElementModal();
-        clearFormInputs();
 
+    try {
         let elementUrl;
+        let imageDescription = ''; // Initialize image description variable
 
         if (dropzoneFiles.length > 0) {
             // User uploaded a file through Dropzone
             elementUrl = `/file/${decodeURIComponent(dropzoneFiles[0].textContent.trim())}`;
-            customizeOrAddGalleryElement(elementUrl, elementDescription);
-        } else if (imageUrlInput) {
-            // Use the provided URL
-            elementUrl = imageUrlInput.startsWith('http') ? imageUrlInput : `/file/${encodeURIComponent(imageUrlInput)}`;
-            customizeOrAddGalleryElement(elementUrl, elementDescription);
+            imageDescription = elementDescription; // Use element description as image description
+
+            // Create a fetch request to update image description
+            const updateDescriptionUrl = `/api/files/description/${image_id}`;
+            fetch(updateDescriptionUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ image_id: image_id, image_description: imageDescription })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to update image description.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Image description updated:', data);
+                    // Add logic to handle successful update if needed
+                })
+                .catch(error => {
+                    console.error('Error updating image description:', error);
+                    // Add logic to handle error if needed
+                });
+
+            customizeOrAddGalleryElement(elementUrl, elementDescription, image_id);
+            showMessage('Image added successfully.', 'success');
+        } else if (isValidUrl(imageUrlInput)) {
+            // Use the provided URL if it's a valid URL
+            elementUrl = imageUrlInput;
+            imageDescription = elementDescription; // Use element description as image description
+
+
+            const response = await fetch('/api/fileUrl', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    user_id: await getUserId(),
+                    image_id: generateUniqueId(), // Pass the image ID generated in Dropzone
+                    file_url: elementUrl,
+                    image_description: imageDescription
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to upload image.');
+            }
+
+            const data = await response.json();
+            console.log(data); // Handle the response data as needed
+            showMessage('Image added successfully.', 'success');
+            customizeOrAddGalleryElement(elementUrl, elementDescription, image_id); // Pass image_id here
+            clearFormInputs();
+            return; // Exit the function after successful upload
         } else {
-            console.error('No files uploaded or image URL provided.');
+            showMessage('Invalid URL provided.', 'warning');
             return;
         }
+
+        // Handle other cases here if needed
+
+    } catch (error) {
+        console.error(error);
+        showMessage('Failed to upload image.', 'error');
     }
+}
+
+
+
+
+
+
+// Function to check if a URL is valid
+function isValidUrl(url) {
+    // Regular expression to validate URL format
+    const urlRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+    return urlRegex.test(url);
 }
 
 function openCustomizeElementModal() {
@@ -136,7 +197,7 @@ function closeCustomizeElementModal() {
 // Function to clear the form inputs and dropzone
 function clearFormInputs() {
     document.getElementById('elementDescription').value = ''; // Clear element description
-    document.getElementById('imageUrl').value = '';
+    document.getElementById('imageUrlAddress').value = '';
 
     // Clear dropzone files
     const dropzone = Dropzone.forElement('.dropzone'); // Replace '.dropzone' with the actual selector for your dropzone
@@ -148,34 +209,30 @@ function clearFormInputs() {
 
 // Function to enable image editing
 function enableImageEdit() {
+    document.getElementById('customize-element-content').setAttribute("style", "0vh");
+
     document.getElementById('modalTitle').innerText = 'Edit Image';
     document.getElementById('elementDescription').style.display = 'block';
-    document.getElementById('elementDescription').style.marginLeft = '8px';
+
+    document.getElementById('image-modal').style.display = 'block';
+    document.getElementById('buttonSection').style.display = 'none';
     document.getElementById('imageEditSection').style.display = 'block';
+    document.getElementById('textFieldSection').style.display = 'none';
+    document.getElementById('delete-image').style.display = 'block';
+    document.getElementById('socialMediaEditSection').style.display = 'none';
+    document.getElementById('addSocialMediaButton').style.display = 'none';
+    document.getElementById('saveChangesButton').style.display = 'none';
+    document.getElementById('socialDelete').style.display = 'none';
 
     // Populate the modal with existing details if editing an item
-    if (currentEditedItem && currentElementType === 'image') {
+    if (currentEditedItem) {
         const description = currentEditedItem.querySelector('.gallery-description').textContent;
         document.getElementById('elementDescription').value = description;
 
         // Display the existing image URL in the modal
         const imageUrl = currentEditedItem.getAttribute('data-url');
-        document.getElementById('imageUrl').value = imageUrl;
+        document.getElementById('imageUrlAddress').value = imageUrl;
 
-        // Add delete button only if it doesn't exist
-        const deleteButton = document.querySelector('.delete-button');
-        if (!deleteButton) {
-            const deleteButton = document.createElement('button');
-            deleteButton.classList.add('delete-button');
-            deleteButton.innerHTML = 'Delete <i class="fas fa-trash-alt"></i>';
-            deleteButton.style.marginLeft = '8px';
-            deleteButton.style.backgroundColor = 'red';
-            deleteButton.addEventListener('click', deleteImage);
-
-            // Append it below the "Apply Changes" button
-            const applyChangesButton = document.getElementById('applyChangesButton');
-            applyChangesButton.parentNode.insertBefore(deleteButton, applyChangesButton.nextSibling);
-        }
     } else {
         currentEditedItem = false;
     }
@@ -187,7 +244,7 @@ function editElement(galleryElement) {
 
     // Populate the modal with existing details
     document.getElementById('elementDescription').value = description;
-    document.getElementById('imageUrl').value = image.src;
+    document.getElementById('imageUrlAddress').value = image.src;
 
     // Set the currentEditedItem to galleryElement
     currentEditedItem = galleryElement;
@@ -198,34 +255,71 @@ function editElement(galleryElement) {
 }
 
 // Function to apply changes to the image
-function applyChanges() {
-    const elementDescription = document.getElementById('elementDescription').value.trim();
-    const imageUrlInput = document.getElementById('imageUrl').value.trim();
+async function applyChanges() {
+    const image_id = currentEditedItem.dataset.id;
+    const elementDescription = document.getElementById('elementDescription').value;
+    const imageUrlInput = document.getElementById('imageUrlAddress').value.trim();
     const dropzoneFiles = document.querySelectorAll('.dropzone .dz-filename span');
 
     if (!currentEditedItem) {
-        showError('No item being edited. Cannot apply changes.');
+        showMessage('No item being edited. Cannot apply changes.');
         return;
     }
 
-    console.log('Editing an existing element');
-    console.log('Element Description:', elementDescription);
-    console.log('Image URL Input:', imageUrlInput);
-    console.log('Dropzone Files:', dropzoneFiles);
+    let imageData;
 
-    updateGalleryDescription(currentEditedItem, elementDescription);
-
-    const elementUrl = getImageUrl(dropzoneFiles, imageUrlInput);
-
-    // Update or create the image element
-    const imageElement = currentEditedItem.querySelector('img');
-    if (imageElement) {
-        // Update existing image
-        imageElement.src = elementUrl;
+    if (dropzoneFiles.length > 0 || (dropzoneFiles.length > 0 && imageUrlInput == `/file/${encodeURIComponent(dropzoneFiles[0].textContent.trim())}`)) {
+        // User uploaded a file through Dropzone
+        const imageUrl = `/file/${encodeURIComponent(dropzoneFiles[0].textContent.trim())}`;
+        imageData = { type: 'file', data: dropzoneFiles[0], url: imageUrl };
+    } else if (isValidUrl(imageUrlInput)) {
+        // Use the provided URL if it's a valid URL
+        const imageUrl = imageUrlInput.startsWith('http://') || imageUrlInput.startsWith('https://') ? imageUrlInput : imageUrlInput;
+        imageData = { type: 'url', url: imageUrl };
+    } else {
+        showMessage('Invalid URL provided or no file uploaded.', 'warning');
+        return;
     }
 
-    // Update the description attribute for the 'gallery-item'
-    currentEditedItem.setAttribute('description', elementDescription);
+    // Update or create the image element
+    if (currentEditedItem) {
+        if (imageData.type === 'file') {
+            // Update existing image with file
+            const file = imageData.data;
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('image_id', currentEditedItem.dataset.id);
+            formData.append('image_description', elementDescription);
+
+            // Perform the file upload or update here using formData and fetch
+            // This part depends on your server-side logic
+
+        } else if (imageData.type === 'url') {
+            // Update image src attribute with URL
+            currentEditedItem.querySelector('img').src = imageData.url;
+
+            const response = await fetch('/api/fileUrl', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    image_id: image_id, // Pass the image ID generated in Dropzone
+                    file_url: imageUrlInput,
+                    image_description: elementDescription
+                })
+            });
+
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    }
+
+    if (currentEditedItem) {
+        updateGalleryDescription(currentEditedItem, elementDescription);
+    } else {
+        showMessage('Error caught when trying to edit.');
+    }
+
 
     // Change the existing overlay text only when editing an item
     const overlayElement = currentEditedItem.querySelector('.gallery-overlay');
@@ -239,9 +333,55 @@ function applyChanges() {
         clearFormInputs();
         // Reset the currentEditedItem flag
         currentEditedItem = false;
-    }, 200); // Adjust the delay as needed
-
+    }, 300); // Adjust the delay as needed
 }
+
+
+
+
+
+
+
+// Function to fetch all images and display them in gallery items
+async function fetchAndDisplayImages() {
+    const user_id = await getUserIdWithFallback();
+    try {
+        const response = await fetch(`/api/getAllImages/${user_id}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch images.');
+        }
+        const imageData = await response.json();
+        console.log('Image Data:', imageData); // Log the fetched image data
+
+        // Process each image based on the data
+        imageData.forEach(image => {
+            if (image.file_url) {
+                customizeOrAddGalleryElement(image.file_url, image.image_description, image.image_id)
+            } else if (image.filename) {
+                // Use the server route to fetch the image by filename
+                const imageUrl = `/file/${image.filename}`;
+                console.log('Image URL:', imageUrl); // Log the image URL
+                customizeOrAddGalleryElement(imageUrl, image.image_description, image.image_id);
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching and displaying images:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', fetchAndDisplayImages);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // Function to get the image URL based on user input
@@ -255,27 +395,29 @@ function getImageUrl(dropzoneFiles, imageUrlInput) {
         // Use the provided URL
         elementUrl = imageUrlInput.startsWith('http') ? imageUrlInput : imageUrlInput;
     } else {
-        showError('No changes applied. Image URL or file required.');
+        showMessage('No changes applied. Image URL or file required.');
     }
 
     return elementUrl;
 }
 
-// Function to show an error message
-function showError(message) {
-    const errorMessageElement = document.getElementById('error-message');
-    errorMessageElement.textContent = message;
-    errorMessageElement.style.display = 'block';
 
-    // Hide the error message after a few seconds
-    setTimeout(() => {
-        errorMessageElement.style.display = 'none';
-        errorMessageElement.textContent = '';
-    }, 3000);
-}
-
-function deleteImage() {
+async function deleteImage() {
     if (currentEditedItem) {
+
+        const image_id = currentEditedItem.dataset.id;
+        const response = await fetch(`/api/deleteImage/${image_id}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to delete image');
+        }
+
+        const data = await response.json();
+        console.log(data.message); // Handle success message
+
+
         // Remove the gallery item
         const galleryContainer = document.getElementById('galleryContainer');
         currentEditedItem.remove();
@@ -292,18 +434,16 @@ function deleteImage() {
 
         // Reset the currentEditedItem flag
         currentEditedItem = false;
-
-        // Remove the delete button from the modal
-        const deleteButton = document.querySelector('.delete-button');
-        if (deleteButton) {
-            deleteButton.remove();
-        }
+    } else {
+        showMessage('Cannot delete the image. Try again later', 'error');
     }
 }
 
-function customizeOrAddGalleryElement(elementUrl, elementDescription) {
-    const contentContainer = document.querySelector('.content');
+function customizeOrAddGalleryElement(elementUrl, elementDescription, imageId) {
+    const contentContainer = document.getElementById('images-container');
     let galleryContainer = document.getElementById('galleryContainer');
+
+    const image_id = imageId || generateUniqueId();
 
     if (!galleryContainer) {
         galleryContainer = contentContainer.appendChild(document.createElement('div'));
@@ -330,9 +470,10 @@ function customizeOrAddGalleryElement(elementUrl, elementDescription) {
         descriptionContainer.classList.add('image-text');
         const descriptionElement = descriptionContainer.appendChild(document.createElement('div'));
         descriptionElement.classList.add('gallery-description');
-        galleryElement.setAttribute('data-url', elementUrl);
-
     }
+
+    // Update data-url attribute with elementUrl
+    galleryElement.setAttribute('data-url', elementUrl);
 
     // Create a new image element
     const newImage = document.createElement('img');
@@ -343,37 +484,38 @@ function customizeOrAddGalleryElement(elementUrl, elementDescription) {
     newImage.onload = function () {
         console.log('Image loaded successfully');
 
-        // If not editing, update or create the text elements
+        // Update or create the text elements
+        let descriptionContainer = galleryElement.querySelector('.image-text');
+        if (!descriptionContainer) {
+            descriptionContainer = galleryElement.appendChild(document.createElement('div'));
+            descriptionContainer.classList.add('image-text');
+        }
+
+        let descriptionElement = descriptionContainer.querySelector('.gallery-description');
+        if (!descriptionElement) {
+            descriptionElement = descriptionContainer.appendChild(document.createElement('div'));
+            descriptionElement.classList.add('gallery-description');
+        }
+
+        // Update both data-description and inner text for the specific 'gallery-description' element
+        descriptionElement.innerText = elementDescription;
+        descriptionElement.dataset.description = elementDescription;
+
+        galleryElement.dataset.description = elementDescription;
+        galleryElement.dataset.id = image_id;
+
+        // Check if there's an existing overlay before adding a new one
+        const existingOverlay = galleryElement.querySelector('.gallery-overlay');
+        if (!existingOverlay) {
+            const overlayElement = galleryElement.appendChild(Object.assign(document.createElement('div'), { innerText: '✏', classList: ['gallery-overlay'] }));
+            overlayElement.addEventListener('click', function () {
+                enableImageEdit();
+                editElement(galleryElement);
+            });
+        }
+
+        // Close the modal and clear form inputs only if not editing
         if (!currentEditedItem) {
-            let descriptionContainer = galleryElement.querySelector('.image-text');
-            if (!descriptionContainer) {
-                descriptionContainer = galleryElement.appendChild(document.createElement('div'));
-                descriptionContainer.classList.add('image-text');
-            }
-
-            let descriptionElement = descriptionContainer.querySelector('.gallery-description');
-            if (!descriptionElement) {
-                descriptionElement = descriptionContainer.appendChild(document.createElement('div'));
-                descriptionElement.classList.add('gallery-description');
-            }
-
-            // Update both data-description and inner text for the specific 'gallery-description' element
-            descriptionElement.innerText = elementDescription;
-            descriptionElement.setAttribute('data-description', elementDescription);
-
-            galleryElement.setAttribute('data-description', elementDescription);
-
-            // Check if there's an existing overlay before adding a new one
-            const existingOverlay = galleryElement.querySelector('.gallery-overlay');
-            if (!existingOverlay) {
-                const overlayElement = galleryElement.appendChild(Object.assign(document.createElement('div'), { innerText: '✏', classList: ['gallery-overlay'] }));
-                overlayElement.addEventListener('click', function () {
-                    enableImageEdit();
-                    editElement(galleryElement);
-                });
-            }
-
-            // Close the modal and clear form inputs only if not editing
             closeCustomizeElementModal();
             clearFormInputs();
         }
@@ -383,23 +525,20 @@ function customizeOrAddGalleryElement(elementUrl, elementDescription) {
     galleryElement.appendChild(newImage);
 }
 
+
 // Function to update the gallery description
 function updateGalleryDescription(galleryElement, elementDescription) {
     const descriptionElement = galleryElement.querySelector('.gallery-description');
 
     if (descriptionElement) {
-        console.log('Before Update - Inner Text:', descriptionElement.innerText);
-        console.log('Before Update - Data Description:', descriptionElement.getAttribute('data-description'));
 
-        console.log('Updating description:', elementDescription);
-        descriptionElement.innerText = elementDescription;
-        descriptionElement.setAttribute('data-description', elementDescription);
-        galleryElement.setAttribute('data-description', elementDescription);
+        descriptionElement.textContent = elementDescription;
+        descriptionElement.dataset.description = elementDescription;
+        galleryElement.dataset.description = elementDescription;
 
-        console.log('After Update - Inner Text:', descriptionElement.innerText);
-        console.log('After Update - Data Description:', descriptionElement.getAttribute('data-description'));
+
     } else {
-        console.error('Description element not found.');
+        showMessage('Description element not found.', 'error');
     }
 }
 
@@ -413,6 +552,7 @@ function showImageSection() {
     document.getElementById('textFieldSection').style.display = 'none';
     document.getElementById('buttonCreationForm').style.display = 'none';
     document.getElementById('buttonSection').style.display = 'none';
+    document.getElementById('delete-image').style.display = 'none';
 
 
 }
