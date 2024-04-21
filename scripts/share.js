@@ -33,7 +33,7 @@ async function openInfoModal() {
 
     try {
         // Fetch user information when opening the modal
-        const userId = await getUserId();
+        const userId = await getUserIdWithFallback();
         const data = await fetchData(`/api/UserInfo/${userId}`);
 
         const pageInfoTextarea = document.getElementById('pageInfo');
@@ -52,7 +52,7 @@ function closeInfoModal() {
 }
 
 async function saveInfoChanges() {
-    const userId = await getUserId();
+    const userId = await getUserIdWithFallback();
     const pageInfoTextarea = document.getElementById('pageInfo');
     const pageInfo = pageInfoTextarea.value;
 

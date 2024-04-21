@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         fileInput.style.display = 'none';
 
         // Fetch and render user's profile picture on page load
-        const userId = await getUserId();
+        const userId = await getUserIdWithFallback();
         const blobData = await fetchProfilePicture(userId);
 
         if (blobData) {
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 
 async function sendBlobImageToServer(imageBlob) {
-    const userId = await getUserId();
+    const userId = await getUserIdWithFallback();
     const formData = new FormData();
     formData.append('userId', userId);
     formData.append('imageData', imageBlob);
@@ -97,7 +97,7 @@ async function fetchProfilePicture(userId) {
 
         const blob = await response.blob();
 
-        handleFetchCompletion(); // Increment fetch completion for profile picture\
+        handleFetchCompletion(); // Increment fetch completion for profile picture
         return blob;
     } catch (error) {
         console.error('Error fetching profile picture:', error);

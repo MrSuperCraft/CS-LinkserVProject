@@ -311,7 +311,7 @@ window.addEventListener('load', (event) => {
     addSocialMediaButton.addEventListener('click', function () {
         // Retrieve values from the inputs
         const platform = document.getElementById('socialMediaPlatform').value || 'facebook';
-        const url = document.getElementById('href-text').value || 'https://example.com';
+        const url = document.getElementById('socialUrl').value || 'https://example.com';
         const directionSelect = document.querySelector('.select-box select');
         const direction = directionSelect.value || 'Left Top'; // Default to 'Left Top' if no direction is selected
         const color1 = document.querySelectorAll('.colors input')[0].value || '#5665E9';
@@ -327,7 +327,7 @@ window.addEventListener('load', (event) => {
         setTimeout(() => {
             // Clear form inputs except direction and colors
             document.getElementById('socialMediaPlatform').value = '';
-            document.getElementById('href-text').value = '';
+            document.getElementById('socialUrl').value = '';
             directionSelect.value = 'Left Top'; // Reset direction to default
             document.querySelectorAll('.colors input')[0].value = '#5665E9'; // Reset color1 to default black
             document.querySelectorAll('.colors input')[1].value = '#A271F8'; // Reset color2 to default white
@@ -359,7 +359,7 @@ function openEditSocialMediaModal(buttonContainer, platform, url, color1, color2
 
 
 
-    document.getElementById('href-text').value = url;
+    document.getElementById('socialUrl').value = url;
 
     // Find the select element for direction
     const directionSelect = document.querySelector('.select-box select');
@@ -454,7 +454,7 @@ async function updateSocialMediaButtonUI(buttonId) {
 
     // Retrieve values from the inputs in the modal
     const platform = document.getElementById('socialMediaPlatform').value;
-    const url = document.getElementById('href-text').value;
+    const url = document.getElementById('socialUrl').value;
     const direction = document.querySelector('.select-box select').value;
     const color1 = document.querySelectorAll('.colors input')[0].value;
     const color2 = document.querySelectorAll('.colors input')[1].value;
@@ -857,7 +857,7 @@ async function getUserId() {
 // Function to get form values
 function getFormValues() {
     const platform = document.getElementById('socialMediaPlatform').value;
-    const url = document.getElementById('href-text').value.trim();
+    const url = document.getElementById('socialUrl').value;
     const direction = document.querySelector('#directionSelect select').value; // Ensure this line is correctly retrieving the value
     const color1 = document.querySelector('.colors input:nth-child(1)').value;
     const color2 = document.querySelector('.colors input:nth-child(2)').value;
@@ -868,7 +868,7 @@ function getFormValues() {
 
 // Function to save a new social media button
 async function saveSocialMediaButton() {
-    const userId = await getUserId();
+    const userId = await getUserIdWithFallback();
     if (!userId) {
         console.error('User ID not available');
         return;
@@ -876,10 +876,14 @@ async function saveSocialMediaButton() {
 
     const buttonId = generateUniqueId();
 
-    const { platform, direction, color1, color2, url } = getFormValues();
+    const platform = document.getElementById('socialMediaPlatform').value;
+    const url = document.getElementById('socialUrl').value;
+    const direction = document.querySelector('#directionSelect select').value; // Ensure this line is correctly retrieving the value
+    const color1 = document.querySelector('.colors input:nth-child(1)').value;
+    const color2 = document.querySelector('.colors input:nth-child(2)').value;
 
     // Check if URL is not empty and is valid
-    if (!url || !isValidUrl(url)) {
+    if (!url) {
         console.error('Invalid or empty URL');
         return;
     }
@@ -898,9 +902,9 @@ async function saveSocialMediaButton() {
                 button_id: buttonId,
                 platform,
                 url: formattedUrl, // Use the formatted URL
-                color1,
-                color2,
-                direction,
+                color1: color1,
+                color2: color2,
+                direction: direction
             }),
         });
 
@@ -928,7 +932,7 @@ async function saveSocialMediaButton() {
 
 // Function to save a new social media button
 async function updateSocialMediaButton() {
-    const userId = await getUserId();
+    const userId = await getUserIdWithFallback();
     if (!userId) {
         console.error('User ID not available');
         return;
@@ -940,7 +944,11 @@ async function updateSocialMediaButton() {
         return;
     }
 
-    const { platform, direction, color1, color2, url } = getFormValues();
+    const platform = document.getElementById('socialMediaPlatform').value;
+    const url = document.getElementById('socialUrl').value;
+    const direction = document.querySelector('#directionSelect select').value; // Ensure this line is correctly retrieving the value
+    const color1 = document.querySelector('.colors input:nth-child(1)').value;
+    const color2 = document.querySelector('.colors input:nth-child(2)').value;
 
     // Check if URL is not empty and is valid
     if (!url || !isValidUrl(url)) {
@@ -1121,7 +1129,7 @@ function createAndRenderSocialMediaButton(platform, url, direction, color1, colo
 
 // Function to display user's social media buttons
 async function displayUserSocialMediaButtons() {
-    const userId = await getUserId(); // Assuming you have a function to get the user ID
+    const userId = await getUserIdWithFallback(); // Assuming you have a function to get the user ID
 
     if (userId) {
         try {

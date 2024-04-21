@@ -34,6 +34,7 @@ function showTextFieldSectionEdit() {
     document.getElementById("delete-text").style.display = "block";
     document.getElementById("addTextField").style.display = "none";
     document.getElementById('modalTitle').textContent = "Edit Your Text Field";
+    document.getElementById('customize-element-content').style.width = '100vh';
 }
 
 
@@ -291,7 +292,7 @@ async function createTextFieldCard() {
         return;
     }
 
-    const user_id = await getUserId();
+    const user_id = await getUserIdWithFallback();
     if (!user_id) {
         console.error('User ID not available');
         return;
@@ -333,7 +334,7 @@ async function createTextFieldCard() {
 
 // Function to retrieve all text field cards for a specific user
 async function getAllTextFieldCards() {
-    const user_id = await getUserId();
+    const user_id = await getUserIdWithFallback();
     try {
         const response = await fetch(`/api/textfields/${user_id}`);
 
