@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Array of image sources
-    const imageSources = ["design-main.png", "website-setup.svg", "web dev.svg"];
+    const imageSources = ["website-setup.svg", "web dev.svg", "design-main.png"];
 
     // Index to track the current image
     let currentIndex = 0;
@@ -120,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const sectionId = link.getAttribute('href').substring(1);
             link.classList.toggle('active', sectionId === activeSectionId);
             if (sectionId === activeSectionId) {
-                link.style.color = '#9CD89E';
 
             }
         });

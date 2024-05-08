@@ -91,7 +91,7 @@ function submitSignupForm(event) {
                 const emailPrefix = email.split('@')[0];
                 console.log('Signup successful');
                 // Optionally, redirect if you want
-                window.location.href = `/design/${encodeURIComponent(emailPrefix)}`;
+                window.location.href = `/design/${username}`;
             } else {
                 // Handle other cases, e.g., display a specific message to the user
                 console.error('Signup failed:', data.message);
@@ -145,3 +145,30 @@ function displayErrorMessage(message) {
         errorMessageContainer.style.display = 'none';
     }, 5000); // Adjust the duration as needed
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const usernameInput = document.getElementById('username');
+    const charCountSpan = document.getElementById('charCount');
+
+    // Update character count on input
+    usernameInput.addEventListener('input', () => {
+        const charCount = usernameInput.value.length;
+        charCountSpan.textContent = `${charCount} / 15`;
+
+        // Check if the username exceeds 15 characters and notify the user
+        if (charCount > 15) {
+            usernameInput.setCustomValidity('Username cannot exceed 15 characters.');
+        } else {
+            usernameInput.setCustomValidity('');
+        }
+    });
+
+    // Handle form submission
+    const form = document.querySelector('form');
+    form.addEventListener('submit', (event) => {
+        if (!form.checkValidity()) {
+            event.preventDefault(); // Prevent form submission if validation fails
+            alert('Please enter a valid username.');
+        }
+    });
+});
