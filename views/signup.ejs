@@ -42,16 +42,19 @@
                 <div class="login-text">with your credentials</div>
 
 
-                <div class="custom-container custom-transition custom-hover">
+                <div class="custom-container custom-transition custom-hover" style="border: 1px solid rgba(0, 0, 0, 0.1);
+                border-radius: 10px;">
                     <div class="custom-flex custom-background custom-padding">
                         <span class="custom-label">LinkserV.com/</span>
                         <div class="custom-input-container" title="Enter your username">
                             <input name="username" id="username" autocomplete="off" type="text" placeholder="username"
                                 required aria-invalid="false" aria-labelledby="label-ltclid6"
-                                class="custom-input custom-ease-out !outline-none" value="">
+                                class="custom-input custom-ease-out" value="" maxlength="15">
+                            <span id="charCount" class="custom-char-count">0 / 15</span>
                         </div>
                     </div>
                 </div>
+
 
                 <div class="input-group">
                     <fieldset>

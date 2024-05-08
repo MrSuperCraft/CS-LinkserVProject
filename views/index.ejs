@@ -43,7 +43,7 @@
                 <div class="navigation">
                     <a href="#Home" id="homebtn">Home</a>
                     <a href="#About">About</a>
-                    <a href="#FAQ" id="faqbtn">FAQ</a>
+                    <a href="#FAQ" id="FAQbtn">FAQ</a>
                     <a href="/pages">Pages</a>
                     <a href="/login" class="logbtn">
                         <% if (req.session.username) { %>
@@ -82,8 +82,7 @@
             </div>
 
             <div class="image-container">
-                <img id="carouselImage" class="carousel-image" src="design-main.png" alt="Image description"
-                    width="200px" height="200px">
+                <img id="carouselImage" class="carousel-image" src="design-main.png" alt="Image description">
             </div>
         </div>
 
@@ -122,69 +121,71 @@
             </div>
         </div>
 
+        <div id="FAQ" style="margin-top: -50px;">
+            <div class="third-section faq-section" style="margin-top: 100px;">
+                <div class="white-box" data-aos="fade-up" data-aos-duration="500">
+                    <h2>Frequently Asked Questions</h2>
+                    <h3 class="faq-desc"> Here are some questions that are asked often about the LinkserV service:</h3>
+                    <div class="accordion">
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <h3>What features does your link-in-bio service offer?</h3>
+                                <span class="toggle-icon">+</span>
+                            </div>
+                            <div class="accordion-content">
+                                <p>Our platform offers many customization features such as social media buttons and to
+                                    aid
+                                    you in creating an all - in one bio page!</p>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <h3>How many links can I add?</h3>
+                                <span class="toggle-icon">+</span>
+                            </div>
+                            <div class="accordion-content">
+                                <p>Each user can only have a single link assigned to their account.</p>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <h3>Can I use my own domain?</h3>
+                                <span class="toggle-icon">+</span>
+                            </div>
+                            <div class="accordion-content">
+                                <p>No. LinkserV offers you a custom link with a URL in this pattern:
+                                    LinkserV.com/yourUsername. Currently, the feature is unavailable.</p>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <h3>How does it look on different devices?</h3>
+                                <span class="toggle-icon">+</span>
+                            </div>
+                            <div class="accordion-content">
+                                <p>Generally speaking, the page should be designed the same for all platforms and
+                                    devices.
+                                    <br> However, the current stages of development only focus on Desktop support.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <h3>Are there planned updates and features?</h3>
+                                <span class="toggle-icon">+</span>
+                            </div>
+                            <div class="accordion-content">
+                                <p>New updates are not yet planned as core features are still being implemented, but
+                                    they
+                                    will start getting published after further development on the website.</p>
+                            </div>
+                        </div>
 
-        <div class="third-section faq-section" style="padding-top: 100px;" id="FAQ">
-            <div class="white-box" data-aos="fade-up" data-aos-duration="500">
-                <h2>Frequently Asked Questions</h2>
-                <h3 class="faq-desc"> Here are some questions that are asked often about the LinkserV service:</h3>
-                <div class="accordion">
-                    <div class="accordion-item">
-                        <div class="accordion-header">
-                            <h3>What features does your link-in-bio service offer?</h3>
-                            <span class="toggle-icon">+</span>
-                        </div>
-                        <div class="accordion-content">
-                            <p>Our platform offers many customization features such as social media buttons and to
-                                aid
-                                you in creating an all - in one bio page!</p>
-                        </div>
                     </div>
-                    <div class="accordion-item">
-                        <div class="accordion-header">
-                            <h3>How many links can I add?</h3>
-                            <span class="toggle-icon">+</span>
-                        </div>
-                        <div class="accordion-content">
-                            <p>Each user can only have a single link assigned to their account.</p>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <div class="accordion-header">
-                            <h3>Can I use my own domain?</h3>
-                            <span class="toggle-icon">+</span>
-                        </div>
-                        <div class="accordion-content">
-                            <p>No. LinkserV offers you a custom link with a URL in this pattern:
-                                LinkserV.com/yourUsername. Currently, the feature is unavailable.</p>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <div class="accordion-header">
-                            <h3>How does it look on different devices?</h3>
-                            <span class="toggle-icon">+</span>
-                        </div>
-                        <div class="accordion-content">
-                            <p>Generally speaking, the page should be designed the same for all platforms and
-                                devices.
-                                <br> However, the current stages of development only focus on Desktop support.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <div class="accordion-header">
-                            <h3>Are there planned updates and features?</h3>
-                            <span class="toggle-icon">+</span>
-                        </div>
-                        <div class="accordion-content">
-                            <p>New updates are not yet planned as core features are still being implemented, but
-                                they
-                                will start getting published after further development on the website.</p>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>
+
         <div class="fourth-section contact-section">
             <div class="white-box" data-aos="fade-up" data-aos-duration="500" id="Contact-us">
                 <form id="contactForm">
@@ -234,7 +235,7 @@
                     <li><i class="fa-solid fa-file"></i></li>
                 </a>
             </ul>
-            <p class="copyright">Created by _____.</p>
+            <p class="copyright">Created by Itamar Hanan.</p>
         </div>
     </footer>
 
