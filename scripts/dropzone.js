@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', function () {
             this.on('sending', function (file, xhr, formData) {
                 // Attach additional data to the file upload request
                 const image_description = document.getElementById('elementDescription').value;
+                // Replace spaces with underscores in the filename
+                file.name.replace(/ /g, '_');
+                file.name.replace(/%20/g, '_');
 
                 if (currentEditedItem) {
                     image_id = currentEditedItem.dataset.id;
