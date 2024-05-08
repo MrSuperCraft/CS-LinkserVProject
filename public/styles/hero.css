@@ -169,22 +169,22 @@ header .navigation a {
 
 .content .image-container {
   flex-shrink: 0;
-  margin-left: 5%;
+  margin-left: 3%;
 }
 
 .content .image-container img {
   margin-top: 40px;
   margin-left: 0;
-  width: auto;
+  max-width: 700px;
   /* Allow the width to adjust based on the aspect ratio */
+
   height: 100%;
   /* Set the height to 100% */
-  max-width: none;
-  /* Remove the maximum width constraint */
-  object-fit: cover;
+  object-fit: contain;
   /* Maintain aspect ratio and cover the entire container */
   transition: transform 0.5s ease-in-out;
   animation: fade 5s 1s ease-in-out infinite;
+  border: 1px solid transparent;
 }
 
 @keyframes fade {
@@ -431,6 +431,10 @@ label {
   display: block;
   max-height: 1000px;
   /* Adjust to a large value or use an appropriate value */
+}
+
+.accordion-content p {
+  text-align: left;
 }
 
 

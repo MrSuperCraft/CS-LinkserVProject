@@ -339,6 +339,18 @@ input {
     /* Adjust the margin as needed for spacing */
 }
 
+.custom-char-count {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    /* Adjust as needed */
+    transform: translateY(-50%);
+    color: rgba(0, 0, 0, 0.5);
+    /* Slightly opaque color */
+    font-size: 12px;
+    /* Adjust font size as needed */
+}
+
 .icons {
     position: absolute;
     top: 30%;
@@ -386,15 +398,17 @@ input {
 .custom-label {
     background-color: #f0f0f0;
     color: #333;
-    padding: 0.5rem;
+    padding: 0.65rem;
     font-size: 0.875rem;
     min-width: fit-content;
     border-radius: 10px 0 0 10px;
+    z-index: 0;
 }
 
 .custom-input-container {
     position: relative;
     flex-grow: 1;
+
 }
 
 .custom-input {
@@ -410,10 +424,7 @@ input {
     /* Add transition for a smoother effect */
 }
 
-.custom-input:focus {
-    border-color: #e0e2d9;
-    /* Change border color on focus */
-}
+
 
 .custom-input::placeholder {
     color: #ccc;
