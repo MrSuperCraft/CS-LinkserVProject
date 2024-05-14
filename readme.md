@@ -39,3 +39,9 @@ Running the project locally can be done through the use of the following npm com
 ```bash
 npm run dev
 ```
+The server will run on localhost with port 3000 after executing the command. closing the server can be done by simply closing editor.
+
+
+### Installation altenrative:
+
+Open a codespace of the repository and execute the node command `npm run dev` to start up the server.
