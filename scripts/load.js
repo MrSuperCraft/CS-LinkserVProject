@@ -35,21 +35,33 @@ async function getUserIdWithFallback() {
     }
 }
 
+/**
+ * Retrieves the username from the current URL.
+ * Removes specific hash segments (#view, #profile, #presets, #design, #background) from the URL path.
+ *
+ * @returns {string} The username extracted from the URL.
+ */
 function getUsernameFromURL() {
     const pathSegments = window.location.pathname.split('/');
     let username = '';
 
-    if (pathSegments.length === 3 && pathSegments[1] === 'design') {
+    // Remove specific hash segments from the pathSegments
+    const validPathSegments = pathSegments.filter(segment => {
+        return !['#view', '#profile', '#presets', '#design', '#background'].includes(segment);
+    });
+
+    if (validPathSegments.length === 3 && validPathSegments[1] === 'design') {
         // Case 1: URL is /design/${username}
-        username = pathSegments[2].replace(/_/g, ' ');
-    } else if (pathSegments.length === 2 && pathSegments[1] !== '') {
+        username = validPathSegments[2].replace(/_/g, '');
+    } else if (validPathSegments.length === 2 && validPathSegments[1] !== '') {
         // Case 2: URL is /${username}
-        username = pathSegments[1].replace(/_/g, ' ');
+        username = validPathSegments[1].replace(/_/g, '');
     } else {
         // Default case or invalid URL structure
         username = 'Guest';
     }
 
+    console.log(`Username extracted from URL: ${username}`);
     return username;
 }
 

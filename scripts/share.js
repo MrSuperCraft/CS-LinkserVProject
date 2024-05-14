@@ -140,7 +140,7 @@ function loadDynamicShareButtons(username) {
     const urlAddressSpan = document.getElementById('url-address');
 
     // Set the dynamic URL address
-    const dynamicURL = `https://localhost:3000/${username}`;
+    const dynamicURL = `http://localhost:3000/${username}`;
     urlAddressSpan.textContent = dynamicURL;
 }
 

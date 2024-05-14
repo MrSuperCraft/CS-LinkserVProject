@@ -2064,7 +2064,6 @@ body {
 
 
 #profileSection {
-    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -2075,7 +2074,6 @@ body {
     background: -webkit-linear-gradient(135deg, hsl(0, 0%, 57%) 0%, hsla(0, 1%, 66%, 1) 100%);
     filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#696969", endColorstr="#A9A7A7", GradientType=1);
 
-    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     position: relative;
@@ -2154,7 +2152,7 @@ body {
     /* More padding for a cleaner look */
     text-align: center;
     transition: transform 0.2s ease-in-out;
-    width: 200px;
+    width: 250px;
     /* Set a fixed width for consistent card sizes */
 }
 
