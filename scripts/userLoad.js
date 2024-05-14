@@ -1,5 +1,5 @@
 function removeAllOverlays() {
-    const overlaysToRemove = ['div.gallery-overlay', 'div.text-overlay', '.btn__overlay', '.social-overlay', '.profile-picture-overlay'];
+    const overlaysToRemove = ['.gallery-overlay', 'div.text-overlay', '.btn__overlay', '.social-overlay', '.profile-picture-overlay'];
 
     overlaysToRemove.forEach(selector => {
         const elements = document.querySelectorAll(selector);
