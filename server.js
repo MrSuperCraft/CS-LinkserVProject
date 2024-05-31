@@ -263,6 +263,7 @@ app.post('/signup', async (req, res) => {
 
             // Save user information in the session
             req.session.username = username;
+            req.session.userId = this.lastID;
 
             // Send a JSON response indicating successful signup
             return res.status(200).json({ success: true, redirect: `/design/${encodeURIComponent(username)}` });
@@ -975,6 +976,7 @@ app.route('/file-upload')
                 const image_id = req.body.image_id; // Get the image ID from the request body
                 const image_description = req.body.image_description;
 
+
                 const result = await insertFileMetadata(originalname, buffer, mimetype, userId, image_id, image_description);
                 res.json({ message: 'File uploaded successfully', fileId: result.id });
             } else {
@@ -994,6 +996,9 @@ app.route('/file-upload')
                 const image_id = req.body.image_id; // Get the image ID from the request body
                 const image_description = req.body.image_description;
 
+                console.log("userId: " + userId + " imageId: " + image_id + " description: " + image_description);
+
+
                 const result = await updateFileMetadata(originalname, buffer, mimetype, userId, image_id, image_description);
                 res.json({ message: 'File updated successfully', fileId: result.id });
             } else {
@@ -1007,10 +1012,12 @@ app.route('/file-upload')
     // POST request for URL upload
     .post(async (req, res) => {
         try {
-            const { url, image_id, image_description } = req.body;
+            const { file_url, image_id, image_description } = req.body;
             const userId = req.session.userId;
 
-            const result = await insertFileUrl(url, userId, image_id, image_description);
+
+
+            const result = await insertFileUrl(file_url, userId, image_id, image_description);
             res.json({ message: 'URL uploaded successfully', fileId: result.id });
         } catch (err) {
             console.error('Error uploading URL:', err);
@@ -1020,10 +1027,13 @@ app.route('/file-upload')
     // PUT request for URL update
     .put(async (req, res) => {
         try {
-            const { url, image_id, image_description } = req.body;
+            const { file_url, image_id, image_description } = req.body;
             const userId = req.session.userId;
 
-            const result = await updateFileUrl(url, userId, image_id, image_description);
+            console.log("userId: " + userId + " imageId: " + image_id + " description: " + image_description + "file_url: " + file_url);
+
+
+            const result = await updateFileUrl(file_url, userId, image_id, image_description);
             res.json({ message: 'URL updated successfully', fileId: result.id });
         } catch (err) {
             console.error('Error updating URL:', err);
@@ -1080,24 +1090,23 @@ async function updateFileUrl(url, userId, image_id, image_description) {
     });
 }
 
+
 // Function to update file metadata in the database
 async function updateFileMetadata(originalname, buffer, mimetype, userId, image_id, image_description) {
-    // Your database update logic here
     const sqlUpdateMetadata = `UPDATE files SET filename = ?, data = ?, mimetype = ?, image_description = ? WHERE image_id = ? AND user_id = ?`;
     const paramsUpdateMetadata = [originalname, buffer, mimetype, image_description, image_id, userId];
 
-    return new Promise((resolve, reject) => {
-        db.run(sqlUpdateMetadata, paramsUpdateMetadata, function (err) {
-            if (err) {
-                console.error('Error updating file metadata:', err);
-                reject(err);
-            } else {
-                console.log('File metadata updated successfully');
-                resolve({ id: this.lastID });
-            }
-        });
-    });
+    try {
+        const result = await db.run(sqlUpdateMetadata, paramsUpdateMetadata);
+        console.log('File metadata updated successfully');
+        return { id: result.lastID };
+    } catch (err) {
+        console.error('Error updating file metadata:', err);
+        throw err; // Throw the error to propagate it to the caller
+    }
 }
+
+
 
 
 

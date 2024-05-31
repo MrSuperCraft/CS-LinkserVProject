@@ -601,20 +601,22 @@
     <h2 id="modalTitle" style="margin: 3px;">Customize Element</h2>
 
     <div id="image-modal">
-      <!-- Text customization section -->
-      <div id="textEditSection">
-        <label for="elementDescription">Text:</label>
-        <input type="text" id="elementDescription" placeholder="Tip: keep it short!">
-      </div>
+      <form id="image_form" action="/file-upload" method="POST" enctype="multipart/form-data">
 
-      <!-- Image customization section -->
-      <div id="imageEditSection">
-        <label for="imageUrlAddress">Image URL:</label>
-        <input type="text" id="imageUrlAddress" placeholder="Or enter a URL...">
-        <form action="/file-upload" id="dropzone" class="dropzone"></form> <!-- Dropzone container -->
-      </div>
+        <!-- Text customization section -->
+        <div id="textEditSection">
+          <label for="elementDescription">Text:</label>
+          <input type="text" id="elementDescription" placeholder="Tip: keep it short!">
+        </div>
 
-      <button id="applyChangesButton">Apply Changes</button>
+        <!-- Image customization section -->
+        <div id="imageEditSection">
+          <label for="imageUrlAddress">Image URL:</label>
+          <input type="text" id="imageUrlAddress" placeholder="Or enter a URL...">
+        </div>
+        <div id="dropzone" class="dropzone"></div> <!-- Dropzone container -->
+        <button id="applyChangesButton" type="submit">Apply Changes</button>
+      </form>
       <button id="delete-image" class="delete-image" onclick="deleteImage()" style="display: none;"><i
           class="fas fa-trash"></i> Delete
         Image</button>

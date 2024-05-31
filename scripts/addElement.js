@@ -87,6 +87,7 @@ function addElement(type) {
 }
 
 async function customizeElement(image_id) {
+    console.log('customizeElement called')
     const elementDescription = document.getElementById('elementDescription').value;
     const imageUrlInput = document.getElementById('imageUrlAddress').value;
     const dropzoneFiles = document.querySelectorAll('.dropzone .dz-filename span');
@@ -104,7 +105,7 @@ async function customizeElement(image_id) {
             // Create a fetch request to update image description
             const updateDescriptionUrl = `/api/files/description/${image_id}`;
             fetch(updateDescriptionUrl, {
-                method: 'PUT',
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -304,6 +305,7 @@ async function applyChanges() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
+                    user_id: await getUserIdWithFallback(),
                     image_id: image_id, // Pass the image ID generated in Dropzone
                     file_url: imageUrlInput,
                     image_description: elementDescription
@@ -316,6 +318,9 @@ async function applyChanges() {
 
     if (currentEditedItem) {
         updateGalleryDescription(currentEditedItem, elementDescription);
+        showMessage('Updating image...', 'success');
+        setTimeout(wait, 1500)
+        window.location.reload();
     } else {
         showMessage('Error caught when trying to edit.');
     }
@@ -336,7 +341,11 @@ async function applyChanges() {
     }, 300); // Adjust the delay as needed
 }
 
-
+function wait() {
+    setTimeout(function () {
+        // nothing
+    }, 1500);
+}
 
 
 
